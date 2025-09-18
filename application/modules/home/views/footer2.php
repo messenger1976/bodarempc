@@ -14,10 +14,10 @@ if ($this->uri->uri_string() == '') {
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Our Office</h5>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <h5 class="text-white mb-4">BODARE Building</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>J.A. Clarin St., Dao Dist. Tagbilaran City, Bohol</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0946-241-7633</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>bodarempc@yahoo.com</p>
                     <div class="d-flex pt-3">
                         <a class="btn btn-square btn-primary rounded-circle me-2" href=""><i
                                 class="fab fa-twitter"></i></a>
