@@ -144,7 +144,7 @@ if ($this->uri->uri_string() == '') {
                 </div>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>-->
             </div>
-            <a href="<?php echo base_url();?>access/login" class="btn btn-primary px-3 d-none d-lg-block">Login</a>
+            <a href="<?php echo base_url();?>access/login" class="btn btn-primary px-3 d-none d-lg-block">Contact Us</a>
         </div>
     </nav>
     <!-- Navbar End -->
