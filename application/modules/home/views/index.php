@@ -16,7 +16,15 @@
                                     <div class="col-lg-10 text-start">
                                         <p class="fs-5 fw-medium text-primary text-uppercase animated slideInRight"><?php echo $slide->subtitle; ?></p>
                                         <h1 class="display-1 text-white mb-5 animated slideInRight"><?php echo $slide->content; ?></h1>
+                                        <?php
+                                        if(!empty($slide->button_link)){
+
+                                        
+                                        ?>
                                         <a href="<?php echo $slide->button_link; ?>" class="btn btn-primary py-3 px-5 animated slideInRight"><?php echo $slide->button_text; ?></a>
+                                        <?php
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
