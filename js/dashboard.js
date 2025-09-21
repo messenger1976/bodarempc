@@ -56,6 +56,10 @@ $(document).ready(function () {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.favicon_error + "</p>");
                     $("div#warning_notifi").delay(100).show();
                     $("div#warning_notifi").delay(5000).hide("Slow");
+                }else if (data.slider_error) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.slider_error + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
                 }
             },
             cache: false,
@@ -65,7 +69,50 @@ $(document).ready(function () {
     });
 });
 
+//Website slider UPDATE 
+$(document).ready(function () {
+    $("#website_slider_submit").click(function (event) {
+        event.preventDefault();
 
+        var form = $('form#website_slider_form');
+        var formData = new FormData($(form)[0]);
+        var url = baseurl + 'dashboard/website/editslider';
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: formData,
+            async: true,
+            beforeSend: function () {
+                $("div#loading").delay(100).fadeIn();
+            },
+            success: function (data) {
+                $("div#loading").delay(100).fadeOut("slow");
+                if (data.success) {
+                    $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
+                    $("div#success_notifi").delay(100).show();
+                    $("div#success_notifi").delay(5000).hide("Slow");
+                } else if (data.notsuccess) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.notsuccess + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.logo_error) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.logo_error + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.slider_error) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.slider_error + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+});
 
 /********************************/
 /********* Adding User **********/

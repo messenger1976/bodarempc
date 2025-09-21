@@ -332,7 +332,7 @@ $siteinfo = $siteinfo->result();
                                     </li>
 
                                     <li class="<?php
-                                    if ($cmethod == "slider") {
+                                    if ($cmethod == "slider" || $cmethod == "slideredit") {
                                         echo "active";
                                     }
                                     ?>">

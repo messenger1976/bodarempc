@@ -51,10 +51,10 @@ class Website extends MX_Controller {
 	/***** Website Slider *****/
 	/*****************************/
 	public function slider(){
-                $data['slider'] = $this->getSlider();
-		$this->load->view('Dashboard/header');
+        $data['slider'] = $this->getSlider();
+		$this->load->view('Dashboard/header2');
 		$this->load->view('Website/slider', $data);
-		$this->load->view('Dashboard/footer');
+		$this->load->view('Dashboard/footer2');
 	}
 	
 	        
@@ -239,9 +239,16 @@ class Website extends MX_Controller {
         /*****************************/
 	/***** Website get Slider *****/
 	/*****************************/
-        public function getSlider(){
-            $this->db->order_by('serialid', 'asc');
-            $query = $this->db->get('slider');
+        public function getSlider($sliderid=''){
+			if($sliderid!=''){
+				//$sliderid = $this->uri->segment(4);
+        		$query = $this->db->get_where('slider', array('sliderid' => $sliderid));
+			}else{
+				$this->db->order_by('serialid', 'asc');
+            	$query = $this->db->get('slider');
+			}
+			
+            
             return $query->result();
         }
         
@@ -262,6 +269,18 @@ class Website extends MX_Controller {
             $this->db->delete('slider');
             redirect('dashboard/website/slider', 'refresh');
         }
+
+		/*     * ************************** */
+		/*     * *** Website Slider Edit **** */
+		/*     * ************************** */
+		public function slideredit() {
+			$sliderid = $this->uri->segment(4);
+			$data['slider'] = $this->getSlider($sliderid);
+			$this->load->view('Dashboard/header');
+			$this->load->view('Website/slideredit', $data);
+			$this->load->view('Dashboard/footer');
+		}
+
         
         /*     * ************************** */
         /*     * *** Sort Section      **** */
@@ -354,6 +373,60 @@ class Website extends MX_Controller {
 			}
 			
 		}
+	}
+
+	/*****************************/
+	/***** Website Edit Slider *****/
+	/*****************************/
+	public function editslider(){ 
+	
+		$errors = array();			
+		$success = array();			
+		$data = array();
+		$sliderid = $this->input->post('sliderid');
+		$subtitle = $this->input->post('subtitle');
+		$content = $this->input->post('content');
+		$button_text = $this->input->post('button_text');
+		$button_link = $this->input->post('button_link');
+
+		if (!empty($subtitle)){$data['subtitle'] = $subtitle;}
+		if (!empty($content)){$data['content'] = $content;}
+		if (!empty($button_text)){$data['button_text'] = $button_text;}
+		if (!empty($button_link)){$data['button_link'] = $button_link;}
+
+
+		$imagePath = realpath(APPPATH . '../images/website/slider');
+		$sliderimage = $_FILES['sliderimage']['tmp_name'];
+		
+		
+		if($sliderimage !== ""){
+			$config['upload_path'] = $imagePath; 
+			$config['allowed_types'] = 'jpg|png|jpeg|gif';	
+//			$config['max_size']     = '200';
+//			$config['max_width'] = '500';
+//			$config['max_height'] = '500';					
+			$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			$this->load->library('upload', $config);
+			if ($this->upload->do_upload('sliderimage')){				
+				$uploaded_data = $this->upload->data();				
+				$data['filename']= $uploaded_data['file_name'];									
+			}else{				
+				$data['filename']= '';	
+				$errors['slider_error'] = strip_tags($this->upload->display_errors());
+				echo json_encode($errors);
+			}
+		}
+		$this->db->where('sliderid', $sliderid); 
+		$updated = $this->db->update('slider', $data); 
+		if($updated == TRUE){
+			$success['success'] = "Successfully Updated";
+			echo json_encode($success);
+		}else{
+			$errors['notsuccess'] = 'Opps! Something Wrong';					
+			echo json_encode($errors);
+		}
+
+
 	}
 	
 }

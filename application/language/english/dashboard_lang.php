@@ -73,6 +73,7 @@ $lang['dash_allpages_panel_title'] = "All Pages";
 $lang['dash_updatepage_panel_title'] = "Update Page";
 
 $lang['dash_addslider_panel_title'] = "Add Slider";
+$lang['dash_updateslider_panel_title'] = "Update Slider";
 $lang['dash_allslider_panel_title'] = "All Sliders";
 
 $lang['dash_addgallery_panel_title'] = "Add Gallery Image";
@@ -191,6 +192,7 @@ $lang['dash_gpanel_guardian_phone'] = "Guardian Phone";
 
 $lang['dash_gpanel_image'] = "Photo";
 $lang['dash_gpanel_title'] = "Title";
+$lang['dash_gpanel_subtitle'] = "Sub-title";
 $lang['dash_gpanel_slogan'] = "Slogan";
 $lang['dash_gpanel_date'] = "Date";
 $lang['dash_gpanel_time'] = "Time";
@@ -203,8 +205,11 @@ $lang['dash_gpanel_btn_text'] = "Button Text";
 $lang['dash_gpanel_shortcode'] = "Shortcode";
 $lang['dash_gpanel_selectshortcode'] = "Select Shortcode";
 $lang['dash_gpanel_removebackground'] = "Remove Previous Background";
+$lang['dash_gpanel_buttontext'] = "Button Text";
+$lang['dash_gpanel_buttonlink'] = "Button Link";
 
 $lang['dash_gpanel_no'] = "No.";
+$lang['dash_gpanel_sort_row'] = "Sort";
 $lang['dash_gpanel_photo'] = "Photo";
 $lang['dash_gpanel_name'] = "Name";
 $lang['dash_gpanel_action'] = "Action";
@@ -320,6 +325,7 @@ $lang['dash_gpanel_aavalue'] = "Approximate Value";
 $lang['dash_gpanel_slider'] = "Slider";
 $lang['dash_gpanel_addslider'] = "Add Slider";
 $lang['dash_gpanel_addimage'] = "Add Image";
+$lang['dash_gpanel_updateslider'] = "Update Slider";
 
 /********************************/
 /*********** Global Seminar *****/

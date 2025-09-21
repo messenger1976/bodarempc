@@ -9,8 +9,9 @@ if ($this->uri->uri_string() == '') {
 
 <?php 
 
-    $query = $this->db->get('websitebasic');
-    foreach ($query->result() as $basic): 
+    //$query = $this->db->get('websitebasic');
+    //foreach ($query->result() as $basic): 
+    foreach ($basicinfo as $basic)
 ?>
 
 <!DOCTYPE html>
@@ -149,4 +150,4 @@ if ($this->uri->uri_string() == '') {
     <!-- Navbar End -->
 
 
-<?php endforeach;?>
+<?php //endforeach;?>

@@ -15,6 +15,7 @@ class Home extends MX_Controller {
     /*****************************/
     public function index(){        
         $data['basicinfo'] = $this->getBasicInfo();
+        //$data['basicinfo'] = getBasic();
         $data['event'] = $this->getEventInfo();
         $data['events'] = $this->getEventsInfo();
         $data['speech'] = $this->getSpeeches();

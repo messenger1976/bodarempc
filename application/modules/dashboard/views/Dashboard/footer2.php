@@ -517,6 +517,48 @@
         });
     }
 
+    /************************************************/
+    /******** Slider Image Cropper **********/
+    /************************************************/
+    function sliderbanner() {
+        var preview = document.querySelector('img#image');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+
+        reader.onload = (function () {
+
+            // Destroy cropper
+            $('#image').cropper('destroy');
+
+            // Replace url
+            preview.src = reader.result;
+
+            $('#image').cropper({
+                aspectRatio: 16 / 9,
+                viewMode: 3,
+                dragMode: 'move',
+                crop: function (e) {
+                    // Output the result data for cropping image.
+                    $("input#x").val(e.x);
+                    $("input#y").val(e.y);
+                    $("input#width").val(e.width);
+                    $("input#height").val(e.height);
+                }
+            });
+
+            var x = $("input#x").val();
+            console.log(x);
+
+        });
+    }
 
 </script>
 
