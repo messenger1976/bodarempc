@@ -367,6 +367,7 @@ class Website extends MX_Controller {
 				$data['filename'] = $fileData['file_name'];
 				$data['cdate'] = date("j F Y");
 				$this->db->insert('slider', $data);
+				$this->session->set_flashdata('success', 'Successfully New Record Added');
 				redirect('dashboard/website/slider', 'refresh');	
 			}else{
 				echo strip_tags($this->upload->display_errors());
