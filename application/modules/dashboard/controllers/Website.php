@@ -357,8 +357,8 @@ class Website extends MX_Controller {
 				$config['source_image'] = $fileData['full_path'];
 				$config['new_image'] = $imagePath.'/resize';
 				$config['maintain_ratio'] = FALSE;
-				$config['width'] = 250;
-				$config['height'] = 250;
+				$config['width'] = 1920;
+				$config['height'] = 1080;
 				
 				$this->image_lib->clear();
 				$this->image_lib->initialize($config);
@@ -404,11 +404,28 @@ class Website extends MX_Controller {
 			$config['allowed_types'] = 'jpg|png|jpeg|gif';	
 //			$config['max_size']     = '200';
 //			$config['max_width'] = '500';
-//			$config['max_height'] = '500';					
+//			$config['max_height'] = '500';		
+			//$config['maintain_ratio'] = FALSE;
+			//$config['width'] = 1920;
+			//$config['height'] = 1080;
+				
+			//$this->image_lib->clear();
+			//$this->image_lib->initialize($config);
+			//$this->image_lib->resize();			
 			$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
 			$this->load->library('upload', $config);
-			if ($this->upload->do_upload('sliderimage')){				
-				$uploaded_data = $this->upload->data();				
+			if ($this->upload->do_upload('sliderimage')){	
+
+				$uploaded_data = $this->upload->data();		
+				$config1['source_image'] = $uploaded_data['full_path'];
+				$config1['new_image'] = $imagePath.'/resize';
+				$config1['maintain_ratio'] = FALSE;
+				$config1['width'] = 1920;
+				$config1['height'] = 1080;
+				
+				$this->image_lib->clear();
+				$this->image_lib->initialize($config1);
+				$this->image_lib->resize();		
 				$data['filename']= $uploaded_data['file_name'];									
 			}else{				
 				$data['filename']= '';	

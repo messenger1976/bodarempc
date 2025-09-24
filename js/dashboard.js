@@ -93,6 +93,8 @@ $(document).ready(function () {
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
+                    //redirect('dashboard/website/slider', 'refresh');
+                    window.location.replace('/dashboard/website/slider');
                 } else if (data.notsuccess) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.notsuccess + "</p>");
                     $("div#warning_notifi").delay(100).show();

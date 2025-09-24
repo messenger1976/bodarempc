@@ -56,7 +56,7 @@
                                     ?>                                
                                     <tr data-id="<?php echo $row->sliderid; ?>" style="color: rgba(33, 33, 33, 0.70); font-weight: bold" class="parent-slider">
                                         <td><?php echo $i; ?></td>               
-                                        <td><img style="width: 80px;" src="<?php echo base_url(); ?>images/website/slider/<?php echo $row->filename; ?>"></td>                                        
+                                        <td><img style="width: 80px;" src="<?php echo base_url(); ?>images/website/slider/resize/<?php echo $row->filename; ?>"></td>                                        
                                         <td><?php echo $row->filename; ?></td>
                                         <td>
                                             <a href="<?php echo base_url(); ?>dashboard/website/slideredit/<?php echo $row->sliderid; ?>" class="btn btn-warning"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>

@@ -9,7 +9,7 @@
 
                 <?php $i=0; foreach ($slider as $slide) { $i++;?>     
                     <div class="carousel-item <?php if($i == 1){echo "active";} ?>">
-                        <img class="w-100" src="<?php echo base_url();?>images/website/slider/<?php echo $slide->filename; ?>" alt="Image">
+                        <img class="w-100" src="<?php echo base_url();?>images/website/slider/resize/<?php echo $slide->filename; ?>" alt="Image">
                         <div class="carousel-caption">
                             <div class="container">
                                 <div class="row justify-content-center">
