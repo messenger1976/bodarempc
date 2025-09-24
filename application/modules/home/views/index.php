@@ -17,11 +17,10 @@
                                         <p class="fs-5 fw-medium text-primary text-uppercase animated slideInRight"><?php echo $slide->subtitle; ?></p>
                                         <h1 class="display-1 text-white mb-5 animated slideInRight"><?php echo $slide->content; ?></h1>
                                         <?php
-                                        if(!empty($slide->button_link)){
-
-                                        
+                                        if(!empty($slide->button_text)){
                                         ?>
-                                        <a href="<?php echo $slide->button_link; ?>" class="btn btn-primary py-3 px-5 animated slideInRight"><?php echo $slide->button_text; ?></a>
+                                            <a href="<?php echo $slide->button_link; ?>" class="btn btn-primary py-3 px-5 animated slideInRight"><?php echo $slide->button_text; ?></a>
+                                            
                                         <?php
                                         }
                                         ?>
@@ -328,9 +327,9 @@
 
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item">
-                        <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-1.jpg" alt="">
+                        <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-4.jpg" alt="">
                         <div class="service-img">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-1.jpg" alt="">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-4.jpg" alt="">
                         </div>
                         <div class="service-detail">
                             <div class="service-title">

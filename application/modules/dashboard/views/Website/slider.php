@@ -38,7 +38,7 @@
                         <table class="table table-hover sorted_slider_table">
                             <thead class="text-default">
                             <th style="width: 1%"><?php echo $this->lang->line('dash_gpanel_no'); ?></th>
-                            <th style="width: 3%"><?php echo $this->lang->line('dash_gpanel_sort_row'); ?></th>
+                            
                             <th style="width: 3%"><?php echo $this->lang->line('dash_gpanel_photo'); ?></th>
                             <th style="width: 5%"><?php echo $this->lang->line('dash_gpanel_title'); ?></th>
                             <th style="width: 4%"><?php echo $this->lang->line('dash_gpanel_action'); ?></th>
@@ -56,7 +56,6 @@
                                     ?>                                
                                     <tr data-id="<?php echo $row->sliderid; ?>" style="color: rgba(33, 33, 33, 0.70); font-weight: bold" class="parent-slider">
                                         <td><?php echo $i; ?></td>               
-                                        <td><?php echo $row->serialid; ?></td>
                                         <td><img style="width: 80px;" src="<?php echo base_url(); ?>images/website/slider/<?php echo $row->filename; ?>"></td>                                        
                                         <td><?php echo $row->filename; ?></td>
                                         <td>
