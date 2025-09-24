@@ -20,7 +20,7 @@
                                 </div>	                                        
                             </div>
 
-                            <button id="website_slider_submit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_gpanel_update_now'); ?></button>                            
+                            <button id="website_addslider_submit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_gpanel_update_now'); ?></button>                            
                         </form>
                     </div>
                 </div>

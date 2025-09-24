@@ -344,7 +344,7 @@ class Website extends MX_Controller {
 			$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
 			$_FILES['userfile']['error']= $files['userfile']['error'][$i];
 			$_FILES['userfile']['size']= $files['userfile']['size'][$i];  
-			
+			//$sliderimage = $_FILES['userfile']['tmp_name'];
 			$imagePath = realpath(APPPATH . '../images/website/slider');			
 			$config['upload_path'] = $imagePath;
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';
@@ -365,7 +365,7 @@ class Website extends MX_Controller {
 				$this->image_lib->resize();
 				
 				$data['filename'] = $fileData['file_name'];
-                                $data['cdate'] = date("j F Y");
+				$data['cdate'] = date("j F Y");
 				$this->db->insert('slider', $data);
 				redirect('dashboard/website/slider', 'refresh');	
 			}else{
