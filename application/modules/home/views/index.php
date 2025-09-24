@@ -281,7 +281,7 @@
                                 <p class="text-white mb-0">Salary, Petty Cash, Motor Vehicle Loans, Appliance, Business, Bonus, PO’s Grocery and Dept.</p>
                             </div>
                         </div>
-                        <a class="btn btn-light" href="">Read More</a>
+                        <a class="btn btn-light" href="#">Read More</a>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
@@ -297,11 +297,10 @@
                                 <hr class="w-25">
                             </div>
                             <div class="service-text">
-                                <p class="text-white mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                                    lorem sed diam stet diam sed stet.</p>
+                                <p class="text-white mb-0">This expansive office suite offers a premier location and a functional layout designed for productivity. The space includes private offices, a large central conference room with a projector, and a welcoming reception area for clients. It provides commanding views and an abundance of natural light. The building features 24/7 security, high-speed fiber optic internet, and a fully equipped kitchen area for tenant use</p>
                             </div>
                         </div>
-                        <a class="btn btn-light" href="">Read More</a>
+                        <a class="btn btn-light" href="#">Read More</a>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
@@ -317,11 +316,10 @@
                                 <hr class="w-25">
                             </div>
                             <div class="service-text">
-                                <p class="text-white mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                                    lorem sed diam stet diam sed stet.</p>
+                                <p class="text-white mb-0">Your future is worth investing in. Open a savings account with us today and watch your money grow. It's safe, simple, and the smart choice for a secure tomorrow.</p>
                             </div>
                         </div>
-                        <a class="btn btn-light" href="">Read More</a>
+                        <a class="btn btn-light" href="#">Read More</a>
                     </div>
                 </div>
 
@@ -338,19 +336,18 @@
                                 <hr class="w-25">
                             </div>
                             <div class="service-text">
-                                <p class="text-white mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                                    lorem sed diam stet diam sed stet.</p>
+                                <p class="text-white mb-0">Relieve the financial and emotional stress of an unexpected loss.</p>
                             </div>
                         </div>
-                        <a class="btn btn-light" href="">Read More</a>
+                        <a class="btn btn-light" href="#">Read More</a>
                     </div>
                 </div>
 
                 <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item">
-                        <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-2.jpg" alt="">
+                        <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-5.jpg" alt="">
                         <div class="service-img">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-2.jpg" alt="">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-5.jpg" alt="">
                         </div>
                         <div class="service-detail">
                             <div class="service-title">
@@ -359,11 +356,29 @@
                                 <hr class="w-25">
                             </div>
                             <div class="service-text">
-                                <p class="text-white mb-0">Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                                    lorem sed diam stet diam sed stet.</p>
+                                <p class="text-white mb-0">Why pay more for a fancy room you'll barely use? At BODARE Pension House, we give you everything you need for a comfortable stay at a fraction of the cost. Clean rooms, friendly service, and a great location. Book now and start your adventure!</p>
                             </div>
                         </div>
-                        <a class="btn btn-light" href="">Read More</a>
+                        <a class="btn btn-light" href="#">Read More</a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item">
+                        <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-6.jpg" alt="">
+                        <div class="service-img">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/service-6.jpg" alt="">
+                        </div>
+                        <div class="service-detail">
+                            <div class="service-title">
+                                <hr class="w-25">
+                                <h3 class="mb-0">BODARE Crown Residences</h3>
+                                <hr class="w-25">
+                            </div>
+                            <div class="service-text">
+                                <p class="text-white mb-0">Coming Soon...</p>
+                            </div>
+                        </div>
+                        <a class="btn btn-light" href="#">Read More</a>
                     </div>
                 </div>
             </div>
