@@ -23,7 +23,8 @@
                                 <div class="col-md-12">
                                     
                                     <input type="hidden" name="sliderid" id="sliderid" value="<?php echo $row->sliderid;?>">
-                                    
+                                    <input type="hidden" name="filename" id="filename" value="<?php echo $row->filename;?>">
+
                                     <div class="form-group label-floating">													
                                         <p class="image_select_text"><i class="material-icons">add_a_photo</i> <?php echo $this->lang->line('dash_gpanel_updateslider'); ?></p>
                                         <input type="file" onchange="sliderbanner()" name="sliderimage" id="sliderimage" class="form-control">

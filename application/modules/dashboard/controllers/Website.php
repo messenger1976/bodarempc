@@ -384,6 +384,7 @@ class Website extends MX_Controller {
 		$success = array();			
 		$data = array();
 		$sliderid = $this->input->post('sliderid');
+		$filename = $this->input->post('filename');
 		$subtitle = $this->input->post('subtitle');
 		$content = $this->input->post('content');
 		$button_text = $this->input->post('button_text');
@@ -412,7 +413,16 @@ class Website extends MX_Controller {
 			//$this->image_lib->clear();
 			//$this->image_lib->initialize($config);
 			//$this->image_lib->resize();			
-			$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			//$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			
+			if (!empty($filename)){
+				@unlink($imagePath.'/'.$filename);
+				$filename_array = explode('.',$filename);
+				$config['file_name'] =$filename_array[0];
+			}else{
+				$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			}
+			//$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
 			$this->load->library('upload', $config);
 			if ($this->upload->do_upload('sliderimage')){	
 
