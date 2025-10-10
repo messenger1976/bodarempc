@@ -391,11 +391,23 @@
     <!-- Project Start -->
     <div class="container-fluid bg-dark pt-5 my-5 px-0">
         <div class="text-center mx-auto mt-5 wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
-            <p class="fw-medium text-uppercase text-primary mb-2">Our Projects</p>
-            <h1 class="display-5 text-white mb-5">See What We Have Completed Recently</h1>
+            <p class="fw-medium text-uppercase text-primary mb-2">Our Gallery</p>
+            <h1 class="display-5 text-white mb-5">See What We Have Recently</h1>
         </div>
         <div class="owl-carousel project-carousel wow fadeIn" data-wow-delay="0.1s">
-            <a class="project-item" href="">
+            <?php foreach ($gallery as $gallery) { ?>
+                <a class="project-item" href="">
+                    <img class="img-fluid" src="<?php echo base_url(); ?>images/website/gallery/small/<?php echo $gallery->filename; ?>" alt="<?php echo $gallery->filename; ?>" data-image="<?php echo base_url(); ?>images/website/gallery/large/<?php echo $gallery->filename; ?>"
+                        data-description="<?php echo $gallery->filename; ?>">
+                    <div class="project-title">
+                        <h5 class="text-primary mb-0"><?php echo $gallery->filename; ?></h5>
+                    </div>
+                </a>
+
+                
+            <?php } ?>
+
+            <!--<a class="project-item" href="">
                 <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-1.jpg" alt="">
                 <div class="project-title">
                     <h5 class="text-primary mb-0">Auto Engineering</h5>
@@ -430,7 +442,7 @@
                 <div class="project-title">
                     <h5 class="text-primary mb-0">Water Engineering</h5>
                 </div>
-            </a>
+            </a>-->
         </div>
     </div>
     <!-- Project End -->
