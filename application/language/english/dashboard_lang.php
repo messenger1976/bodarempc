@@ -77,6 +77,7 @@ $lang['dash_updateslider_panel_title'] = "Update Slider";
 $lang['dash_allslider_panel_title'] = "All Sliders";
 
 $lang['dash_addgallery_panel_title'] = "Add Gallery Image";
+$lang['dash_updategallery_panel_title'] = "Update Gallery Image";
 $lang['dash_allgallery_panel_title'] = "All Gallery Images";
 
 $lang['dash_addspeech_panel_title'] = "Add Speech";
@@ -192,6 +193,7 @@ $lang['dash_gpanel_guardian_phone'] = "Guardian Phone";
 
 $lang['dash_gpanel_image'] = "Photo";
 $lang['dash_gpanel_title'] = "Title";
+$lang['dash_gpanel_filename'] = "Filename";
 $lang['dash_gpanel_subtitle'] = "Sub-title";
 $lang['dash_gpanel_slogan'] = "Slogan";
 $lang['dash_gpanel_date'] = "Date";

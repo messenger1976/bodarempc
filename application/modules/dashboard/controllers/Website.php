@@ -197,7 +197,9 @@ class Website extends MX_Controller {
 		$data = array();
 		$files = $_FILES;
 		$count = count($_FILES['userfile']['name']);
-		
+		$title = $this->input->post('title');
+		if (!empty($title)){$data['title'] = $title;}
+
 		for($i=0; $i<$count; $i++){
 		
 			$_FILES['userfile']['name']= $files['userfile']['name'][$i];
@@ -215,18 +217,18 @@ class Website extends MX_Controller {
 			if($this->upload->do_upload()){
 				$fileData = $this->upload->data();
 				$data['filename'] = $fileData['file_name'];
-                                $data['cdate'] = date("j F Y");
-                                $this->db->insert('gallery', $data);
-                                
-                                $config['source_image'] = $fileData['full_path'];
-                                $config['new_image'] = $imagePath . '/small';
-                                $config['maintain_ratio'] = TRUE;
-                                $config['width'] = 250;
-                                $config['height'] = 250;
+				$data['cdate'] = date("j F Y");
+				$this->db->insert('gallery', $data);
+				
+				$config1['source_image'] = $fileData['full_path'];
+				$config1['new_image'] = $imagePath . '/small';
+				$config1['maintain_ratio'] = FALSE;
+				$config1['width'] = 400;
+				$config1['height'] = 500;
 
-                                $this->image_lib->clear();
-                                $this->image_lib->initialize($config);
-                                $this->image_lib->resize();
+				$this->image_lib->clear();
+				$this->image_lib->initialize($config1);
+				$this->image_lib->resize();
                                 
 				redirect('dashboard/website/gallery', 'refresh');	
 			}else{
@@ -242,6 +244,7 @@ class Website extends MX_Controller {
         public function getSlider($sliderid=''){
 			if($sliderid!=''){
 				//$sliderid = $this->uri->segment(4);
+				$this->db->order_by('serialid', 'asc');
         		$query = $this->db->get_where('slider', array('sliderid' => $sliderid));
 			}else{
 				$this->db->order_by('serialid', 'asc');
@@ -255,9 +258,15 @@ class Website extends MX_Controller {
         /*****************************/
 	/***** Website get Slider *****/
 	/*****************************/
-        public function getGallery(){
-            $this->db->order_by('serialid', 'asc');
-            $query = $this->db->get('gallery');
+        public function getGallery($galleryid=''){
+			if($galleryid!=''){
+				$this->db->order_by('serialid', 'asc');
+				$query = $this->db->get_where('gallery', array('galleryid' => $galleryid));
+			}else{
+				$this->db->order_by('serialid', 'asc');
+            	$query = $this->db->get('gallery');
+			}
+            
             return $query->result();
         }
         
@@ -299,7 +308,17 @@ class Website extends MX_Controller {
             }
         }
         
-        
+        /*     * ************************** */
+		/*     * *** Website Slider Edit **** */
+		/*     * ************************** */
+		public function galleryedit() {
+			$galleryid = $this->uri->segment(4);
+			$data['gallery'] = $this->getGallery($galleryid);
+			$this->load->view('Dashboard/header');
+			$this->load->view('Website/galleryedit', $data);
+			$this->load->view('Dashboard/footer');
+		}
+
         /*****************************/
 	/***** Website Gallery Delete *****/
 	/*****************************/
@@ -457,4 +476,79 @@ class Website extends MX_Controller {
 
 	}
 	
+	/*****************************/
+	/***** Website Edit Gallery *****/
+	/*****************************/
+	public function editgallery(){ 
+	
+		$errors = array();			
+		$success = array();			
+		$data = array();
+		$galleryid = $this->input->post('galleryid');
+		$filename = $this->input->post('filename');
+		$title = $this->input->post('title');
+		
+		if (!empty($title)){$data['title'] = $title;}
+		
+
+		$imagePath = realpath(APPPATH . '../images/website/gallery');
+		$galleryimage = $_FILES['galleryimage']['tmp_name'];
+		
+		
+		if($galleryimage !== ""){
+			$config['upload_path'] = $imagePath.'/large'; 
+			$config['allowed_types'] = 'jpg|png|jpeg|gif';	
+//			$config['max_size']     = '200';
+//			$config['max_width'] = '500';
+//			$config['max_height'] = '500';		
+			//$config['maintain_ratio'] = FALSE;
+			//$config['width'] = 1920;
+			//$config['height'] = 1080;
+				
+			//$this->image_lib->clear();
+			//$this->image_lib->initialize($config);
+			//$this->image_lib->resize();			
+			//$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			
+			if (!empty($filename)){
+				@unlink($imagePath.DIRECTORY_SEPARATOR.'large'.DIRECTORY_SEPARATOR.$filename);
+				@unlink($imagePath.DIRECTORY_SEPARATOR.'small'.DIRECTORY_SEPARATOR.$filename);
+				$filename_array = explode('.',$filename);
+				$config['file_name'] =$filename_array[0];
+			}else{
+				$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			}
+			//$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
+			$this->load->library('upload', $config);
+			if ($this->upload->do_upload('galleryimage')){	
+
+				$uploaded_data = $this->upload->data();		
+				$config1['source_image'] = $uploaded_data['full_path'];
+				$config1['new_image'] = $imagePath.'/small';
+				$config1['maintain_ratio'] = FALSE;
+				$config1['width'] = 400;
+				$config1['height'] = 500;
+				
+				$this->image_lib->clear();
+				$this->image_lib->initialize($config1);
+				$this->image_lib->resize();		
+				$data['filename']= $uploaded_data['file_name'];									
+			}else{				
+				$data['filename']= '';	
+				$errors['slider_error'] = strip_tags($this->upload->display_errors());
+				echo json_encode($errors);
+			}
+		}
+		$this->db->where('galleryid', $galleryid); 
+		$updated = $this->db->update('gallery', $data); 
+		if($updated == TRUE){
+			$success['success'] = "Successfully Updated";
+			echo json_encode($success);
+		}else{
+			$errors['notsuccess'] = 'Opps! Something Wrong';					
+			echo json_encode($errors);
+		}
+
+
+	}
 }

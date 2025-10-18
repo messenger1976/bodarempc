@@ -400,7 +400,7 @@
                     <img class="img-fluid" src="<?php echo base_url(); ?>images/website/gallery/small/<?php echo $gallery->filename; ?>" alt="<?php echo $gallery->filename; ?>" data-image="<?php echo base_url(); ?>images/website/gallery/large/<?php echo $gallery->filename; ?>"
                         data-description="<?php echo $gallery->filename; ?>">
                     <div class="project-title">
-                        <h5 class="text-primary mb-0"><?php echo $gallery->filename; ?></h5>
+                        <h5 class="text-primary mb-0"><?php echo $gallery->title; ?></h5>
                     </div>
                 </a>
 

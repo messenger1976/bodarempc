@@ -17,7 +17,19 @@
                                     </div>
                                 </div>	                                        
                             </div>
-                            <button id="website_gallery_submit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_gpanel_update_now'); ?></button>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_title'); ?></label>
+                                        <input type="text" id="title" name="title" class="form-control">
+                                        <span class="material-input"></span></div>
+                                </div>
+                                
+                                
+                                
+                                
+                            </div>
+                            <button id="website_addgallery_submit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_gpanel_update_now'); ?></button>
                         </form>
                     </div>
                 </div>
@@ -36,6 +48,7 @@
                             <th style="width: 1%"><?php echo $this->lang->line('dash_gpanel_no'); ?></th>
                             <th style="width: 3%"><?php echo $this->lang->line('dash_gpanel_photo'); ?></th>
                             <th style="width: 5%"><?php echo $this->lang->line('dash_gpanel_title'); ?></th>
+                            <th style="width: 5%"><?php echo $this->lang->line('dash_gpanel_filename'); ?></th>
                             <th style="width: 4%"><?php echo $this->lang->line('dash_gpanel_action'); ?></th>
                             </thead>
                             <tbody>
@@ -51,9 +64,12 @@
                                     ?>                                
                                     <tr data-id="<?php echo $row->galleryid; ?>" style="color: rgba(33, 33, 33, 0.70); font-weight: bold" class="parent-gallery">
                                         <td><?php echo $i; ?></td>               
-                                        <td><img style="width: 80px;" src="<?php echo base_url(); ?>images/website/gallery/small/<?php echo $row->filename; ?>"></td>                                        
+                                        <td><img style="width: 80px;" src="<?php echo base_url(); ?>images/website/gallery/small/<?php echo $row->filename.'?cache='.rand(); ?>"></td>                                        
+                                        <td><?php echo $row->title; ?></td>
                                         <td><?php echo $row->filename; ?></td>
                                         <td>
+                                            <a href="<?php echo base_url(); ?>dashboard/website/galleryedit/<?php echo $row->galleryid; ?>" class="btn btn-warning"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>
+
                                             <a href="<?php echo base_url(); ?>dashboard/website/gallerydelete/<?php echo $row->galleryid; ?>" class="btn btn-danger delete"><i class="material-icons">clear</i> <?php echo $this->lang->line('dash_gpanel_delete'); ?></a>
                                         </td>
                                     </tr>
