@@ -166,7 +166,32 @@ if (!function_exists('shortCode')) {
                     $peopleid = "";
                 }
 
-                if ($type == "group") {
+                if ($type == "bodaregroup") {
+                    $resultHtml .= "<div class='col-lg-4 col-md-6 wow fadeInUp' data-wow-delay='0.1s'>
+                    <div class='team-item'>
+                        <img class='img-fluid' src='". base_url() . "images/$table/profile/$row->profileimage' alt='$row->fname' width='550px' height='600px'> 
+                        <div class='d-flex'>
+                            <div class='flex-shrink-0 btn-square bg-primary' style='width: 90px; height: 90px;'>
+                                <i class='fa fa-2x fa-share text-white'></i>
+                            </div>
+                            <div class='position-relative overflow-hidden bg-light d-flex flex-column justify-content-center w-100 ps-4'
+                                style='height: 90px;'>
+                                <h5><a target='_blank' href='" . base_url() . "home/$table/view/$peopleid'>$row->fname $row->lname</a></h5>
+                                <span class='text-primary'>$row->position</span>
+                                <div class='team-social'>
+                                    <a class='btn btn-square btn-dark rounded-circle mx-1' href=''><i
+                                            class='fab fa-facebook-f'></i></a>
+                                    <a class='btn btn-square btn-dark rounded-circle mx-1' href=''><i
+                                            class='fab fa-twitter'></i></a>
+                                    <a class='btn btn-square btn-dark rounded-circle mx-1' href=''><i
+                                            class='fab fa-instagram'></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>";
+                    //$resultHtml .= "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12'><div class='pastors'><img src='" . base_url() . "images/$table/profile/$row->profileimage' alt='$row->fname'></img> <h5>$row->position</h5>       <h4><a target='_blank' href='" . base_url() . "home/$table/view/$peopleid'>$row->fname $row->lname</a></h4>                                </div>                            </div>";
+                }else if ($type == "group") {
                     $resultHtml .= "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12'>
                                 <div class='pastors'>
                                     <img src='" . base_url() . "images/$table/profile/$row->profileimage' alt='$row->fname'></img>

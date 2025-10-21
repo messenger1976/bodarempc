@@ -407,53 +407,92 @@
                 
             <?php } ?>
 
-            <!--<a class="project-item" href="">
-                <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-1.jpg" alt="">
-                <div class="project-title">
-                    <h5 class="text-primary mb-0">Auto Engineering</h5>
-                </div>
-            </a>
-            <a class="project-item" href="">
-                <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-2.jpg" alt="">
-                <div class="project-title">
-                    <h5 class="text-primary mb-0">Civil Engineering</h5>
-                </div>
-            </a>
-            <a class="project-item" href="">
-                <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-3.jpg" alt="">
-                <div class="project-title">
-                    <h5 class="text-primary mb-0">Gas Engineering</h5>
-                </div>
-            </a>
-            <a class="project-item" href="">
-                <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-4.jpg" alt="">
-                <div class="project-title">
-                    <h5 class="text-primary mb-0">Power Engineering</h5>
-                </div>
-            </a>
-            <a class="project-item" href="">
-                <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-5.jpg" alt="">
-                <div class="project-title">
-                    <h5 class="text-primary mb-0">Energy Engineering</h5>
-                </div>
-            </a>
-            <a class="project-item" href="">
-                <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/project-6.jpg" alt="">
-                <div class="project-title">
-                    <h5 class="text-primary mb-0">Water Engineering</h5>
-                </div>
-            </a>-->
+            
         </div>
     </div>
     <!-- Project End -->
 
+<?php foreach ($section as $section) { ?>
 
-    <!-- Team Start -->
+
+<!-- Staff Start -->
+ <?php if ($section->background) {
+            echo '<div class="container-fluid bg-dark pt-5 my-5 px-0">';
+        }else{
+            echo '<div class="container-xxl py-5">';
+        }
+?>
+    
+        <div class="container">
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <p class="fw-medium text-uppercase text-primary mb-2"><?php echo $section->title; ?></p>
+                <h1 class="display-5 mb-5"><?php echo $section->title; ?></h1>
+            </div>
+            <div class="row g-4">
+                <?php
+                    
+                    if ($section->shortcode) {
+                        $SCAttArray = explode(",", $section->shortcode);
+                        echo shortCode($SCAttArray[0], $SCAttArray[1], $SCAttArray[2], $SCAttArray[3], $SCAttArray[4]);
+                    }
+                    ?>
+
+                   
+                                           
+                        <p><?php echo $section->content; ?></p>
+                        <?php if ($section->link) { ?>
+                        <div class="service-item">
+                            <a class="btn btn-light" href="<?php echo $section->link; ?>"><?php echo $section->btntext; ?></a>
+                        </div>
+                        <?php } ?>
+                       
+                
+                
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
+        <!--<div class="animate-in cs_sections <?php
+        if ($section->background) {
+            echo "parallax";
+        }
+        ?>" data-parallax="scroll" data-image-src="images/section/crop/<?php echo $section->background; ?>" data-anim-type="bounce-in-up-large"  data-anim-delay="600">
+            <div class="content">
+                <div class="container">
+                    <h2><?php echo $section->title; ?></h2>
+                    <div class="separator-container">
+                        <div class="separator line-separator">♦</div>
+                    </div>
+
+                    <?php
+                    
+                    if ($section->shortcode) {
+                        $SCAttArray = explode(",", $section->shortcode);
+                        echo shortCode($SCAttArray[0], $SCAttArray[1], $SCAttArray[2], $SCAttArray[3], $SCAttArray[4]);
+                    }
+                    ?>
+
+                    <div class="col-md-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">                        
+                        <p><?php echo $section->content; ?></p>
+                        <?php if ($section->link) { ?>
+                        <div class="col-lg-offset-5 col-md-offset-5 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                            <a class="read_more" href="<?php echo $section->link; ?>"><?php echo $section->btntext; ?></a>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } ?>-->
+
+    <!-- Staff Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                <p class="fw-medium text-uppercase text-primary mb-2">Our Team</p>
-                <h1 class="display-5 mb-5">Dedicated Team Members</h1>
+                <p class="fw-medium text-uppercase text-primary mb-2">Our Staff</p>
+                <h1 class="display-5 mb-5">Dedicated Staff Members</h1>
             </div>
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">

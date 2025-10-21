@@ -22,6 +22,7 @@ class Home extends MX_Controller {
         $data['section'] = $this->getSection();
         $data['pastors'] = $this->getPastors();
         $data['committee'] = $this->getCommittee();
+        $data['staff'] = $this->getStaff();
         $data['prayer'] = $this->getPrayerInfo();
         $data['notice'] = $this->getNoticeInfo();
         $data['gallery'] = $this->getGalleryInfo();
@@ -91,6 +92,15 @@ class Home extends MX_Controller {
     public function getCommittee(){ 
         $this->db->limit(4);
         $query = $this->db->get('committee');
+        return $query->result();
+    }
+
+    /*****************************/
+    /***** Get Staff Info ********/
+    /*****************************/
+    public function getStaff(){ 
+        $this->db->limit(4);
+        $query = $this->db->get('staff');
         return $query->result();
     }
     
