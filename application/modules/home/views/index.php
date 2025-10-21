@@ -426,7 +426,7 @@
         <div class="container">
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
                 <p class="fw-medium text-uppercase text-primary mb-2"><?php echo $section->title; ?></p>
-                <h1 class="display-5 mb-5"><?php echo $section->title; ?></h1>
+                <h1 class="display-5 mb-5"><?php echo $section->subtitle; ?></h1>
             </div>
             <div class="row g-4">
                 <?php
@@ -436,9 +436,7 @@
                         echo shortCode($SCAttArray[0], $SCAttArray[1], $SCAttArray[2], $SCAttArray[3], $SCAttArray[4]);
                     }
                     ?>
-
-                   
-                                           
+                                 
                         <p><?php echo $section->content; ?></p>
                         <?php if ($section->link) { ?>
                         <div class="service-item">

@@ -119,7 +119,9 @@ if (!function_exists('shortCode')) {
 
         $ci = & get_instance(); //get main CodeIgniter object		
         $ci->load->database(); //load databse library
-
+       
+        //$ci->db->where('status', 1);
+        
         if ($sort && $sortby) {
             $ci->db->order_by($sortby, $sort);
         }

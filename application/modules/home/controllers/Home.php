@@ -72,6 +72,7 @@ class Home extends MX_Controller {
     /***** Get Section    ********/
     /*****************************/
     public function getSection(){   
+        $this->db->where('status = 1');
         $this->db->order_by('serialid', 'asc');
         $query =  $this->db->get('section');
         return $query->result();
