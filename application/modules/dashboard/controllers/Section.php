@@ -86,6 +86,8 @@ class Section extends MX_Controller {
             }
 
             $data['title'] = $this->input->post('title');
+            $data['subtitle'] = $this->input->post('subtitle');
+            $data['status'] = $this->input->post('selectstatus');
             $data['content'] = $this->input->post('content');
             $data['link'] = $this->input->post('link');
             $data['btntext'] = $this->input->post('btntext');
@@ -205,6 +207,7 @@ class Section extends MX_Controller {
         } else {
 
             $data['title'] = $this->input->post('title');
+            $data['subtitle'] = $this->input->post('subtitle');
             if ($shortcode) {
                 $data['shortcode'] = $shortcode;
             } else {
@@ -217,6 +220,7 @@ class Section extends MX_Controller {
 
             $data['content'] = $this->input->post('content');
             $data['link'] = $this->input->post('link');
+            $data['status'] = $this->input->post('selectstatus');
             $data['btntext'] = $this->input->post('btntext');
             $data['cdate'] = date("j F Y");
 

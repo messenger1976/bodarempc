@@ -205,6 +205,7 @@ $lang['dash_gpanel_description'] = "Description";
 $lang['dash_gpanel_link'] = "Link";
 $lang['dash_gpanel_btn_text'] = "Button Text";
 $lang['dash_gpanel_shortcode'] = "Shortcode";
+$lang['dash_gpanel_status'] = "Status";
 $lang['dash_gpanel_selectshortcode'] = "Select Shortcode";
 $lang['dash_gpanel_removebackground'] = "Remove Previous Background";
 $lang['dash_gpanel_buttontext'] = "Button Text";

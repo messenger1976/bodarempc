@@ -40,12 +40,28 @@
                                         <span class="material-input"></span></div>
                                 </div>
                                 <div class="col-md-6">
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label"><?php echo 'Sub-title'; ?> (*)</label>
+                                        <input type="text" id="subtitle" name="subtitle" class="form-control">
+                                        <span class="material-input"></span></div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group label-floating is-empty">                                        
                                         <label class="control-label"><?php echo $this->lang->line('dash_gpanel_removebackground'); ?></label>                                        
                                         <select class="select form-control" id="removebackground" name="removebackground">
                                             <option value=""><?php echo $this->lang->line('dash_gpanel_removebackground'); ?></option>
                                             <option value="Delete">Yes</option>
                                             <option value="Keep" >No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating is-empty">                                        
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_status'); ?></label>                                        
+                                        <select class="select form-control" id="selectstatus" name="selectstatus" required>
+                                            <option value="1" >Enable</option>
+                                            <option value="0" >Disable</option>
+                                            
                                         </select>
                                     </div>
                                 </div>
@@ -75,6 +91,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                
                                 
                             </div>
 
@@ -125,7 +142,9 @@
                         <thead class="text-default">
                         <th style="width:5%" ><?php echo $this->lang->line('dash_gpanel_no'); ?></th>
                         <th style="width:20%"><?php echo $this->lang->line('dash_gpanel_title'); ?></th>
-                        <th style="width:50%"><?php echo $this->lang->line('dash_gpanel_content'); ?></th>
+                        <th style="width:20%"><?php echo $this->lang->line('dash_gpanel_subtitle'); ?></th>
+                        <th style="width:30%"><?php echo $this->lang->line('dash_gpanel_content'); ?></th>
+                        <th style="width:5%"><?php echo 'Status'; ?></th>
                         <th style="width:20%"><?php echo $this->lang->line('dash_gpanel_action'); ?></th>
                         </thead>
                         <tbody>
@@ -142,8 +161,10 @@
                             
                                 <tr data-id="<?php echo $row->sectionid; ?>">
                                     <td><?php echo $i; ?></td>                                        
-                                    <td><?php echo $row->title; ?></td>                                    
+                                    <td><?php echo $row->title; ?></td>  
+                                    <td><?php echo $row->subtitle; ?></td>                                  
                                     <td><?php echo word_limiter(strip_tags($row->content), 20); ?></td>
+                                    <td><?php echo $row->status==1?'Enabled':'Disabled'; ?></td>   
                                     <td>
                                         <a href="<?php echo base_url(); ?>dashboard/section/edit/<?php echo $row->sectionid; ?>" class="btn btn-warning"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>
                                         <a href="<?php echo base_url(); ?>dashboard/section/delete/<?php echo $row->sectionid; ?>" class="btn btn-danger delete"><i class="material-icons">clear</i> <?php echo $this->lang->line('dash_gpanel_delete'); ?></a>

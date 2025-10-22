@@ -45,12 +45,28 @@
                                         <span class="material-input"></span></div>
                                 </div>
                                 <div class="col-md-6">
+                                    <div class="form-group label-floating is-empty">
+                                        <label class="control-label"><?php echo 'Sub-title'; ?> (*)</label>
+                                        <input type="text" id="subtitle" name="subtitle" class="form-control" value="<?php echo $row->subtitle;?>">
+                                        <span class="material-input"></span></div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group label-floating is-empty">                                        
                                         <label class="control-label"><?php echo $this->lang->line('dash_gpanel_removebackground'); ?></label>                                        
                                         <select class="select form-control" id="removebackground" name="removebackground">
                                             <option value=""><?php echo $this->lang->line('dash_gpanel_removebackground'); ?></option>
                                             <option value="Delete">Yes</option>
                                             <option value="Keep" >No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating is-empty">                                        
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_status'); ?></label>                                        
+                                        <select class="select form-control" id="selectstatus" name="selectstatus" required>
+                                            <option value="1" <?php echo $row->status==1?'selected':'';?>>Enable</option>
+                                            <option value="0" <?php echo $row->status==0?'selected':'';?> >Disable</option>
+                                            
                                         </select>
                                     </div>
                                 </div>
