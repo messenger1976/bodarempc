@@ -486,7 +486,7 @@
     <?php } ?>-->
 
     <!-- Staff Start -->
-    <div class="container-xxl py-5">
+    <!--<div class="container-xxl py-5">
         <div class="container">
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
                 <p class="fw-medium text-uppercase text-primary mb-2">Our Staff</p>
@@ -564,7 +564,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <!-- Team End -->
 
 
