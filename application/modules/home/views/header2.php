@@ -103,30 +103,36 @@ if ($this->uri->uri_string() == '') {
                             $parentmenu = $query = $this->db->get('menu');
                             $parentmenu->result();
         
-                            foreach ($parentmenu->result() as $row) { ?>
+                            foreach ($parentmenu->result() as $row) { 
+                                $this->db->where('serialid', $row->menuid);
+                                $this->db->order_by('subserialid', "asc");
+                                $cmquery = $this->db->get('menu');
+                            ?>
+                             <?php 
+                                        if($cmquery->num_rows() > 0){ ?>
+                                        <div class="nav-item dropdown">
+                                        <a href="<?php echo $row->menupageid?base_url('home/page'). "/". $row->menupageid:$row->menulink;?>" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><?php echo $row->menuname;?></a>
+                                        <div class="dropdown-menu  bg-light m-0">
+                                            <?php foreach ($cmquery->result() as $cm) { ?>
+                                                <a href="<?php echo $cm->menulink;?>" class="dropdown-item"><?php echo $cm->menuname;?></a>
+                                            <?php }?>
+                                        </div>
+                                        </div>
+                                    <?php }else{ ?>
+
                                 <a class="nav-item nav-link" href="
                                 <?php 
                                     if($row->menupageid)
                                     {
-                                        echo base_url('home/page'). "/". $row->menupageid;}
-                                    else{
+                                        echo base_url('home/page'). "/". $row->menupageid;
+                                    }else{
                                         echo $row->menulink;
                                     } ?>"><?php echo $row->menuname;?></a>
-                                    <?php 
-                                    
-                                        $this->db->where('serialid', $row->menuid);
-                                        $this->db->order_by('subserialid', "asc");
-                                        $cmquery = $this->db->get('menu');
-                                        
-                                        if($cmquery->num_rows() > 0){ ?>
-                                        <ul class="dropdown-menu">
-                                            <?php foreach ($cmquery->result() as $cm) { ?>
-                                                <li><a href="<?php echo $cm->menulink;?>"><?php echo $cm->menuname;?></a></li>
-                                            <?php }?>
-                                        </ul>
-                                    <?php } ?>
+
                                    
-                            <?php } ?>  
+                                   
+                            <?php }
+                            } ?>  
 
 
                 <!--<a href="index.html" class="nav-item nav-link active">Home</a>
