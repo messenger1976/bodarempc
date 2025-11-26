@@ -584,11 +584,9 @@
                         </div>
                     </div>
                     <div class="testimonial-text text-center rounded p-4">
-                        <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna
-                            ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea
-                            clita.</p>
-                        <h5 class="mb-1">Client Name</h5>
-                        <span class="fst-italic">Profession</span>
+                        <p>BODARE has been a lifesaver for my family! Their motor vehicle loan helped me purchase a motorcycle for my business. The application process was smooth, and the interest rates are very reasonable. I also appreciate their time and savings deposit program which helps me save for my children's education. Highly recommended!</p>
+                        <h5 class="mb-1">Maria Santos</h5>
+                        <span class="fst-italic">Small Business Owner</span>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -599,11 +597,9 @@
                         </div>
                     </div>
                     <div class="testimonial-text text-center rounded p-4">
-                        <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna
-                            ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea
-                            clita.</p>
-                        <h5 class="mb-1">Client Name</h5>
-                        <span class="fst-italic">Profession</span>
+                        <p>I've been a member of BODARE for over 10 years now, and I can't say enough good things about their services. Their salary loan program has helped me during emergencies, and their health program provides great peace of mind. The staff is always friendly and professional. BODARE truly cares about their members' welfare.</p>
+                        <h5 class="mb-1">Juan Dela Cruz</h5>
+                        <span class="fst-italic">Government Employee</span>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -614,11 +610,9 @@
                         </div>
                     </div>
                     <div class="testimonial-text text-center rounded p-4">
-                        <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna
-                            ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea
-                            clita.</p>
-                        <h5 class="mb-1">Client Name</h5>
-                        <span class="fst-italic">Profession</span>
+                        <p>Staying at BODARE Coop Pension House was such a pleasant experience! The rooms are clean and comfortable, the staff is accommodating, and the location is perfect. The rates are very affordable compared to other accommodations in the area. I'll definitely stay there again on my next visit to Bohol. Great service from a great cooperative!</p>
+                        <h5 class="mb-1">Anna Garcia</h5>
+                        <span class="fst-italic">Tourist</span>
                     </div>
                 </div>
             </div>
@@ -646,33 +640,93 @@
         </iframe>
     </div>
 
-    <div class="animate-in cs_sections parallax" data-parallax="scroll" data-image-src="images/slide07.jpg" data-anim-type="bounce-in-up-large"  data-anim-delay="600"  >
-        <div class="content">
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
         <div class="container">
-            <h2>Contact With Us</h2>
-
-            <div class="separator-container">
-                <div class="separator line-separator">♦</div>
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <p class="fw-medium text-uppercase text-primary mb-2">Contact Us</p>
+                <h1 class="display-5 mb-5">Get In Touch With Us</h1>
             </div>
-            <div class="col-md-offset-2 col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <form id="contactform" class="form-horizontal" action="<?php echo base_url();?>home/home/contactWithUs" method="post" enctype="multipart/form-data">
-                    <div class="column one-second">
-                        <input placeholder="Your name" type="text" name="name" required>
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="d-flex flex-column h-100">
+                        <div class="mb-4">
+                            <h3 class="mb-3">Contact Information</h3>
+                            <p class="mb-4">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                        </div>
+                        <div class="row g-4 mb-4">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 btn-lg-square rounded-circle bg-primary">
+                                        <i class="fa fa-map-marker-alt text-white"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h5 class="mb-0">Our Location</h5>
+                                        <span><?php echo isset($basic->address) ? $basic->address : 'Bohol, Philippines'; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 btn-lg-square rounded-circle bg-primary">
+                                        <i class="fa fa-phone-alt text-white"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h5 class="mb-0">Call Us</h5>
+                                        <span><?php echo isset($basic->phone) ? $basic->phone : '038-422-8034'; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 btn-lg-square rounded-circle bg-primary">
+                                        <i class="fa fa-envelope-open text-white"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h5 class="mb-0">Email Us</h5>
+                                        <span><?php echo isset($basic->email) ? $basic->email : 'bodarempc@yahoo.com'; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="column one-second">
-                        <input placeholder="Your e-mail" type="email" name="email" required>
-                    </div>
-                    <div class="column one">
-                        <input placeholder="Subject" type="text" name="subject" id="subject" required>
-                    </div>
-                    <div class="column one">
-                        <textarea placeholder="Message" name="body" id="body" style="width:100%;" rows="10" required></textarea>
-                    </div>
-                    <div class="column one">
-                        <input type="submit" value="Send Now" id="submit" >
-                    </div>
-                </form>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <form id="contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                                    <label for="email">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
+                                    <label for="subject">Subject</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" placeholder="Leave a message here" id="body" name="body" style="height: 150px" required></textarea>
+                                    <label for="body">Message</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary py-3 px-5" type="submit" id="submit">
+                                    <i class="fa fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>	
         </div>
     </div>
+    <!-- Contact End -->

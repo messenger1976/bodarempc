@@ -1,27 +1,76 @@
-
-<div class="wrapper_section">
-    <!-- <div class="container"> -->
-    <div class="animate-in cs_sections" data-anim-type="bounce-in-up-large"  data-anim-delay="300"  >
-        <div class="container allgallery">
-            <p class="breadcrumb"><i class="fa fa-home"></i> <a href="<?php echo base_url();?>">Home</a> <i class="fa fa-angle-right"></i> <a href="<?php echo base_url();?>home/gallery">Gallery</a></p>
-            <h2>Gallery</h2>
-            <div class="separator-container">
-                <div class="separator line-separator">♦</div>
-            </div>
-            
-            <div class="col-md-offset-0 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div id="singlePageGallery" style="display:none;">
-                    <?php foreach ($gallery as $gallery) { ?>
-                        <img alt="<?php echo $gallery->filename; ?>" src="<?php echo base_url(); ?>images/website/gallery/small/<?php echo $gallery->filename; ?>"
-                        data-image="<?php echo base_url(); ?>images/website/gallery/large/<?php echo $gallery->filename; ?>"
-                        data-description="<?php echo $gallery->filename; ?>">
-                    <?php } ?>
-                </div>
-            </div>  
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <h1 class="display-3 text-white animated slideInRight">Gallery</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb animated slideInRight mb-0">
+                    <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+                </ol>
+            </nav>
         </div>
     </div>
-</div> 
+    <!-- Page Header End -->
 
+    <!-- Gallery Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <p class="fw-medium text-uppercase text-primary mb-2">Our Gallery</p>
+                <h1 class="display-5 mb-5">See What We Have Recently</h1>
+            </div>
+            <div class="row g-4">
+                <?php 
+                $delays = [0.1, 0.3, 0.5];
+                $index = 0;
+                foreach ($gallery as $item) { 
+                    $delay = $delays[$index % 3];
+                    $index++;
+                ?>
+                    <div class="col-md-6 col-lg-4 wow fadeInUp" data-wow-delay="<?php echo $delay; ?>s">
+                        <a class="project-item gallery-lightbox" href="<?php echo base_url(); ?>images/website/gallery/large/<?php echo $item->filename; ?>" data-title="<?php echo $item->title; ?>" data-gallery="gallery">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>images/website/gallery/small/<?php echo $item->filename; ?>" alt="<?php echo $item->title; ?>">
+                            <div class="project-title">
+                                <h5 class="text-primary mb-0"><?php echo $item->title; ?></h5>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+    <!-- Gallery End -->
 
+    <!-- Call to Action Start -->
+    <div class="container-fluid bg-primary bg-gradient my-5 py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 text-white mb-0">Want to See More?</h1>
+                    <p class="text-white mb-4">Visit us in person to experience the full range of our facilities and services. Our team is always happy to show you around and answer any questions.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="<?php echo base_url(); ?>home/home/contact" class="btn btn-light py-3 px-5">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Call to Action End -->
 
+    <!-- Lightbox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    
+    <!-- Lightbox JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const lightbox = GLightbox({
+                selector: '.gallery-lightbox',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: true
+            });
+        });
+    </script>
 

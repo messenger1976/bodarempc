@@ -34,6 +34,39 @@ class Home extends MX_Controller {
     }
     
     /*****************************/
+    /***** Products Page  ********/
+    /*****************************/
+    public function products(){        
+        $data['basicinfo'] = $this->getBasicInfo();
+        $data['purchase'] = $this->evnatoVerify();
+        $this->load->view('header2', $data);
+        $this->load->view('products/products', $data);
+        $this->load->view('footer2', $data);
+    }
+    
+    /*****************************/
+    /***** About Us Page  ********/
+    /*****************************/
+    public function about(){        
+        $data['basicinfo'] = $this->getBasicInfo();
+        $data['purchase'] = $this->evnatoVerify();
+        $this->load->view('header2', $data);
+        $this->load->view('about/about', $data);
+        $this->load->view('footer2', $data);
+    }
+    
+    /*****************************/
+    /***** Contact Us Page ********/
+    /*****************************/
+    public function contact(){        
+        $data['basicinfo'] = $this->getBasicInfo();
+        $data['purchase'] = $this->evnatoVerify();
+        $this->load->view('header2', $data);
+        $this->load->view('contact/contact', $data);
+        $this->load->view('footer2', $data);
+    }
+    
+    /*****************************/
     /***** Get Basic Info ********/
     /*****************************/
     public function getBasicInfo(){
