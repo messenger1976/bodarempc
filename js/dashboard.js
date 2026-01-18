@@ -93,8 +93,7 @@ $(document).ready(function () {
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
-                    //redirect('dashboard/website/slider', 'refresh');
-                    window.location.replace('/dashboard/website/slider');
+                    window.location.replace(baseurl + 'dashboard/website/slider');
                 } else if (data.notsuccess) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.notsuccess + "</p>");
                     $("div#warning_notifi").delay(100).show();
@@ -108,6 +107,12 @@ $(document).ready(function () {
                     $("div#warning_notifi").delay(100).show();
                     $("div#warning_notifi").delay(5000).hide("Slow");
                 }
+            },
+            error: function () {
+                $("div#loading").delay(100).fadeOut("slow");
+                $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : Request failed. The image may be too large or the server encountered an error.</p>");
+                $("div#warning_notifi").delay(100).show();
+                $("div#warning_notifi").delay(5000).hide("Slow");
             },
             cache: false,
             contentType: false,

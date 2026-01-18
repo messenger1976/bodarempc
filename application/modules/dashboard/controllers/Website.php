@@ -417,32 +417,17 @@ class Website extends MX_Controller {
 
 
 		$imagePath = realpath(APPPATH . '../images/website/slider');
-		$sliderimage = $_FILES['sliderimage']['tmp_name'];
 		
-		
-		if($sliderimage !== ""){
+		if(isset($_FILES['sliderimage']['tmp_name']) && $_FILES['sliderimage']['tmp_name'] !== ""){
 			$config['upload_path'] = $imagePath; 
 			$config['allowed_types'] = 'jpg|png|jpeg|gif';	
-//			$config['max_size']     = '200';
-//			$config['max_width'] = '500';
-//			$config['max_height'] = '500';		
-			//$config['maintain_ratio'] = FALSE;
-			//$config['width'] = 1920;
-			//$config['height'] = 1080;
-				
-			//$this->image_lib->clear();
-			//$this->image_lib->initialize($config);
-			//$this->image_lib->resize();			
-			//$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
 			
 			if (!empty($filename)){
-				@unlink($imagePath.'/'.$filename);
 				$filename_array = explode('.',$filename);
-				$config['file_name'] =$filename_array[0];
+				$config['file_name'] = $filename_array[0];
 			}else{
 				$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
 			}
-			//$config['file_name'] = date('Ymd_his_').rand(10,99).rand(10,99).rand(10,99);
 			$this->load->library('upload', $config);
 			if ($this->upload->do_upload('sliderimage')){	
 
@@ -455,12 +440,21 @@ class Website extends MX_Controller {
 				
 				$this->image_lib->clear();
 				$this->image_lib->initialize($config1);
-				$this->image_lib->resize();		
+				if ( ! $this->image_lib->resize()){
+					@unlink($uploaded_data['full_path']);
+					$errors['slider_error'] = 'Failed to create resized image.';
+					echo json_encode($errors);
+					return;
+				}
+				if (!empty($filename) && $uploaded_data['file_name'] !== $filename){
+					@unlink($imagePath.'/'.$filename);
+					@unlink($imagePath.'/resize/'.$filename);
+				}
 				$data['filename']= $uploaded_data['file_name'];									
 			}else{				
-				$data['filename']= '';	
 				$errors['slider_error'] = strip_tags($this->upload->display_errors());
 				echo json_encode($errors);
+				return;
 			}
 		}
 		$this->db->where('sliderid', $sliderid); 
