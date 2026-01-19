@@ -875,6 +875,47 @@ $siteinfo = $siteinfo->result();
                                 </ul>
                             </li>
                         <?php } ?>
+
+                        <?php if ($user_position == "Admin") { ?> 
+                            <li class="<?php
+                            if ($ccontroller == "board_of_directors") {
+                                echo "active";
+                            }
+                            ?> nav_parent">		
+                                <a>
+                                    <i class="material-icons">person</i>
+                                    <p><?php echo $this->lang->line('dash_menu_board_of_directors'); ?> <i class="right material-icons ">add_circle</i>	</p>					
+                                </a>
+
+                                <ul class="<?php
+                                if ($ccontroller == "board_of_directors") {
+                                    echo "active";
+                                }
+                                ?> nav_child">
+                                    <li class="<?php
+                                    if ($cmethod == "addboard_of_directors") {
+                                        echo "active";
+                                    }
+                                    ?>">
+                                        <a href="<?php echo base_url('dashboard/board_of_directors/addboard_of_directors'); ?>">
+                                            <i class="material-icons">person</i>
+                                            <p><?php echo $this->lang->line('dash_menu_addboard_of_directors'); ?></p>
+                                        </a>
+                                    </li>
+
+                                    <li class="<?php
+                                    if ($cmethod == "allBoard_of_directors") {
+                                        echo "active";
+                                    }
+                                    ?>">
+                                        <a href="<?php echo base_url('dashboard/board_of_directors/allBoard_of_directors'); ?>">
+                                            <i class="material-icons">people</i>
+                                            <p><?php echo $this->lang->line('dash_menu_allboard_of_directors'); ?></p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
                         <?php if ($user_position == "Admin") { ?>                         
                             <li class="<?php
                             if ($ccontroller == "clan") {

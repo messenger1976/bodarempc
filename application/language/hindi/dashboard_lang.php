@@ -387,6 +387,10 @@ $lang['dash_menu_pastors'] = "पादरियों";
 	$lang['dash_menu_addpastors'] = "पादरी जोड़ें";
 	$lang['dash_menu_allpastors'] = "सभी पादरी";
 
+$lang['dash_menu_board_of_directors'] = "निदेशकों का बोर्ड";
+	$lang['dash_menu_addboard_of_directors'] = "बोर्ड के सदस्य को जोड़ें";
+	$lang['dash_menu_allboard_of_directors'] = "सभी बोर्ड सदस्य";
+
 $lang['dash_menu_financial'] = "वित्तीय";
 	$lang['dash_menu_finfunds'] = "फंड";
 	$lang['dash_menu_findonations'] = "दान";

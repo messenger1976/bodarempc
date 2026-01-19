@@ -392,7 +392,9 @@ $lang['dash_menu_members'] = "সাধারণ সদস্য";
 $lang['dash_menu_pastors'] = "পালক";
 	$lang['dash_menu_addpastors'] = "পালক যোগ করুন";
 	$lang['dash_menu_allpastors'] = "সকল পালক";
-
+$lang['dash_menu_board_of_directors'] = "পরিচালনা বোর্ড";
+	$lang['dash_menu_addboard_of_directors'] = "বোর্ড সদস্য যোগ করুন";
+	$lang['dash_menu_allboard_of_directors'] = "সকল বোর্ড সদস্য";
 $lang['dash_menu_financial'] = "আর্থিক";
 	$lang['dash_menu_finfunds'] = "অর্থ";
 	$lang['dash_menu_findonations'] = "অনুদান";

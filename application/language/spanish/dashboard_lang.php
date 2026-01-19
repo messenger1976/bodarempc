@@ -407,6 +407,10 @@ $lang['dash_menu_pastors'] = "Pastors";
 	$lang['dash_menu_addpastors'] = "Añadir Pastor";
 	$lang['dash_menu_allpastors'] = "Todos los pastores";
 
+$lang['dash_menu_board_of_directors'] = "Junta Directiva";
+	$lang['dash_menu_addboard_of_directors'] = "Añadir miembro de la junta";
+	$lang['dash_menu_allboard_of_directors'] = "Todos los miembros de la junta";
+
 $lang['dash_menu_financial'] = "Financiero";
 	$lang['dash_menu_finfunds'] = "Fondos";
 	$lang['dash_menu_findonations'] = "Donaciones";

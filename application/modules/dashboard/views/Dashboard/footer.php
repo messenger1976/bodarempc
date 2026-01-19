@@ -53,7 +53,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Custom JS Files Added -->
-<script src="<?php echo base_url(); ?>js/dashboard.js"></script>
+<script src="<?php echo base_url(); ?>js/dashboard.js?v=<?php echo time(); ?>"></script>
 
 <!-- Include Trumbowyg Editor JS -->
 <script src="<?php echo base_url(); ?>trumbowyg/dist/trumbowyg.min.js"></script>

@@ -855,6 +855,118 @@ $(document).ready(function () {
     });
 });
 
+/********************************/
+/******* Adding Board_of_directors ********/
+/********************************/
+$(document).ready(function () {
+    $("#addBoard_of_directorsSubmit").click(function (event) {
+        event.preventDefault();
+
+        var form = $('form#addBoard_of_directorsForm');
+        var formData = new FormData($(form)[0]);
+        var url = baseurl + 'dashboard/board_of_directors/addnewboard_of_directors';
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: formData,
+            async: true,
+            beforeSend: function () {
+                $("div#loading").delay(100).fadeIn();
+            },
+            success: function (data) {
+                $("div#loading").delay(100).fadeOut("slow");
+                if (data.success) {
+                    $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
+                    $("div#success_notifi").delay(100).show();
+                    $("div#success_notifi").delay(5000).hide("Slow");
+                    setTimeout(function() {
+                        window.location.href = baseurl + 'dashboard/board_of_directors/allBoard_of_directors';
+                    }, 2000);
+                } else if (data.errorFormValidation) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.emailerror) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.emailerror + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.notsuccess) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.notsuccess + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.profileimage_error) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.profileimage_error + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+});
+
+/************************************/
+/****** Update Board_of_directors *****/
+/************************************/
+$(document).ready(function () {
+    $("#updateBoard_of_directorsSubmit").click(function (event) {
+        event.preventDefault();
+
+        var form = $('form#updateBoard_of_directorsForm');
+        var formData = new FormData($(form)[0]);
+        var url = baseurl + 'dashboard/board_of_directors/update';
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: formData,
+            async: true,
+            beforeSend: function () {
+                $("div#loading").delay(100).fadeIn();
+            },
+            success: function (data) {
+                $("div#loading").delay(100).fadeOut("slow");
+                if (data.success) {
+                    $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
+                    $("div#success_notifi").delay(100).show();
+                    $("div#success_notifi").delay(5000).hide("Slow");
+                    setTimeout(function() {
+                        window.location.href = baseurl + 'dashboard/board_of_directors/allBoard_of_directors';
+                    }, 2000);
+                } else if (data.errorFormValidation) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.emailerror) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.emailerror + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.notsuccess) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.notsuccess + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.profileimage_error) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.profileimage_error + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                } else if (data.emailexist) {
+                    $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.emailexist + "</p>");
+                    $("div#warning_notifi").delay(100).show();
+                    $("div#warning_notifi").delay(5000).hide("Slow");
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+});
+
 
 
 /********************************/
