@@ -1,5 +1,13 @@
     <!-- Page Header Start -->
-    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <?php
+        // Get the Gallery menu image
+        $this->db->where('menuname', 'Gallery');
+        $menu = $this->db->get('menu')->row();
+        $bgImage = (isset($menu) && !empty($menu->menuimage)) 
+            ? base_url() . 'images/website/menu/' . $menu->menuimage 
+            : base_url() . 'themes/bodare/website/assets/img/default-bg.jpg';
+    ?>
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(to right, rgb(2, 36, 91) 0%, rgba(2, 36, 91, 0) 100%), url(<?php echo $bgImage; ?>) center center no-repeat">
         <div class="container py-5">
             <h1 class="display-3 text-white animated slideInRight">Gallery</h1>
             <nav aria-label="breadcrumb">

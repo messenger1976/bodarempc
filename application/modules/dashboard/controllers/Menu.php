@@ -68,6 +68,28 @@ class Menu extends MX_Controller {
             $data['menulink'] = $this->input->post('menulink');
             $data['cdate'] = date("j F Y");
 
+            /*             * ****** Uploading Menu Images ****** */
+            /*             * ************************************** */
+            $imagePath = realpath(APPPATH . '../images/website/menu');
+            $menuimage = $_FILES['menuimage']['tmp_name'];
+            if ($menuimage !== "") {
+                $config['upload_path'] = $imagePath;
+                $config['allowed_types'] = 'jpg|png|jpeg|gif';
+                $config['file_name'] = date('Ymd_his_') . rand(10, 99) . rand(10, 99) . rand(10, 99);
+                $this->load->library('upload', $config);
+                if ($this->upload->do_upload('menuimage')) {
+                    $uploaded_data = $this->upload->data();
+                    $data['menuimage'] = $uploaded_data['file_name'];
+                } else {
+                    $data['menuimage'] = '';
+                    $errors['menuimage_error'] = strip_tags($this->upload->display_errors());
+                    echo json_encode($errors);
+                    return;
+                }
+            } else {
+                $data['menuimage'] = '';
+            }
+
             $inserted = $this->db->insert('menu', $data);
             if ($inserted == TRUE) {
                 $succcess['success'] = "Successfully Inserted";
@@ -116,6 +138,35 @@ class Menu extends MX_Controller {
             $data['menulink'] = $this->input->post('menulink');
             $data['cdate'] = date("j F Y");
 
+            /*             * ****** Uploading Menu Images ****** */
+            /*             * ************************************** */
+            $imagePath = realpath(APPPATH . '../images/website/menu');
+            $menuimage = $_FILES['menuimage']['tmp_name'];
+            if ($menuimage !== "") {
+                $config['upload_path'] = $imagePath;
+                $config['allowed_types'] = 'jpg|png|jpeg|gif';
+                $config['file_name'] = date('Ymd_his_') . rand(10, 99) . rand(10, 99) . rand(10, 99);
+                $this->load->library('upload', $config);
+                if ($this->upload->do_upload('menuimage')) {
+                    $uploaded_data = $this->upload->data();
+                    
+                    // Delete old image if exists
+                    $old_menu = $this->db->get_where('menu', array('menuid' => $menuid))->result();
+                    if (!empty($old_menu) && !empty($old_menu[0]->menuimage)) {
+                        $old_image_path = $imagePath . '/' . $old_menu[0]->menuimage;
+                        if (file_exists($old_image_path)) {
+                            unlink($old_image_path);
+                        }
+                    }
+                    
+                    $data['menuimage'] = $uploaded_data['file_name'];
+                } else {
+                    $errors['menuimage_error'] = strip_tags($this->upload->display_errors());
+                    echo json_encode($errors);
+                    return;
+                }
+            }
+
             $this->db->where('menuid', $menuid);
             $updated = $this->db->update('menu', $data);
             if ($updated == TRUE) {
@@ -133,6 +184,21 @@ class Menu extends MX_Controller {
     /*     * ************************************* */
 
     public function delete($menuid) {
+        // Get menu details to check for image
+        $this->db->where('menuid', $menuid);
+        $menu = $this->db->get('menu')->row();
+        
+        // Delete image file if it exists
+        if ($menu && !empty($menu->menuimage)) {
+            $imagePath = realpath(APPPATH . '../images/website/menu');
+            $filePath = $imagePath . '/' . $menu->menuimage;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+                log_message('info', 'Deleted menu image: ' . $menu->menuimage);
+            }
+        }
+        
+        // Delete menu record from database
         $this->db->where('menuid', $menuid);
         $deleted = $this->db->delete('menu');
         if ($deleted == TRUE) {

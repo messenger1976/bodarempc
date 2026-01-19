@@ -17,6 +17,7 @@
                             <th style="width: 1%"><?php echo $this->lang->line('dash_gpanel_no'); ?></th>
                             <th style="width: 5%"><?php echo $this->lang->line('dash_gpanel_menutitle'); ?></th>
                             <th style="width: 10%"><?php echo $this->lang->line('dash_gpanel_menulink'); ?></th>
+                            <th style="width: 8%">Image</th>
                             <th style="width: 4%"><?php echo $this->lang->line('dash_gpanel_action'); ?></th>
                             </thead>
                             <tbody>
@@ -37,6 +38,13 @@
                                             $menulink = $row->menulink;
                                             echo character_limiter($menulink, 5);
                                             ?></td>
+                                        <td>
+                                            <?php if (!empty($row->menuimage)): ?>
+                                                <img src="<?php echo base_url(); ?>images/website/menu/<?php echo $row->menuimage; ?>" alt="Menu Image" style="max-width: 60px; max-height: 60px; border: 1px solid #ddd; padding: 2px;">
+                                            <?php else: ?>
+                                                <span style="color: #999;">No Image</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <a href="<?php echo base_url(); ?>dashboard/menu/edit/<?php echo $row->menuid; ?>" class="btn btn-warning"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>
                                             <a href="<?php echo base_url(); ?>dashboard/menu/delete/<?php echo $row->menuid; ?>" class="btn btn-danger delete"><i class="material-icons">clear</i> <?php echo $this->lang->line('dash_gpanel_delete'); ?></a>
@@ -62,6 +70,13 @@
                                                 echo character_limiter($menulink, 5);
                                                 ?></td>
                                             <td>
+                                                <?php if (!empty($cm->menuimage)): ?>
+                                                    <img src="<?php echo base_url(); ?>images/website/menu/<?php echo $cm->menuimage; ?>" alt="Menu Image" style="max-width: 60px; max-height: 60px; border: 1px solid #ddd; padding: 2px;">
+                                                <?php else: ?>
+                                                    <span style="color: #999;">No Image</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
                                                 <a href="<?php echo base_url(); ?>dashboard/menu/edit/<?php echo $cm->menuid; ?>" class="btn btn-warning"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>
                                                 <a href="<?php echo base_url(); ?>dashboard/menu/delete/<?php echo $cm->menuid; ?>" class="btn btn-danger delete"><i class="material-icons">clear</i> <?php echo $this->lang->line('dash_gpanel_delete'); ?></a>
                                             </td>
@@ -85,8 +100,8 @@
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="addMenuModalLabel"><i class="material-icons">list</i> <?php echo $this->lang->line('dash_addmenu_panel_title'); ?></h4>
                             </div>
-                            <div class="modal-body" style="min-height: 380px;">
-                                <form id="menuAddForm" class="form-horizontal" action="<?php echo base_url(); ?>dashboard/menu/add" method="post">
+                            <div class="modal-body" style="min-height: 480px;">
+                                <form id="menuAddForm" class="form-horizontal" enctype="multipart/form-data">
                                     <p class="category">(*) <?php echo $this->lang->line('dash_gpanel_mfar'); ?></p>
                                     <div class="form-group label-floating">
                                         <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menuname'); ?> (*)</label>
@@ -114,6 +129,15 @@
                                         <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menulink'); ?></label>
                                         <input id="menulink" name="menulink" type="text" class="form-control">
                                     </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Menu Image</label>
+                                        <div id="menuAddDropzone" class="dropzone" style="border: 2px dashed #ccc; padding: 20px; border-radius: 4px; background-color: #fafafa; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+                                            <div class="dz-message" style="text-align: center;">
+                                                <div><i class="material-icons" style="font-size: 48px; display: block; margin-bottom: 10px;">image</i></div>
+                                                <span>Drop image here or click to upload</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -128,3 +152,145 @@
 
 
         </div>
+    </div>
+</div>
+
+<!-- Dropzone.js CSS from CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+
+<!-- Dropzone.js JS from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+<script type="text/javascript">
+    // Wait for jQuery and Dropzone to be available
+    if (typeof Dropzone === 'undefined') {
+        console.error('Dropzone.js not loaded properly');
+    } else {
+        console.log('Dropzone.js loaded successfully');
+    }
+
+    // Configure Dropzone
+    Dropzone.autoDiscover = false;
+    
+    var menuAddDropzone;
+
+    // Initialize Add Menu Dropzone when modal opens
+    $(document).on('shown.bs.modal', '#addMenuModal', function() {
+        // Check if dropzone already initialized
+        if (menuAddDropzone) {
+            return;
+        }
+        
+        // Check if element exists
+        if (!$('#menuAddDropzone').length) {
+            console.error('Dropzone element #menuAddDropzone not found');
+            return;
+        }
+        
+        menuAddDropzone = new Dropzone("#menuAddDropzone", {
+            url: "<?php echo base_url(); ?>dashboard/menu/add",
+            maxFilesize: 5, // 5 MB
+            acceptedFiles: ".jpg,.jpeg,.png,.gif",
+            uploadMultiple: false,
+            maxFiles: 1,
+            paramName: "menuimage",
+            autoQueue: false,
+            autoDiscover: false,
+            addRemoveLinks: true,
+            dictDefaultMessage: "Drop image here or click to upload",
+            init: function() {
+                var dz = this;
+                
+                console.log('Add Menu Dropzone initialized');
+                
+                this.on("addedfile", function(file) {
+                    console.log('File added:', file.name);
+                    if (dz.files.length > 1) {
+                        dz.removeFile(dz.files[0]);
+                    }
+                });
+
+                this.on("error", function(file, errorMessage) {
+                    console.error('Dropzone error:', errorMessage);
+                    alert('Image Upload Error: ' + errorMessage);
+                });
+
+                this.on("removedfile", function(file) {
+                    console.log('File removed:', file.name);
+                });
+            }
+        });
+    });
+
+    // Reset dropzone when modal closes
+    $(document).on('hidden.bs.modal', '#addMenuModal', function() {
+        if (menuAddDropzone) {
+            menuAddDropzone.destroy();
+            menuAddDropzone = null;
+        }
+    });
+
+    // Handle Add Menu Submit
+    $(document).on('click', '#menuAddSubmit', function(e) {
+        e.preventDefault();
+        
+        if (!menuAddDropzone) {
+            alert('Dropzone not initialized');
+            return false;
+        }
+        
+        console.log('Add Menu submit clicked');
+        console.log('Dropzone files:', menuAddDropzone.files.length);
+        
+        var menuname = $('#menuname').val().trim();
+        
+        if (!menuname) {
+            alert('Menu Name is required');
+            return false;
+        }
+        
+        var formData = new FormData();
+        formData.append('menuname', $('#menuname').val());
+        formData.append('menuparent', $('#menuparent').val());
+        formData.append('menupage', $('#menupage').val());
+        formData.append('menulink', $('#menulink').val());
+        
+        // Append file if selected
+        if (menuAddDropzone.files.length > 0) {
+            var file = menuAddDropzone.files[0];
+            console.log('Appending file:', file.name, 'Size:', file.size);
+            formData.append('menuimage', file);
+        } else {
+            console.log('No file selected');
+        }
+        
+        $.ajax({
+            url: "<?php echo base_url(); ?>dashboard/menu/add",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response) {
+                console.log('Server response:', response);
+                if (response.success) {
+                    alert(response.success);
+                    location.reload();
+                } else if (response.errorFormValidation) {
+                    alert('Validation Error: ' + response.errorFormValidation);
+                } else if (response.menuimage_error) {
+                    alert('Image Upload Error: ' + response.menuimage_error);
+                } else if (response.notsuccess) {
+                    alert(response.notsuccess);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                console.error('Response:', xhr.responseText);
+                alert('Error: ' + error + '\n\nCheck console for details');
+            }
+        });
+        
+        return false;
+    });
+</script>
