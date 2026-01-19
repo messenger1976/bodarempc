@@ -39,7 +39,9 @@ class Menu extends MX_Controller {
     /*     * ************************** */
 
     public function menu() {
+        $data['parentmenu'] = $this->parentmenus();
         $data['menus'] = $this->allmenus();
+        $data['pages'] = $this->allpages();
         $this->load->view('Dashboard/header');
         $this->load->view('Menu/menu', $data);
         $this->load->view('Dashboard/footer');

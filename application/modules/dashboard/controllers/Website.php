@@ -353,6 +353,15 @@ class Website extends MX_Controller {
 	
 		$this->load->library('upload');		
 		$data = array();
+		$subtitle = $this->input->post('subtitle');
+		$content = $this->input->post('content');
+		$button_text = $this->input->post('button_text');
+		$button_link = $this->input->post('button_link');
+		if (!empty($subtitle)) { $data['subtitle'] = $subtitle; }
+		if (!empty($content)) { $data['content'] = $content; }
+		if (!empty($button_text)) { $data['button_text'] = $button_text; }
+		if (!empty($button_link)) { $data['button_link'] = $button_link; }
+
 		$files = $_FILES;
 		$count = count($_FILES['userfile']['name']);
 		
@@ -363,7 +372,6 @@ class Website extends MX_Controller {
 			$_FILES['userfile']['tmp_name']= $files['userfile']['tmp_name'][$i];
 			$_FILES['userfile']['error']= $files['userfile']['error'][$i];
 			$_FILES['userfile']['size']= $files['userfile']['size'][$i];  
-			//$sliderimage = $_FILES['userfile']['tmp_name'];
 			$imagePath = realpath(APPPATH . '../images/website/slider');			
 			$config['upload_path'] = $imagePath;
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';

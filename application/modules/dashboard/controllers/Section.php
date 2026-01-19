@@ -26,14 +26,8 @@ class Section extends MX_Controller {
     /*     * ************************** */
 
     public function index() {
-
-        $baselink = "section/index";
-        $database = "section";
-        $perpage = 10;
-        $start = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $limit = iniPagination($baselink, $database, $perpage);
-        $data['section'] = $this->get_pagi_data($limit, $start);
-        $data['pagination'] = $this->pagination->create_links();
+        $this->db->order_by('serialid', 'asc');
+        $data['section'] = $this->db->get('section')->result();
 
         $this->load->view('Dashboard/header');
         $this->load->view('Section/addsection', $data);

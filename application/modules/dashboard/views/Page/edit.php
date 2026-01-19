@@ -32,6 +32,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <a href="<?php echo base_url(); ?>dashboard/page" class="btn btn-default pull-right" style="margin-right: 8px;">Cancel</a>
                             <button id="webPageUpdateSubmit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_updatepage_panel_title'); ?></button>
                             <div class="clearfix"></div>
                             <?php endforeach; ?>

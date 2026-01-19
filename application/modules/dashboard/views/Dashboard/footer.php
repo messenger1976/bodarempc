@@ -49,6 +49,9 @@
 <!--  Jquery Sortable Plugin    -->
 <script src="<?php echo base_url(); ?>js/jquery-sortable.js"></script>
 
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- Custom JS Files Added -->
 <script src="<?php echo base_url(); ?>js/dashboard.js"></script>
 

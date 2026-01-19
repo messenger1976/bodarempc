@@ -2,58 +2,9 @@
     <div class="container-fluid">
         <div class="row">	                    
             <div class="col-md-offset-1 col-md-10">
-                <div class="card">
-                    <div class="card-header" data-background-color="purple">
-                        <h4 class="title"><i class="material-icons">format_align_center</i> <?php echo $this->lang->line('dash_addmenu_panel_title'); ?></h4>
-                        <p class="category">(*) <?php echo $this->lang->line('dash_gpanel_mfar'); ?></p>
-                    </div>
-                    <div class="card-content">                       
-                        <form id="menuAddForm" class="form-horizontal" action="<?php echo base_url(); ?>dashboard/menu/add" method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group label-floating">
-                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menuname'); ?> (*)</label>
-                                        <input id="menuname" name="menuname" type="text" class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">                                    
-                                    <div class="form-group label-floating">
-                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menuparent'); ?></label>
-                                        <select class="select form-control" id="menuparent" name="menuparent">
-                                            <option value=""><?php echo $this->lang->line('dash_gpanel_smenuparent'); ?></option>
-                                            <?php foreach ($menus as $row): ?>
-                                                <option value="<?php echo $row->menuid; ?>"><?php echo $row->menuname; ?></option>
-                                            <?php endforeach; ?>   
-                                        </select>
-                                    </div> 
-                                </div>
-                                <div class="col-md-12">                                    
-                                    <div class="form-group label-floating">
-                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menupage'); ?> Menu Page</label>
-                                        <select class="select form-control" id="menupage" name="menupage">
-                                            <option value=""><?php echo $this->lang->line('dash_gpanel_smenupage'); ?></option>
-                                            <?php foreach ($pages as $row): ?>
-                                                <option value="<?php echo $row->pageslug; ?>"><?php echo $row->pagetitle; ?></option>
-                                            <?php endforeach; ?>                                                
-                                        </select>
-                                    </div> 
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group label-floating">
-                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menulink'); ?></label>
-                                        <input id="menulink" name="menulink" type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <button id="menuAddSubmit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_addmenu_panel_title'); ?></button>
-                                <div class="clearfix"></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-
                 <div class="card gusers">
                     <div class="card-header" data-background-color="purple">
+                        <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addMenuModal" style="margin-top: -2px;"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_addmenu_panel_title'); ?></a>
                         <h4 class="title"><i class="material-icons">format_align_center</i> <?php echo $this->lang->line('dash_allmenus_panel_title'); ?> ( <?php
                             $this->db->from('menu');
                             echo $this->db->count_all_results();
@@ -124,6 +75,53 @@
                         </table>
                     </div>
 
+                </div>
+
+                <!-- Add Menu Modal -->
+                <div class="modal fade" id="addMenuModal" tabindex="-1" role="dialog" aria-labelledby="addMenuModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="addMenuModalLabel"><i class="material-icons">list</i> <?php echo $this->lang->line('dash_addmenu_panel_title'); ?></h4>
+                            </div>
+                            <div class="modal-body" style="min-height: 380px;">
+                                <form id="menuAddForm" class="form-horizontal" action="<?php echo base_url(); ?>dashboard/menu/add" method="post">
+                                    <p class="category">(*) <?php echo $this->lang->line('dash_gpanel_mfar'); ?></p>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menuname'); ?> (*)</label>
+                                        <input id="menuname" name="menuname" type="text" class="form-control" required>
+                                    </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menuparent'); ?></label>
+                                        <select class="select form-control" id="menuparent" name="menuparent">
+                                            <option value=""><?php echo $this->lang->line('dash_gpanel_smenuparent'); ?></option>
+                                            <?php foreach ($menus as $row): ?>
+                                                <option value="<?php echo $row->menuid; ?>"><?php echo $row->menuname; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menupage'); ?> Menu Page</label>
+                                        <select class="select form-control" id="menupage" name="menupage">
+                                            <option value=""><?php echo $this->lang->line('dash_gpanel_smenupage'); ?></option>
+                                            <?php foreach ($pages as $row): ?>
+                                                <option value="<?php echo $row->pageslug; ?>"><?php echo $row->pagetitle; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label"><?php echo $this->lang->line('dash_gpanel_menulink'); ?></label>
+                                        <input id="menulink" name="menulink" type="text" class="form-control">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button id="menuAddSubmit" type="button" class="btn btn-primary"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_addmenu_panel_title'); ?></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <?php //echo $pagination;       ?>
             </div>

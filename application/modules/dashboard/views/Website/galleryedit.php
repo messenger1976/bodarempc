@@ -53,6 +53,7 @@
                                 
                             </div>
 
+                            <a href="<?php echo base_url(); ?>dashboard/website/gallery" class="btn btn-default pull-right" style="margin-right: 8px;">Cancel</a>
                             <button id="website_gallery_submit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_gpanel_update_now'); ?></button>                            
                         </form>
                         <?php endforeach; ?>

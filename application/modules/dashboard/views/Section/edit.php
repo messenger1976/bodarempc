@@ -123,6 +123,7 @@
                                 </div>
                             </div>
 
+                            <a href="<?php echo base_url(); ?>dashboard/section" class="btn btn-default pull-right" style="margin-right: 8px;">Cancel</a>
                             <button id="updateSectionSubmit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">person_add</i> <?php echo $this->lang->line('dash_updatesection_panel_title'); ?></button>
                             <div class="clearfix"></div>
                         </form>

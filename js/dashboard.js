@@ -5,10 +5,22 @@ $("div#warning_notifi").delay(5000).hide("Slow");
 
 $(document).ready(function () {
 
-    $(".delete").click(function () {
-        if (!confirm("Do you want to delete it?")) {
-            return false;
-        }
+    $(".delete").click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
     });
 
     $("#selectshortcode").on('change', function () {
@@ -17,6 +29,35 @@ $(document).ready(function () {
         console.log(selectshortcode);
     });
 
+    // Reset Add Slider form when modal is closed
+    $('#addSliderModal').on('hidden.bs.modal', function () {
+        var f = document.getElementById('website_slider_add_form');
+        if (f) f.reset();
+    });
+
+    // Reset Add Menu form when modal is closed
+    $('#addMenuModal').on('hidden.bs.modal', function () {
+        var f = document.getElementById('menuAddForm');
+        if (f) f.reset();
+    });
+
+    // Reset Add Gallery form when modal is closed
+    $('#addGalleryModal').on('hidden.bs.modal', function () {
+        var f = document.getElementById('website_gallery_add_form');
+        if (f) f.reset();
+    });
+
+    // Reset Add Section form when modal is closed
+    $('#addSectionModal').on('hidden.bs.modal', function () {
+        var f = document.getElementById('addSectionForm');
+        if (f) f.reset();
+    });
+
+    // Reset Add Page form when modal is closed
+    $('#addPageModal').on('hidden.bs.modal', function () {
+        var f = document.getElementById('webPageAddForm');
+        if (f) f.reset();
+    });
 
 });
 
@@ -146,7 +187,7 @@ $(document).ready(function () {
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
                     //redirect('dashboard/website/slider', 'refresh');
-                    window.location.replace('/dashboard/website/gallery');
+                    window.location.replace(baseurl + 'dashboard/website/gallery');
                 } else if (data.notsuccess) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.notsuccess + "</p>");
                     $("div#warning_notifi").delay(100).show();
@@ -1804,9 +1845,11 @@ $(document).ready(function () {
             success: function (data) {
                 $("div#loading").delay(100).fadeOut("slow");
                 if (data.success) {
+                    $('#addPageModal').modal('hide');
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
+                    window.location.replace(baseurl + 'dashboard/page');
                 } else if (data.errorFormValidation) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
                     $("div#warning_notifi").delay(100).show();
@@ -1858,6 +1901,7 @@ $(document).ready(function () {
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
+                    window.location.replace(baseurl + 'dashboard/page');
                 } else if (data.errorFormValidation) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
                     $("div#warning_notifi").delay(100).show();
@@ -1911,9 +1955,11 @@ $(document).ready(function () {
             success: function (data) {
                 $("div#loading").delay(100).fadeOut("slow");
                 if (data.success) {
+                    $('#addMenuModal').modal('hide');
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
+                    window.location.replace(baseurl + 'dashboard/menu');
                 } else if (data.errorFormValidation) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
                     $("div#warning_notifi").delay(100).show();
@@ -2121,9 +2167,11 @@ $(document).ready(function () {
             success: function (data) {
                 $("div#loading").delay(100).fadeOut("slow");
                 if (data.success) {
+                    $('#addSectionModal').modal('hide');
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
+                    window.location.replace(baseurl + 'dashboard/section');
                 } else if (data.errorFormValidation) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
                     $("div#warning_notifi").delay(100).show();
@@ -2175,6 +2223,7 @@ $(document).ready(function () {
                     $("div#success_notifi").html("<p><i class='material-icons'>check_box</i> Success : " + data.success + "</p>");
                     $("div#success_notifi").delay(100).show();
                     $("div#success_notifi").delay(5000).hide("Slow");
+                    window.location.replace(baseurl + 'dashboard/section');
                 } else if (data.errorFormValidation) {
                     $("div#warning_notifi").html("<p><i class='material-icons'>error</i> Error : " + data.errorFormValidation + "</p>");
                     $("div#warning_notifi").delay(100).show();

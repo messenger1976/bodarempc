@@ -697,3 +697,54 @@ $('.dtStudent').DataTable({
 
     ]
 });
+
+/* Slider table with pagination */
+if ($('.sorted_slider_table').length) {
+    $('.sorted_slider_table').DataTable({
+        paging: true,
+        pageLength: 10,
+        lengthChange: true,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        searching: true,
+        info: true,
+        ordering: false
+    });
+}
+
+/* Gallery table with pagination */
+if ($('.sorted_gallery_table').length) {
+    $('.sorted_gallery_table').DataTable({
+        paging: true,
+        pageLength: 10,
+        lengthChange: true,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        searching: true,
+        info: true,
+        ordering: false
+    });
+}
+
+/* Section table with pagination */
+if ($('.sorted_table').length) {
+    $('.sorted_table').DataTable({
+        paging: true,
+        pageLength: 10,
+        lengthChange: true,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        searching: true,
+        info: true,
+        ordering: false
+    });
+}
+
+/* Page table with pagination */
+if ($('.sorted_page_table').length) {
+    $('.sorted_page_table').DataTable({
+        paging: true,
+        pageLength: 10,
+        lengthChange: true,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        searching: true,
+        info: true
+    });
+}

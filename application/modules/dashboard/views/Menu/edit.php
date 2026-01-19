@@ -46,6 +46,7 @@
                                             <input id="menulink" name="menulink" type="text" class="form-control" value="<?php echo $row->menulink; ?>">
                                         </div>
                                     </div>
+                                    <a href="<?php echo base_url(); ?>dashboard/menu" class="btn btn-default pull-right" style="margin-right: 8px;">Cancel</a>
                                     <button id="menuUpdateSubmit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_updatemenu_panel_title'); ?></button>
                                     <div class="clearfix"></div>
                                 </div>
