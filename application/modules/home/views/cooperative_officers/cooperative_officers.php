@@ -108,13 +108,6 @@
                 </div>
                 <?php endforeach; ?>
             </div>
-
-            <!-- Pagination -->
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <?php echo $pagination; ?>
-                </div>
-            </div>
         </div>
     </div>
     <!-- Cooperative Officers End -->
