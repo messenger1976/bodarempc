@@ -150,7 +150,9 @@ if (!function_exists('shortCode')) {
                     $peopleid = $row->pastorid;
                 } elseif ($table == "committee") {
                     $peopleid = $row->committeeid;
-                } elseif ($table == "member") {
+                } elseif ($table == "cooperative_officers") {
+                    $peopleid = $row->cooperative_officersid;
+                }elseif ($table == "member") {
                     $peopleid = $row->memberid;
                 } elseif ($table == "chorus") {
                     $peopleid = $row->chorusid;

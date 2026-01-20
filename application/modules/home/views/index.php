@@ -412,7 +412,54 @@
     </div>
     <!-- Project End -->
 
-<?php foreach ($section as $section) { ?>
+<!-- Cooperative Officers Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.5s">
+                    <p class="fw-medium text-uppercase text-primary mb-2">Our Leadership</p>
+                    <h1 class="display-5 mb-4">Cooperative Officers</h1>
+                    <p class="mb-4">The Cooperative Officers of the Bohol DAR Employee & Community Multi-Purpose Cooperative is composed of dedicated leaders committed to the organization's mission and the welfare of its members.</p>
+                </div>
+            </div>
+
+            <!-- Cooperative Officers Grouped by Department -->
+            <?php foreach ($cooperative_officers as $department => $members): ?>
+                <div class="mt-5">
+                    <h3 class="text-primary mb-4 border-bottom pb-3">
+                        <i class="bi bi-diagram-3"></i> <?php echo ucwords($department); ?>
+                    </h3>
+                    <div class="row g-4">
+                        <?php foreach ($members as $member): ?>
+                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="card">
+                                    <img class="card-img-top" src="<?php echo base_url(); ?>images/<?php if($member->profileimage){ echo "cooperative_officers/profile/" . $member->profileimage; }else{ echo "avatar.png"; } ?>" alt="<?php echo $member->fname . " " . $member->lname; ?>">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title text-primary"><?php echo $member->position; ?></h5>
+                                        <h4 class="card-title mb-3"><?php echo $member->fname . " " . $member->lname; ?></h4>
+                                        <p class="card-text"><?php echo word_limiter(strip_tags($member->speech), 20); ?></p>
+                                        <a href="<?php echo base_url(); ?>home/cooperative_officers/view/<?php echo $member->cooperative_officersid; ?>" class="btn btn-primary btn-sm">View Profile</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+
+            <!-- Pagination -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <?php echo $pagination; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cooperative Officers End -->
+    
+<?php 
+if(0) {
+foreach ($section as $section) { ?>
 
 
 <!-- Staff Start -->
@@ -483,7 +530,7 @@
                 </div>
             </div>
         </div>
-    <?php } ?>-->
+    <?php } }?>-->
 
     <!-- Staff Start -->
     <!--<div class="container-xxl py-5">
@@ -573,7 +620,7 @@
         <div class="container">
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
                 <p class="fw-medium text-uppercase text-primary mb-2">Testimonial</p>
-                <h1 class="display-5 mb-5">What Our Clients Say!</h1>
+                <h1 class="display-5 mb-5">What Our Members Say!</h1>
             </div>
             <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
                 <div class="testimonial-item text-center">
@@ -584,9 +631,9 @@
                         </div>
                     </div>
                     <div class="testimonial-text text-center rounded p-4">
-                        <p>BODARE has been a lifesaver for my family! Their motor vehicle loan helped me purchase a motorcycle for my business. The application process was smooth, and the interest rates are very reasonable. I also appreciate their time and savings deposit program which helps me save for my children's education. Highly recommended!</p>
+                        <p>BODARE has truly transformed my financial life! As a DAR employee, I availed their salary loan program during a family emergency and the process was quick and hassle-free. The competitive interest rates and flexible payment terms made it easy for me to manage. I'm also impressed with their insurance and benefits programs. BODARE is more than just a cooperative—they're a family that cares!</p>
                         <h5 class="mb-1">Maria Santos</h5>
-                        <span class="fst-italic">Small Business Owner</span>
+                        <span class="fst-italic">DAR Employee & Member</span>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -597,9 +644,9 @@
                         </div>
                     </div>
                     <div class="testimonial-text text-center rounded p-4">
-                        <p>I've been a member of BODARE for over 10 years now, and I can't say enough good things about their services. Their salary loan program has helped me during emergencies, and their health program provides great peace of mind. The staff is always friendly and professional. BODARE truly cares about their members' welfare.</p>
+                        <p>I've been with BODARE for 12 years and watched them grow into an outstanding cooperative. Their time and savings program helped me build my emergency fund, and their housing loan allowed me to build my dream home. The transparency in their operations and the integrity of their leadership gives me confidence. BODARE truly prioritizes member welfare above all else. Highly recommended!</p>
                         <h5 class="mb-1">Juan Dela Cruz</h5>
-                        <span class="fst-italic">Government Employee</span>
+                        <span class="fst-italic">Member, 12 Years</span>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
@@ -610,9 +657,9 @@
                         </div>
                     </div>
                     <div class="testimonial-text text-center rounded p-4">
-                        <p>Staying at BODARE Coop Pension House was such a pleasant experience! The rooms are clean and comfortable, the staff is accommodating, and the location is perfect. The rates are very affordable compared to other accommodations in the area. I'll definitely stay there again on my next visit to Bohol. Great service from a great cooperative!</p>
+                        <p>What I love most about BODARE is their commitment to the community and their members' growth. Their educational programs and seminars have helped me improve my skills and financial literacy. The cooperative officers are always approachable and genuinely interested in helping members achieve their goals. BODARE isn't just about loans—it's about building a stronger, more prosperous community together. I'm proud to be a member!</p>
                         <h5 class="mb-1">Anna Garcia</h5>
-                        <span class="fst-italic">Tourist</span>
+                        <span class="fst-italic">Community Member & Member</span>
                     </div>
                 </div>
             </div>
@@ -636,7 +683,7 @@
             width="100%"
             height="700"
             frameborder="0" style="border:0; pointer-events: none;"
-            src="https://www.google.com/maps/embed/v1/place?key=<?php echo getBasic()->mapapi;?>&q=<?php echo $basic->map; ?>" allowfullscreen>
+            src="https://www.google.com/maps/embed/v1/place?key=<?php echo $basicinfo[0]->mapapi;?>&q=<?php echo $basicinfo[0]->map; ?>" allowfullscreen>
         </iframe>
     </div>
 

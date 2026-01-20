@@ -1,5 +1,27 @@
 <div class="content allcooperative_officers">
     <div class="container-fluid">
+        <!-- Department Filter Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <form method="GET" class="form-inline">
+                    <div class="form-group mr-3">
+                        <label for="departmentFilter" class="mr-2"><strong>Filter by Department:</strong></label>
+                        <select id="departmentFilter" name="department" class="form-control" onchange="this.form.submit();">
+                            <option value="">All Departments</option>
+                            <?php 
+                            if(isset($departments) && !empty($departments)) {
+                                foreach($departments as $dept) {
+                                    $selected = ($department_filter == $dept->departmentname) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($dept->departmentname) . '" ' . $selected . '>' . htmlspecialchars($dept->departmentname) . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
         <?php
         $num = 1;
         $breaker = 3; //How many cols inside a row?

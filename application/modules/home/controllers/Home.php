@@ -27,6 +27,8 @@ class Home extends MX_Controller {
         $data['notice'] = $this->getNoticeInfo();
         $data['gallery'] = $this->getGalleryInfo();
         $data['slider'] = $this->getSlider();
+        $data['cooperative_officers'] = $this->getCooperativeOfficers();
+        $data['pagination'] = '';
         $data['purchase'] = $this->evnatoVerify();
         $this->load->view('header2', $data);
         $this->load->view('index', $data);
@@ -171,8 +173,26 @@ class Home extends MX_Controller {
         $query = $this->db->get('slider');
         return $query->result();
     }
-    
-    
+        /*****************************/
+    /***** Get Cooperative Officers Info ********/
+    /*****************************/
+    public function getCooperativeOfficers(){ 
+        $query = $this->db->get('cooperative_officers');
+        $officers = $query->result();
+        
+        // Group officers by department
+        $grouped = array();
+        foreach($officers as $officer) {
+            $dept = !empty($officer->department) ? $officer->department : 'Unassigned';
+            if(!isset($grouped[$dept])) {
+                $grouped[$dept] = array();
+            }
+            $grouped[$dept][] = $officer;
+        }
+        
+        return $grouped;
+    }
+        
     /*****************************/
     /***** Get Gallery Info ********/
     /*****************************/

@@ -164,8 +164,21 @@ class Cooperative_officers extends MX_Controller {
         $database = "cooperative_officers";
         $perpage = 9;
         $start = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $limit = iniPagination($baselink, $database, $perpage);
-        $data['cooperative_officers'] = $this->get_pagi_data($limit, $start);
+        
+        // Get selected department filter
+        $department_filter = $this->input->get('department');
+        
+        // Store filter in data for view
+        $data['department_filter'] = $department_filter;
+        $data['departments'] = $this->getDepartment();
+        
+        // Calculate total rows based on filter
+        $total_rows = $this->get_filtered_count($department_filter);
+        
+        // Setup pagination with filtered count
+        $limit = $this->setup_pagination($baselink, $total_rows, $perpage);
+        
+        $data['cooperative_officers'] = $this->get_pagi_data($limit, $start, $department_filter);
         $data['pagination'] = $this->pagination->create_links();
         $this->load->view('Dashboard/header');
         $this->load->view('Cooperative_officers/allcooperative_officers', $data);
@@ -321,8 +334,14 @@ class Cooperative_officers extends MX_Controller {
     /*     * *** Getting Cooperative_officers By Pagination **** */
     /*     * ************************** */
 
-    public function get_pagi_data($limit, $start) {
+    public function get_pagi_data($limit, $start, $department_filter = null) {
         $this->db->order_by("cooperative_officersid", "desc");
+        
+        // Apply department filter if selected
+        if (!empty($department_filter)) {
+            $this->db->where('department', $department_filter);
+        }
+        
         $this->db->limit($limit, $start);
         $query = $this->db->get('cooperative_officers');
         return $query->result();
@@ -366,6 +385,59 @@ class Cooperative_officers extends MX_Controller {
     public function getDepartment() {
         $queryDepartment = $this->db->get('department');
         return $queryDepartment->result();
+    }
+
+    /*     * ************************************* */
+    /*     * ******* Get Filtered Count ************ */
+    /*     * ************************************* */
+
+    public function get_filtered_count($department_filter = null) {
+        if (!empty($department_filter)) {
+            $this->db->where('department', $department_filter);
+        }
+        return $this->db->count_all_results('cooperative_officers');
+    }
+
+    /*     * ************************************* */
+    /*     * ******* Setup Pagination ************ */
+    /*     * ************************************* */
+
+    public function setup_pagination($baselink, $total_rows, $perpage) {
+        $baseurl = base_url() . "dashboard/" . $baselink;
+        
+        // Add department filter to pagination links if present
+        $department_filter = $this->input->get('department');
+        if (!empty($department_filter)) {
+            $baseurl .= "?department=" . urlencode($department_filter);
+        }
+        
+        $config["base_url"] = $baseurl;
+        $config['total_rows'] = $total_rows;
+        $limit = $config['per_page'] = $perpage;
+        $config["uri_segment"] = 4;
+        $choice = $config["total_rows"] / $config["per_page"];
+        $config["num_links"] = floor($choice);
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+        $config['first_link'] = false;
+        $config['last_link'] = false;
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['prev_link'] = $this->lang->line('dash_gpanel_pre');
+        $config['prev_tag_open'] = '<li class="prev">';
+        $config['prev_tag_close'] = '</li>';
+        $config['next_link'] = $this->lang->line('dash_gpanel_next');
+        $config['next_tag_open'] = '<li>';
+        $config['next_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="active"><a href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        
+        $this->pagination->initialize($config);
+        return $limit;
     }
 
 }
