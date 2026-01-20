@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Call Us</h5>
-                                        <span><?php echo getBasic()->phone; ?></span>
+                                        <span><?php echo getBasic()->contact; ?></span>
                                     </div>
                                 </div>
                             </div>
