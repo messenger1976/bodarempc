@@ -36,7 +36,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="person-view">
                         <div class="row">
-                            <img src="<?php echo base_url(); ?>images/cooperative_officers/profile/<?php echo $cooperative_officers->profileimage; ?>" alt="Cooperative Officer - <?php echo $cooperative_officers->fname . " " . $cooperative_officers->lname; ?>"></img>
+                            <img src="<?php echo base_url(); ?>images/<?php if($cooperative_officers->profileimage){ echo "cooperative_officers/profile/" . $cooperative_officers->profileimage; }else{ echo "avatar.png"; } ?>" alt="Cooperative Officer - <?php echo $cooperative_officers->fname . " " . $cooperative_officers->lname; ?>" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; margin: 0 auto; display: block;"></img>
                             <h5><?php echo $cooperative_officers->position; ?></h5>
                             <h4><a   href="<?php echo base_url(); ?>home/cooperative_officers/view/<?php echo $cooperative_officers->cooperative_officersid; ?>"><?php echo $cooperative_officers->fname . " " . $cooperative_officers->lname; ?></a></h4>
                             <p><?php echo strip_tags($cooperative_officers->speech); ?></p>
