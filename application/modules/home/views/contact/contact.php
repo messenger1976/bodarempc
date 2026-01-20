@@ -25,7 +25,7 @@
             width="100%"
             height="700"
             frameborder="0" style="border:0; pointer-events: none;"
-            src="https://www.google.com/maps/embed/v1/place?key=<?php echo getBasic()->mapapi;?>&q=<?php echo $basic->map; ?>" allowfullscreen>
+            src="https://www.google.com/maps/embed/v1/place?key=<?php echo getBasic()->mapapi;?>&q=<?php echo getBasic()->map; ?>" allowfullscreen>
         </iframe>
     </div>
 
@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Our Location</h5>
-                                        <span><?php echo isset($basic->address) ? $basic->address : 'Bohol, Philippines'; ?></span>
+                                        <span><?php echo getBasic()->address; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Call Us</h5>
-                                        <span><?php echo isset($basic->phone) ? $basic->phone : '038-422-8034'; ?></span>
+                                        <span><?php echo getBasic()->phone; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Email Us</h5>
-                                        <span><?php echo isset($basic->email) ? $basic->email : 'bodarempc@yahoo.com'; ?></span>
+                                        <span><?php echo getBasic()->email; ?></span>
                                     </div>
                                 </div>
                             </div>
