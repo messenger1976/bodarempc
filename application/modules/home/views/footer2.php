@@ -19,23 +19,30 @@ if ($this->uri->uri_string() == '') {
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0946-241-7633</p>
                     <p class="mb-2"><i class="fa fa-envelope me-3"></i>bodarempc@yahoo.com</p>
                     <div class="d-flex pt-3">
-                        <a class="btn btn-square btn-primary rounded-circle me-2" href=""><i
+                        <a class="btn btn-square btn-primary rounded-circle me-2" href="<?php echo getBasic()->twitter;?>" target="_blank"><i
                                 class="fab fa-twitter"></i></a>
-                        <a class="btn btn-square btn-primary rounded-circle me-2" href=""><i
+                        <a class="btn btn-square btn-primary rounded-circle me-2" href="<?php echo getBasic()->facebook;?>" target="_blank"><i
                                 class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-square btn-primary rounded-circle me-2" href=""><i
+                        <a class="btn btn-square btn-primary rounded-circle me-2" href="<?php echo getBasic()->youtube;?>" target="_blank"><i
                                 class="fab fa-youtube"></i></a>
-                        <a class="btn btn-square btn-primary rounded-circle me-2" href=""><i
+                        <a class="btn btn-square btn-primary rounded-circle me-2" href="<?php echo getBasic()->linkedin;?>" target="_blank"><i
                                 class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Quick Links</h5>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
-                    <a class="btn btn-link" href="">Our Services</a>
-                    <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">Support</a>
+                    <?php 
+                    $this->db->where('menuparentid', " ");
+                    $this->db->where('active', "1");
+                    $this->db->order_by('serialid', "asc");
+                    $menuQuery = $this->db->get('menu');
+                    
+                    foreach ($menuQuery->result() as $menu) { 
+                        $menuUrl = $menu->menupageid ? base_url('home/page') . "/" . $menu->menupageid : $menu->menulink;
+                    ?>
+                        <a class="btn btn-link" href="<?php echo $menuUrl; ?>"><?php echo $menu->menuname; ?></a>
+                    <?php } ?>
+                    <a class="btn btn-link" href="<?php echo base_url('home/contact'); ?>">Contact Us</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Business Hours</h5>
