@@ -1,4 +1,27 @@
 
+<!-- Page Header Start -->
+    <?php
+        // Get the Cooperative Officers menu image
+        $this->db->where('menuname', 'Cooperative Officers');
+        $menu = $this->db->get('menu')->row();
+        $bgImage = (isset($menu) && !empty($menu->menuimage)) 
+            ? base_url() . 'images/website/menu/' . $menu->menuimage 
+            : base_url() . 'themes/bodare/website/assets/img/members-training.jpg';
+    ?>
+    <div class="container-fluid py-5 mb-5 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(to right, rgb(2, 36, 91) 0%, rgba(2, 36, 91, 0) 100%), url(<?php echo $bgImage; ?>) center center no-repeat">
+        <div class="container py-5">
+            <h1 class="display-3 text-white animated slideInRight">Cooperative Officer Profile</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb animated slideInRight mb-0">
+                    <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>">Home</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>home/cooperative_officers">Cooperative Officers</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Officer Profile</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
 <div class="wrapper_section">
     <!-- <div class="container"> -->
     <div class="animate-in cs_sections" data-anim-type="bounce-in-up-large"  data-anim-delay="300"  >
