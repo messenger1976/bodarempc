@@ -118,7 +118,7 @@
                                         <select id="department" name="department" class="select form-control">
                                             <option value="">Select Department</option>
                                             <?php foreach ($department as $department){ ?>
-                                                <option value="<?php echo $department->departmentname; ?>"><?php echo $department->departmentname; ?></option>
+                                                <option value="<?php echo $department->departmentname; ?>" <?php if($row->department == $department->departmentname){ echo 'selected'; } ?>><?php echo $department->departmentname; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
