@@ -17,6 +17,7 @@
                     <div class="content">
                         <h6 class="category text-gray"><?php echo $row->position; ?></h6>
                         <h4 class="card-title"><?php echo $row->fname . " " . $row->lname; ?></h4>
+                        <h6 class="category text-muted"><?php echo $row->department ? $row->department : 'N/A'; ?></h6>
                         <p class="card-content speech"><?php echo word_limiter(strip_tags($row->speech), 20); ?></p>
 
                         <div class="col-md-12 action-btn">
