@@ -395,6 +395,10 @@ $lang['dash_menu_board_of_directors'] = "Conselho de Administração";
 	$lang['dash_menu_addboard_of_directors'] = "Adicionar membro do conselho";
 	$lang['dash_menu_allboard_of_directors'] = "Todos os membros do conselho";
 
+$lang['dash_menu_cooperative_officers'] = "Oficiais da Cooperativa";
+	$lang['dash_menu_addcooperative_officers'] = "Adicionar Oficial";
+	$lang['dash_menu_allcooperative_officers'] = "Todos os Oficiais";
+
 $lang['dash_menu_financial'] = "Financeiro";
 	$lang['dash_menu_finfunds'] = "Fundos";
 	$lang['dash_menu_findonations'] = "Doações";

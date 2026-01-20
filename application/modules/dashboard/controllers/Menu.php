@@ -61,6 +61,7 @@ class Menu extends MX_Controller {
         if ($this->form_validation->run() == FALSE) {
             $errors['errorFormValidation'] = validation_errors();
             echo json_encode($errors);
+            exit;
         } else {
             $data['menuname'] = $this->input->post('menuname');
             $data['menuparentid'] = $this->input->post('menuparent');
@@ -71,7 +72,7 @@ class Menu extends MX_Controller {
             /*             * ****** Uploading Menu Images ****** */
             /*             * ************************************** */
             $imagePath = realpath(APPPATH . '../images/website/menu');
-            $menuimage = $_FILES['menuimage']['tmp_name'];
+            $menuimage = (isset($_FILES['menuimage']['tmp_name'])) ? $_FILES['menuimage']['tmp_name'] : '';
             if ($menuimage !== "") {
                 $config['upload_path'] = $imagePath;
                 $config['allowed_types'] = 'jpg|png|jpeg|gif';
@@ -84,7 +85,7 @@ class Menu extends MX_Controller {
                     $data['menuimage'] = '';
                     $errors['menuimage_error'] = strip_tags($this->upload->display_errors());
                     echo json_encode($errors);
-                    return;
+                    exit;
                 }
             } else {
                 $data['menuimage'] = '';
@@ -92,11 +93,13 @@ class Menu extends MX_Controller {
 
             $inserted = $this->db->insert('menu', $data);
             if ($inserted == TRUE) {
-                $succcess['success'] = "Successfully Inserted";
-                echo json_encode($succcess);
+                $success['success'] = "Successfully Inserted";
+                echo json_encode($success);
+                exit;
             } else {
                 $errors['notsuccess'] = 'Opps! Something Wrong';
                 echo json_encode($errors);
+                exit;
             }
         }
     }
@@ -130,6 +133,7 @@ class Menu extends MX_Controller {
         if ($this->form_validation->run() == FALSE) {
             $errors['errorFormValidation'] = validation_errors();
             echo json_encode($errors);
+            exit;
         } else {
 
             $data['menuname'] = $this->input->post('menuname');
@@ -141,7 +145,7 @@ class Menu extends MX_Controller {
             /*             * ****** Uploading Menu Images ****** */
             /*             * ************************************** */
             $imagePath = realpath(APPPATH . '../images/website/menu');
-            $menuimage = $_FILES['menuimage']['tmp_name'];
+            $menuimage = (isset($_FILES['menuimage']['tmp_name'])) ? $_FILES['menuimage']['tmp_name'] : '';
             if ($menuimage !== "") {
                 $config['upload_path'] = $imagePath;
                 $config['allowed_types'] = 'jpg|png|jpeg|gif';
@@ -163,18 +167,20 @@ class Menu extends MX_Controller {
                 } else {
                     $errors['menuimage_error'] = strip_tags($this->upload->display_errors());
                     echo json_encode($errors);
-                    return;
+                    exit;
                 }
             }
 
             $this->db->where('menuid', $menuid);
             $updated = $this->db->update('menu', $data);
             if ($updated == TRUE) {
-                $succcess['success'] = "Successfully Updted";
-                echo json_encode($succcess);
+                $success['success'] = "Successfully Updted";
+                echo json_encode($success);
+                exit;
             } else {
                 $errors['notsuccess'] = 'Opps! Something Wrong';
                 echo json_encode($errors);
+                exit;
             }
         }
     }

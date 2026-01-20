@@ -391,6 +391,10 @@ $lang['dash_menu_board_of_directors'] = "निदेशकों का बो�
 	$lang['dash_menu_addboard_of_directors'] = "बोर्ड के सदस्य को जोड़ें";
 	$lang['dash_menu_allboard_of_directors'] = "सभी बोर्ड सदस्य";
 
+$lang['dash_menu_cooperative_officers'] = "सहकारी अधिकारी";
+	$lang['dash_menu_addcooperative_officers'] = "अधिकारी जोड़ें";
+	$lang['dash_menu_allcooperative_officers'] = "सभी अधिकारी";
+
 $lang['dash_menu_financial'] = "वित्तीय";
 	$lang['dash_menu_finfunds'] = "फंड";
 	$lang['dash_menu_findonations'] = "दान";

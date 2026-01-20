@@ -916,6 +916,47 @@ $siteinfo = $siteinfo->result();
                                 </ul>
                             </li>
                         <?php } ?>
+
+                        <?php if ($user_position == "Admin") { ?> 
+                            <li class="<?php
+                            if ($ccontroller == "cooperative_officers") {
+                                echo "active";
+                            }
+                            ?> nav_parent">		
+                                <a>
+                                    <i class="material-icons">person</i>
+                                    <p><?php echo $this->lang->line('dash_menu_cooperative_officers'); ?> <i class="right material-icons ">add_circle</i>	</p>					
+                                </a>
+
+                                <ul class="<?php
+                                if ($ccontroller == "cooperative_officers") {
+                                    echo "active";
+                                }
+                                ?> nav_child">
+                                    <li class="<?php
+                                    if ($cmethod == "addcooperative_officers") {
+                                        echo "active";
+                                    }
+                                    ?>">
+                                        <a href="<?php echo base_url('dashboard/cooperative_officers/addcooperative_officers'); ?>">
+                                            <i class="material-icons">person</i>
+                                            <p><?php echo $this->lang->line('dash_menu_addcooperative_officers'); ?></p>
+                                        </a>
+                                    </li>
+
+                                    <li class="<?php
+                                    if ($cmethod == "allCooperative_officers") {
+                                        echo "active";
+                                    }
+                                    ?>">
+                                        <a href="<?php echo base_url('dashboard/cooperative_officers/allCooperative_officers'); ?>">
+                                            <i class="material-icons">people</i>
+                                            <p><?php echo $this->lang->line('dash_menu_allcooperative_officers'); ?></p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
                         <?php if ($user_position == "Admin") { ?>                         
                             <li class="<?php
                             if ($ccontroller == "clan") {

@@ -411,6 +411,10 @@ $lang['dash_menu_board_of_directors'] = "Junta Directiva";
 	$lang['dash_menu_addboard_of_directors'] = "Añadir miembro de la junta";
 	$lang['dash_menu_allboard_of_directors'] = "Todos los miembros de la junta";
 
+$lang['dash_menu_cooperative_officers'] = "Oficiales Cooperativos";
+	$lang['dash_menu_addcooperative_officers'] = "Añadir Oficial";
+	$lang['dash_menu_allcooperative_officers'] = "Todos los Oficiales";
+
 $lang['dash_menu_financial'] = "Financiero";
 	$lang['dash_menu_finfunds'] = "Fondos";
 	$lang['dash_menu_findonations'] = "Donaciones";

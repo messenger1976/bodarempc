@@ -414,6 +414,10 @@ $lang['dash_menu_board_of_directors'] = "Board of Directors";
 	$lang['dash_menu_addboard_of_directors'] = "Add Board Member";
 	$lang['dash_menu_allboard_of_directors'] = "All Board Members";
 
+$lang['dash_menu_cooperative_officers'] = "Cooperative Officers";
+	$lang['dash_menu_addcooperative_officers'] = "Add Officer";
+	$lang['dash_menu_allcooperative_officers'] = "All Officers";
+
 $lang['dash_menu_financial'] = "Finance";
 	$lang['dash_menu_finfunds'] = "Funds/Tithes/Offerings";
 	$lang['dash_menu_findonations'] = "Donations";
