@@ -26,11 +26,7 @@
     <!-- <div class="container"> -->
     <div class="animate-in cs_sections" data-anim-type="bounce-in-up-large"  data-anim-delay="300"  >
         <div class="container">
-            <p class="breadcrumb"><i class="fa fa-home"></i> <a href="<?php echo base_url(); ?>">Home</a> <i class="fa fa-angle-right"></i> <a href="<?php echo base_url(); ?>home/cooperative_officers">Cooperative Officers</a></p>
             <h2>Cooperative Officer</h2>
-            <div class="separator-container">
-                <div class="separator line-separator">♦</div>
-            </div>
 
             <?php foreach ($cooperative_officers as $cooperative_officers) { ?>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -39,6 +35,7 @@
                             <img src="<?php echo base_url(); ?>images/<?php if($cooperative_officers->profileimage){ echo "cooperative_officers/profile/" . $cooperative_officers->profileimage; }else{ echo "avatar.png"; } ?>" alt="Cooperative Officer - <?php echo $cooperative_officers->fname . " " . $cooperative_officers->lname; ?>" style="width: 250px; height: 250px; border-radius: 50%; object-fit: cover; margin: 0 auto; display: block;"></img>
                             <h5><?php echo $cooperative_officers->position; ?></h5>
                             <h4><a   href="<?php echo base_url(); ?>home/cooperative_officers/view/<?php echo $cooperative_officers->cooperative_officersid; ?>"><?php echo $cooperative_officers->fname . " " . $cooperative_officers->lname; ?></a></h4>
+                            <h6 style="color: #666; margin-bottom: 15px;"><?php echo $cooperative_officers->department ? $cooperative_officers->department : 'N/A'; ?></h6>
                             <p><?php echo strip_tags($cooperative_officers->speech); ?></p>
                         </div>
                         
@@ -49,14 +46,14 @@
                         <div class="row">
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="social_media">
-                                    <a class="socialbtn facebook" target="_blank" href="<?php echo $cooperative_officers->facebook; ?>"><i class="fa fa-facebook"></i></a>
-                                    <a class="socialbtn twitter" target="_blank" href="<?php echo $cooperative_officers->twitter; ?>"><i class="fa fa-twitter"></i></a>
-                                    <a class="socialbtn linkedin" target="_blank" href="<?php echo $cooperative_officers->linkedin; ?>"><i class="fa fa-linkedin"></i></a>
-                                    <a class="socialbtn googleplus" target="_blank" href="<?php echo $cooperative_officers->googleplus; ?>"><i class="fa fa-google"></i></a>
-                                    <a class="socialbtn youtube" target="_blank" href="<?php echo $cooperative_officers->youtube; ?>"><i class="fa fa-youtube"></i></a>
-                                    <a class="socialbtn pinterest" target="_blank" href="<?php echo $cooperative_officers->pinterest; ?>"><i class="fa fa-pinterest"></i></a>
-                                    <a class="socialbtn instagram" target="_blank" href="<?php echo $cooperative_officers->instagram; ?>"><i class="fa fa-instagram"></i></a>
-                                    <a class="socialbtn whatsapp" target="_blank" href="tel:<?php echo $cooperative_officers->whatsapp; ?>"><i class="fa fa-whatsapp"></i></a>
+                                    <?php if(!empty($cooperative_officers->facebook)): ?><a class="socialbtn facebook" target="_blank" href="<?php echo $cooperative_officers->facebook; ?>"><i class="fa fa-facebook"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->twitter)): ?><a class="socialbtn twitter" target="_blank" href="<?php echo $cooperative_officers->twitter; ?>"><i class="fa fa-twitter"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->linkedin)): ?><a class="socialbtn linkedin" target="_blank" href="<?php echo $cooperative_officers->linkedin; ?>"><i class="fa fa-linkedin"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->googleplus)): ?><a class="socialbtn googleplus" target="_blank" href="<?php echo $cooperative_officers->googleplus; ?>"><i class="fa fa-google"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->youtube)): ?><a class="socialbtn youtube" target="_blank" href="<?php echo $cooperative_officers->youtube; ?>"><i class="fa fa-youtube"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->pinterest)): ?><a class="socialbtn pinterest" target="_blank" href="<?php echo $cooperative_officers->pinterest; ?>"><i class="fa fa-pinterest"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->instagram)): ?><a class="socialbtn instagram" target="_blank" href="<?php echo $cooperative_officers->instagram; ?>"><i class="fa fa-instagram"></i></a><?php endif; ?>
+                                    <?php if(!empty($cooperative_officers->whatsapp)): ?><a class="socialbtn whatsapp" target="_blank" href="tel:<?php echo $cooperative_officers->whatsapp; ?>"><i class="fa fa-whatsapp"></i></a><?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -73,11 +70,6 @@
                                             <td><i class="fa fa-phone"></i></td>
                                             <td>Phone</td>
                                             <td><?php echo $cooperative_officers->phone; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fa fa-heart"></i></td>
-                                            <td>Blood Group</td>
-                                            <td><?php echo $cooperative_officers->blood; ?></td>
                                         </tr>
                                         <tr>
                                             <td><i class="fa fa-envelope"></i></td>
