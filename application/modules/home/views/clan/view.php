@@ -123,8 +123,7 @@
                                     width="100%"
                                     height="280"
                                     frameborder="0" style="border:0; pointer-events: none;"
-                                    src="https://www.google.com/maps/embed/v1/place?key=<?php echo getBasic()->mapapi;?>
-                                    &q=<?php echo $clan->city . ", " . $clan->country; ?>">
+                                    src="https://www.google.com/maps?q=<?php echo rawurlencode($clan->city . ', ' . $clan->country); ?>&output=embed">
                                 </iframe>
                             </div> 
                         </div>

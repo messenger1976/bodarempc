@@ -205,12 +205,16 @@
     </div>
 
 
+    <?php
+        $legacyHomeMapQuery = trim((string) $basic->map);
+        $legacyHomeMapEmbedUrl = 'https://www.google.com/maps?q=' . rawurlencode($legacyHomeMapQuery) . '&output=embed';
+    ?>
     <div class="animate-in cs_sections map" data-anim-type="bounce-in-up-large"  data-anim-delay="600"  >
         <iframe
             width="100%"
             height="700"
             frameborder="0" style="border:0; pointer-events: none;"
-            src="https://www.google.com/maps/embed/v1/place?key=<?php echo getBasic()->mapapi;?>&q=<?php echo $basic->map; ?>" allowfullscreen>
+            src="<?php echo $legacyHomeMapEmbedUrl; ?>" allowfullscreen>
         </iframe>
     </div>
 

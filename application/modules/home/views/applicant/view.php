@@ -110,7 +110,7 @@
                                     width="100%"
                                     height="280"
                                     frameborder="0" style="border:0; pointer-events: none;"
-                                    src="https://www.google.com/maps/embed/v1/place?key=<?php echo getBasic()->mapapi;?>&q=<?php echo $applicant->city . ", " . $applicant->country; ?>">
+                                    src="https://www.google.com/maps?q=<?php echo rawurlencode($applicant->city . ', ' . $applicant->country); ?>&output=embed">
                                 </iframe>
                             </div> 
                         </div>
