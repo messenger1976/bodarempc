@@ -21,8 +21,38 @@
     <!-- Page Header End -->
 
     <!-- Gallery Start -->
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5 gallery-page">
         <div class="container">
+            <style>
+                .gallery-page .project-item {
+                    overflow: hidden;
+                    height: 100%;
+                    background: var(--dark);
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .gallery-page .project-item img {
+                    width: 100%;
+                    height: 260px;
+                    object-fit: cover;
+                    display: block;
+                    margin-top: 0 !important;
+                }
+
+                .gallery-page .project-item .project-title {
+                    position: relative !important;
+                    bottom: auto !important;
+                    left: auto;
+                    height: 56px;
+                    margin-top: 0;
+                    width: 100%;
+                }
+
+                .gallery-page .project-item .project-title::before {
+                    display: none;
+                }
+            </style>
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
                 <p class="fw-medium text-uppercase text-primary mb-2">Our Gallery</p>
                 <h1 class="display-5 mb-5">See What We Have Recently</h1>
