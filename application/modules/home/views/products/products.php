@@ -23,6 +23,33 @@
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
+            <style>
+                .service-item {
+                    margin: 105px 0 35px 0;
+                }
+
+                .service-item .service-img {
+                    width: 210px;
+                    height: 210px;
+                    top: -105px;
+                    padding: 16px;
+                }
+
+                .service-item .service-img img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .service-item .service-title,
+                .service-item .service-text {
+                    padding: 110px 30px 25px 30px;
+                }
+
+                .service-item .btn {
+                    bottom: -28px;
+                }
+            </style>
             <div class="text-center mx-auto pb-4 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
                 <p class="fw-medium text-uppercase text-primary mb-2">What We Offer</p>
                 <h1 class="display-5 mb-4">Our Products & Services</h1>

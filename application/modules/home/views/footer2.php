@@ -43,6 +43,7 @@ if ($this->uri->uri_string() == '') {
                         <a class="btn btn-link" href="<?php echo $menuUrl; ?>"><?php echo $menu->menuname; ?></a>
                     <?php } ?>
                     <a class="btn btn-link" href="<?php echo base_url('home/contact'); ?>">Contact Us</a>
+                    <a class="btn btn-link" href="<?php echo base_url('access/login'); ?>" target="_blank" rel="noopener noreferrer">Admin Login</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Business Hours</h5>
