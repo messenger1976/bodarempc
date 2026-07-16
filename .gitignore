@@ -18,3 +18,5 @@ application/logs/*
 application/config/config.php
 application/config/database.php
 /vendor/
+/ci_sessions/
+ci_sessions/*

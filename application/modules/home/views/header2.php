@@ -48,6 +48,23 @@ if ($this->uri->uri_string() == '') {
 
     <!-- Template Stylesheet -->
     <link href="<?php echo base_url(); ?>themes/bodare/website/assets/css/style.css" rel="stylesheet">
+    
+    <style>
+        /* Highlight active and hover menu items with database color */
+        .navbar .navbar-nav .nav-link.active {
+            background-color: <?php echo $basic->color; ?> !important;
+            color: #ffffff !important;
+            padding: 20px 15px !important;
+            border-radius: 4px;
+        }
+        
+        .navbar .navbar-nav .nav-link:hover {
+            background-color: <?php echo $basic->color; ?> !important;
+            color: #ffffff !important;
+            padding: 20px 15px !important;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>
@@ -102,16 +119,41 @@ if ($this->uri->uri_string() == '') {
                             $this->db->order_by('serialid', "asc");
                             $parentmenu = $query = $this->db->get('menu');
                             $parentmenu->result();
+                            
+                            // Normalize the current path so it can be compared against menu links.
+                            $current_uri = trim($this->uri->uri_string(), '/');
+                            $current_page_id = $this->uri->segment(3);
         
                             foreach ($parentmenu->result() as $row) { 
                                 $this->db->where('serialid', $row->menuid);
                                 $this->db->order_by('subserialid', "asc");
                                 $cmquery = $this->db->get('menu');
+                                
+                                // Determine if this menu item is active.
+                                $is_active = false;
+                                $menu_path = '';
+
+                                if (!empty($row->menupageid)) {
+                                    $menu_path = 'home/page/' . $row->menupageid;
+                                    $is_active = ($current_uri === $menu_path) || ((string) $current_page_id === (string) $row->menupageid);
+                                } elseif (!empty($row->menulink)) {
+                                    $parsed_menu_path = parse_url($row->menulink, PHP_URL_PATH);
+
+                                    if ($parsed_menu_path !== null && $parsed_menu_path !== false) {
+                                        $menu_path = trim($parsed_menu_path, '/');
+                                    }
+
+                                    if ($menu_path === '') {
+                                        $is_active = ($current_uri === '') || ($current_uri === 'home');
+                                    } else {
+                                        $is_active = ($current_uri === $menu_path);
+                                    }
+                                }
                             ?>
                              <?php 
                                         if($cmquery->num_rows() > 0){ ?>
                                         <div class="nav-item dropdown">
-                                        <a href="<?php echo $row->menupageid?base_url('home/page'). "/". $row->menupageid:$row->menulink;?>" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><?php echo $row->menuname;?></a>
+                                        <a href="<?php echo $row->menupageid?base_url('home/page'). "/". $row->menupageid:$row->menulink;?>" class="nav-link dropdown-toggle <?php echo $is_active ? 'active' : ''; ?>" data-bs-toggle="dropdown"><?php echo $row->menuname;?></a>
                                         <div class="dropdown-menu  bg-light m-0">
                                             <?php foreach ($cmquery->result() as $cm) { ?>
                                                 <a href="<?php echo $cm->menulink;?>" class="dropdown-item"><?php echo $cm->menuname;?></a>
@@ -120,7 +162,7 @@ if ($this->uri->uri_string() == '') {
                                         </div>
                                     <?php }else{ ?>
 
-                                <a class="nav-item nav-link" href="
+                                <a class="nav-item nav-link <?php echo $is_active ? 'active' : ''; ?>" href="
                                 <?php 
                                     if($row->menupageid)
                                     {
