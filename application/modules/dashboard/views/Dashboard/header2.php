@@ -406,99 +406,6 @@ $siteinfo = $siteinfo->result();
                                                     </ul>
                                                 </li>
 
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "financial") {
-                                echo "active";
-                            }
-                            ?> nav_parent">	
-                                <a>
-                                    <i class="material-icons">attach_money</i>
-                                    <p><?php echo $this->lang->line('dash_menu_financial'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "financial") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "funds") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/financial/funds'); ?>">
-                                            <i class="material-icons">attach_money</i>
-                                            <p><?php echo $this->lang->line('dash_menu_finfunds'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "donation") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/financial/donation'); ?>">
-                                            <i class="material-icons">attach_money</i>
-                                            <p><?php echo $this->lang->line('dash_menu_findonations'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "assets") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/financial/assets'); ?>">
-                                            <i class="material-icons">widgets</i>
-                                            <p><?php echo $this->lang->line('dash_menu_fincassets'); ?></p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "sermon") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">record_voice_over</i>
-                                    <p><?php echo $this->lang->line('dash_menu_sermons'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "sermon") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addsermon") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/sermon/addsermon'); ?>">
-                                            <i class="material-icons">record_voice_over</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addsermon'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allsermons") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/sermon/allsermons'); ?>">
-                                            <i class="material-icons">record_voice_over</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allsermons'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
 
 
                         <?php if ($user_position == "Admin") { ?> 
@@ -542,46 +449,6 @@ $siteinfo = $siteinfo->result();
                             </li>
                         <?php } ?>
 
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "prayer") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">bookmark</i>
-                                    <p><?php echo $this->lang->line('dash_menu_prayer'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "prayer") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addprayer") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/prayer/addprayer'); ?>">
-                                            <i class="material-icons">bookmark</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addprayer'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allprayers") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/prayer/allprayers'); ?>">
-                                            <i class="material-icons">bookmark</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allprayers'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?> 
                         <?php if ($user_position == "Admin") { ?> 
                             <li class="<?php
                             if ($ccontroller == "notice") {
@@ -665,48 +532,6 @@ $siteinfo = $siteinfo->result();
                                 </ul>
                             </li>
                         <?php } ?>
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "family") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_families'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "family") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addfamily") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/family/addfamily'); ?>">
-                                            <i class="material-icons">person</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addfamily'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allfamily") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/family/allfamily'); ?>">
-                                            <i class="material-icons">people</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allfamilies'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
 
 
                         <?php if ($user_position == "Admin") { ?> 
@@ -837,126 +662,6 @@ $siteinfo = $siteinfo->result();
 
                         <?php if ($user_position == "Admin") { ?> 
                             <li class="<?php
-                            if ($ccontroller == "pastor") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_pastors'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "pastor") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addpastor") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/pastor/addpastor'); ?>">
-                                            <i class="material-icons">person</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addpastors'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allpastors") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/pastor/allpastors'); ?>">
-                                            <i class="material-icons">people</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allpastors'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                        <?php if ($user_position == "Admin") { ?>                         
-                            <li class="<?php
-                            if ($ccontroller == "clan") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_clans'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "clan") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addclan") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/clan/addclan'); ?>">
-                                            <i class="material-icons">person_add</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addclan'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allclans") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/clan/allclans'); ?>">
-                                            <i class="material-icons">group</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allclans'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "chorus") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_chorus'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "chorus") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addchorus") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/chorus/addchorus'); ?>">
-                                            <i class="material-icons">person_add</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addchorus'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allchorus") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/chorus/allchorus'); ?>">
-                                            <i class="material-icons">group</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allchorus'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
                             if ($ccontroller == "staff") {
                                 echo "active";
                             }
@@ -995,47 +700,6 @@ $siteinfo = $siteinfo->result();
                                 </ul>
                             </li>
                         <?php } ?>
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "school") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">games</i>
-                                    <p><?php echo $this->lang->line('dash_menu_sundayschool'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "school") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addstudent") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/school/addstudent'); ?>">
-                                            <i class="material-icons">person_add</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addstudent'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allstudents") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/school/allstudents'); ?>">
-                                            <i class="material-icons">group</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allstudents'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
                         <?php if ($user_position == "Admin") { ?> 
                             <li class="<?php
                             if ($ccontroller == "user") {
@@ -1237,16 +901,6 @@ $siteinfo = $siteinfo->result();
                                         <li><a href='<?php echo base_url(); ?>dashboard/switchLang/hindi'><img class="lang_img" src="<?php echo base_url(); ?>images/language/hindi.png" alt="hindi"> <?php echo $this->lang->line('dash_lhindi'); ?></a></li>
                                         <li><a href='<?php echo base_url(); ?>dashboard/switchLang/spanish'><img class="lang_img" src="<?php echo base_url(); ?>images/language/spanish.png" alt="spanish"> <?php echo $this->lang->line('dash_lspanish'); ?></a></li>
                                         <li><a href='<?php echo base_url(); ?>dashboard/switchLang/portuguese'><img class="lang_img" src="<?php echo base_url(); ?>images/language/portuguese.png" alt="portuguese"> <?php echo $this->lang->line('dash_lportuguese'); ?></a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="material-icons">settings_applications</i>
-                                        <span class="notification">1</span>
-                                        <p class="hidden-lg hidden-md">Language</p>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href='<?php echo base_url(); ?>dashboard/setting/about'><i class="material-icons">chat</i> <?php echo $this->lang->line('dash_saboutus'); ?></a></li>
                                     </ul>
                                 </li>
                             </ul>
