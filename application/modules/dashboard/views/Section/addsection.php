@@ -4,7 +4,7 @@
             <div class="col-md-offset-1 col-md-10">
                 <div class="card gusers">
                     <div class="card-header" data-background-color="purple">
-                        <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addSectionModal" style="margin-top: -2px;"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_addsection_panel_title'); ?></a>
+                        <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-bs-toggle="modal" data-target="#addSectionModal" style="margin-top: -2px;"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_addsection_panel_title'); ?></a>
                         <h4 class="title"><i class="material-icons">line_style</i> <?php echo $this->lang->line('dash_allsection_panel_title'); ?> ( <?php
                         $this->db->from('section');
                         echo $this->db->count_all_results();
@@ -51,7 +51,7 @@
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="addSectionModalLabel"><i class="material-icons">line_style</i> <?php echo $this->lang->line('dash_addsection_panel_title'); ?></h4>
                             </div>
                             <div class="modal-body" style="min-height: 520px;">
@@ -162,7 +162,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
                                 <button id="addSectionSubmit" type="button" class="btn btn-primary"><i class="material-icons">person_add</i> <?php echo $this->lang->line('dash_addsection_panel_title'); ?></button>
                             </div>
                         </div>

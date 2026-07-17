@@ -81,9 +81,11 @@
                                         <label class="control-label"><?php echo $this->lang->line('dash_gpanel_position'); ?> (*)</label>
                                         <select id="position" name="position" class="select form-control">
                                             <option value=""><?php echo $this->lang->line('dash_gpanel_spt'); ?></option>
+                                            <option value="Super Admin">Super Admin</option>
                                             <option value="Admin">Admin</option>
-                                            <option value="Contibutor">Contibutor</option>
-                                            <option value="Subscriber">Subscriber</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Staff">Staff</option>
+                                            <option value="Viewer">Viewer</option>
                                         </select> 
                                         <span class="material-input"></span></div>
                                 </div>

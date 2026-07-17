@@ -1,22 +1,151 @@
-<footer class="footer">
+<footer class="footer nk-footer bg-white">
     <div class="container-fluid">
-        <nav class="pull-left">
-        </nav>
-        <p class="copyright pull-right"></p>
+        <div class="nk-footer-wrap">
+            <div class="nk-footer-copyright">Multi Purpose Cooperative Admin</div>
+            <div class="nk-footer-copyright">&copy; <?php echo date('Y'); ?> Bodare MPC CMS</div>
+        </div>
     </div>
 </footer>
-</div>
-</div>
+                        </div><!-- container-xl -->
+                    </div><!-- nk-content -->
+                </div><!-- nk-wrap -->
+            </div><!-- nk-main -->
+        </div><!-- nk-app-root -->
 
 
 <!--   Core JS Files   -->
 <script> var baseurl = "<?php echo base_url(); ?>"; </script>
 
-<!--Main JS Loading in Head-->
+<script src="<?php echo base_url(); ?>assets/dashlite/js/bundle.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo base_url(); ?>assets/dashlite/js/scripts.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo base_url(); ?>js/coop-modal-compat.js?v=<?php echo time(); ?>"></script>
+<script>
+/* Sidebar submenu toggle - independent so other script errors cannot break it */
+(function () {
+    function ready(fn) {
+        if (document.readyState !== 'loading') {
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+
+    function childMenu(parent) {
+        if (!parent || !parent.children) {
+            return null;
+        }
+        for (var i = 0; i < parent.children.length; i++) {
+            var el = parent.children[i];
+            if (el.tagName === 'UL' && el.classList.contains('nav_child')) {
+                return el;
+            }
+        }
+        return null;
+    }
+
+    function setIcon(parent, isOpen) {
+        var p = parent.querySelector('a > p');
+        if (!p) {
+            return;
+        }
+        var icon = p.querySelector('i.right') || p.querySelector('i:last-child');
+        if (icon) {
+            icon.textContent = isOpen ? 'remove_circle' : 'add_circle';
+        }
+    }
+
+    function closeAll(except) {
+        var parents = document.querySelectorAll('.coop-sidebar-nav li.nav_parent');
+        for (var i = 0; i < parents.length; i++) {
+            if (except && parents[i] === except) {
+                continue;
+            }
+            parents[i].classList.remove('open');
+            var child = childMenu(parents[i]);
+            if (child) {
+                child.classList.remove('open');
+            }
+            setIcon(parents[i], false);
+        }
+    }
+
+    ready(function () {
+        var nav = document.querySelector('.coop-sidebar-nav');
+        if (!nav) {
+            return;
+        }
+
+        var activeParents = nav.querySelectorAll('li.nav_parent.active');
+        for (var a = 0; a < activeParents.length; a++) {
+            activeParents[a].classList.add('open');
+            var activeChild = childMenu(activeParents[a]);
+            if (activeChild) {
+                activeChild.classList.add('open');
+            }
+            setIcon(activeParents[a], true);
+        }
+
+        var allParents = nav.querySelectorAll('li.nav_parent');
+        for (var p = 0; p < allParents.length; p++) {
+            if (!allParents[p].classList.contains('open')) {
+                setIcon(allParents[p], false);
+            }
+        }
+
+        nav.addEventListener('click', function (event) {
+            var target = event.target;
+            if (!target) {
+                return;
+            }
+
+            // Ignore clicks on submenu links so they navigate normally
+            if (target.closest && target.closest('ul.nav_child a')) {
+                return;
+            }
+
+            var link = target.closest ? target.closest('li.nav_parent > a') : null;
+            if (!link) {
+                // Fallback for older browsers
+                var node = target;
+                while (node && node !== nav) {
+                    if (node.tagName === 'A' && node.parentElement && node.parentElement.classList.contains('nav_parent')) {
+                        link = node;
+                        break;
+                    }
+                    node = node.parentElement;
+                }
+            }
+            if (!link || !nav.contains(link)) {
+                return;
+            }
+
+            var parent = link.parentElement;
+            var child = childMenu(parent);
+            if (!child) {
+                return; // no submenu, allow default link behavior
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            var willOpen = !parent.classList.contains('open');
+            closeAll(parent);
+
+            if (willOpen) {
+                parent.classList.add('open');
+                child.classList.add('open');
+                setIcon(parent, true);
+            } else {
+                parent.classList.remove('open');
+                child.classList.remove('open');
+                setIcon(parent, false);
+            }
+        }, true);
+    });
+})();
+</script>
+
 <script src="<?php echo base_url(); ?>assets/js/jquery-ui.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url(); ?>assets/js/material.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url(); ?>assets/js/perfect-scrollbar.jquery.min.js"></script>
 
 <!-- Image Cropper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.1.3/cropper.min.js"></script>	
@@ -43,8 +172,7 @@
 <!--  Full Calendar Plugin    -->
 <script src="<?php echo base_url(); ?>assets/js/fullcalendar.min.js"></script>
 
-<!-- Material Dashboard javascript methods -->
-<script src="<?php echo base_url(); ?>assets/js/material-dashboard.js"></script>
+<!-- Material Dashboard javascript methods removed for DashLite -->
 
 <!--  Jquery Sortable Plugin    -->
 <script src="<?php echo base_url(); ?>js/jquery-sortable.js"></script>
@@ -76,6 +204,9 @@
 <script type="text/javascript" src="<?php echo base_url('datatables/js/buttons.flash.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('datatables/js/buttons.html5.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('datatables/js/buttons.colVis.min.js'); ?>"></script>
+<script src="<?php echo base_url(); ?>js/coop-table-tranx.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo base_url(); ?>js/coop-table-page-header.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo base_url(); ?>js/coop-form-elements.js?v=<?php echo time(); ?>"></script>
 <script src="<?php echo base_url(); ?>js/iniDatatables.js"></script>
 
 <script>
@@ -116,7 +247,9 @@
     var simpleBarChart = Chartist.Bar('#simpleBarChart', dataSimpleBarChart, optionsSimpleBarChart, responsiveOptionsSimpleBarChart);
 
     //start animation for the Emails Subscription Chart
-    md.startAnimationForBarChart(simpleBarChart);
+    if (typeof md !== 'undefined' && md.startAnimationForBarChart) {
+        md.startAnimationForBarChart(simpleBarChart);
+    }
 
 <?php } ?>
 
@@ -124,88 +257,59 @@
     jQuery(document).ready(function ($) {}); // End Of NoConflict 
         
     /*************** Destroying Scrollbar On Cropper Container *********************/
-    $(".cropper-container").perfectScrollbar('destroy');
+    try {
+        if (window.jQuery && jQuery.fn.perfectScrollbar) {
+            jQuery(".cropper-container").perfectScrollbar('destroy');
+        }
+    } catch (e) {}
 
     /*************** HTML Text Editor Trumbowyg *********************/
-    $('textarea').trumbowyg({
-        svgPath: "<?php echo base_url(); ?>trumbowyg/dist/ui/icons.svg",
-        btns: [
-            ['viewHTML'],
-            ['undo', 'redo'], // Only supported in Blink browsers
-            ['formatting'],
-            ['strong', 'em'],
-            ['link'],
-            ['insertImage'],
-            ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-            ['unorderedList', 'orderedList'],
-            ['horizontalRule'],
-            ['removeformat']
-        ]
-    });
+    try {
+        if (window.jQuery && jQuery.fn.trumbowyg) {
+            jQuery('textarea').trumbowyg({
+                svgPath: "<?php echo base_url(); ?>trumbowyg/dist/ui/icons.svg",
+                btns: [
+                    ['viewHTML'],
+                    ['undo', 'redo'],
+                    ['formatting'],
+                    ['strong', 'em'],
+                    ['link'],
+                    ['insertImage'],
+                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                    ['unorderedList', 'orderedList'],
+                    ['horizontalRule'],
+                    ['removeformat']
+                ]
+            });
+        }
+    } catch (e) {}
     /*$('textarea').trumbowyg({
         svgPath: "<?php echo base_url(); ?>trumbowyg/dist/ui/icons.svg"
     });*/
     
-    $(document).ready(function () {
+    jQuery(document).ready(function ($) {
 
-        /******************* On Click Sidebar Hide & Open ***************/
-        /*****************************************************************/
-        $('a.closeSidebar').on('click', function () {
-            $('.sidebar').hide();
-            $('.main-panel').attr('style', 'float:right !important; width:100% !important;');
-            $('a.closeSidebar i').html('subdirectory_arrow_right');
-            $('a.closeSidebar').attr('title', 'Double Click Me To Open');
-            $('a.closeSidebar').attr('class', 'navbar-brand view_mainsite openSidebar');
-        });
-
-        $(document).on('dblclick', 'a.openSidebar', function () {
-            $('.sidebar').show();
-            $('.main-panel').attr('style', 'float:right !important; width: calc(100% - 260px); ');
-            $('a.openSidebar i').html('subdirectory_arrow_left');
-            $('a.openSidebar').attr('title', 'Click Me To Close');
-            $('a.openSidebar').attr('class', 'navbar-brand view_mainsite closeSidebar');
-        });
-        
-        /*****************************************************************/
-        /*****************************************************************/
-        
-        /******************* Date Picker In Form ************************/
-        /*****************************************************************/
-        $('.datepicker').datepicker({
-            format: 'dd-mm-yyyy'
-        });
-        
-        /******************* Color Picker In Form ************************/
-        /*****************************************************************/
-        $('#color').colorpicker();
-        
-        /******************* Select Style In Form ************************/
-        /*****************************************************************/
-        $('.select').niceSelect();
-        
-        $('li.active').children("a").children("p").children("i").html("remove_circle");
-        $('li.active ul.active').show();
-        $('.sidebar-wrapper ul.nav li.active.nav_parent').attr("class", "active");
-        
-        $("li.nav_parent").click(function () {
-
-            //Toggle the child but don't include them in the hide selector using .not()
-            $('li > ul.nav_child').not($(this).children("ul").toggle(10)).hide();
-
-            var icon = $(this).children("a").children("p").children("i");
-            var html = $(this).children("a").children("p").children("i").html();
-
-
-            if (html == "add_circle") {
-                icon.html("remove_circle");
-                html = "remove_circle";
-                console.log(html);
-            } else if (html == "remove_circle") {
-                icon.html("add_circle");
-                html = "add_circle";
-                console.log(html);
+        // Keep plugins optional so other features still work if they fail
+        try {
+            if ($.fn.datepicker) {
+                $('.datepicker').datepicker({ format: 'dd-mm-yyyy' });
             }
-        });
+        } catch (e) {}
+        try {
+            if ($('#color').length && $.fn.colorpicker) {
+                $('#color').colorpicker();
+            }
+        } catch (e) {}
+        try {
+            // Destroy legacy nice-select; Select2 is handled once by coop-form-elements.js
+            if ($.fn.niceSelect) {
+                try { $('.select').niceSelect('destroy'); } catch (ignore) {}
+                $('.nice-select').remove();
+            }
+            if (window.coopEnhanceAdminForms) {
+                window.coopEnhanceAdminForms();
+            }
+        } catch (e) {}
 
     });
 

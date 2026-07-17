@@ -16,6 +16,8 @@ class Setting extends MX_Controller {
 
         $language = $this->session->userdata('lang');
         $this->lang->load('dashboard', $language);
+        $this->load->library('coop_access');
+        $this->load->library('coop_audit');
     }
 
     public function index() {
@@ -28,6 +30,186 @@ class Setting extends MX_Controller {
         $this->load->view('Dashboard/header');
         $this->load->view('Setting/about');
         $this->load->view('Dashboard/footer');
+    }
+
+    public function backup() {
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
+
+        $backupPath = $this->getBackupPath();
+        $files = array();
+
+        if (is_dir($backupPath)) {
+            $scan = scandir($backupPath);
+            foreach ($scan as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+
+                $absolute = $backupPath . DIRECTORY_SEPARATOR . $file;
+                if (is_file($absolute)) {
+                    $files[] = array(
+                        'name' => $file,
+                        'size' => filesize($absolute),
+                        'modified' => date('Y-m-d H:i:s', filemtime($absolute)),
+                    );
+                }
+            }
+        }
+
+        usort($files, function ($a, $b) {
+            return strcmp($b['modified'], $a['modified']);
+        });
+
+        $data['backupFiles'] = $files;
+        $this->load->view('Dashboard/header');
+        $this->load->view('Setting/backup', $data);
+        $this->load->view('Dashboard/footer');
+    }
+
+    public function createBackup() {
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
+
+        $backupPath = $this->getBackupPath();
+        if (!is_dir($backupPath)) {
+            mkdir($backupPath, 0755, true);
+        }
+
+        $this->load->dbutil();
+        $backup = $this->dbutil->backup(array(
+            'format' => 'zip',
+            'filename' => 'database-' . date('Y-m-d-H-i-s') . '.sql'
+        ));
+
+        $fileName = 'backup-' . date('Y-m-d-H-i-s') . '.zip';
+        $saved = (bool) file_put_contents($backupPath . DIRECTORY_SEPARATOR . $fileName, $backup);
+
+        if ($saved) {
+            $this->coop_audit->log('backup_created', array('file' => $fileName));
+            $this->session->set_flashdata('success', 'Manual backup created successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Unable to create backup file.');
+        }
+
+        redirect('dashboard/setting/backup', 'refresh');
+    }
+
+    public function downloadBackup($fileName = '') {
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
+
+        $safeFile = basename($fileName);
+        $backupPath = $this->getBackupPath();
+        $absolutePath = $backupPath . DIRECTORY_SEPARATOR . $safeFile;
+
+        if (!$safeFile || !is_file($absolutePath)) {
+            show_404();
+        }
+
+        $this->load->helper('download');
+        force_download($absolutePath, NULL);
+    }
+
+    public function deleteBackup($fileName = '') {
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
+
+        $safeFile = basename($fileName);
+        $backupPath = $this->getBackupPath();
+        $absolutePath = $backupPath . DIRECTORY_SEPARATOR . $safeFile;
+
+        if (!$safeFile || !is_file($absolutePath)) {
+            $this->session->set_flashdata('error', 'Backup file not found.');
+            redirect('dashboard/setting/backup', 'refresh');
+        }
+
+        if (unlink($absolutePath)) {
+            $this->coop_audit->log('backup_deleted', array('file' => $safeFile));
+            $this->session->set_flashdata('success', 'Backup file deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Unable to delete backup file.');
+        }
+
+        redirect('dashboard/setting/backup', 'refresh');
+    }
+
+    public function restoreBackup($fileName = '') {
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
+
+        $safeFile = basename($fileName);
+        $backupPath = $this->getBackupPath();
+        $absolutePath = $backupPath . DIRECTORY_SEPARATOR . $safeFile;
+
+        if (!$safeFile || !is_file($absolutePath)) {
+            $this->session->set_flashdata('error', 'Backup file not found.');
+            redirect('dashboard/setting/backup', 'refresh');
+        }
+
+        // Safety snapshot before restore.
+        $snapshotFile = $this->createSnapshotBackup();
+
+        $sqlContent = $this->extractSqlContent($absolutePath);
+        if ($sqlContent === '') {
+            $this->session->set_flashdata('error', 'Unable to read SQL data from backup file.');
+            redirect('dashboard/setting/backup', 'refresh');
+        }
+
+        $analysis = $this->analyzeSqlBatch($sqlContent);
+        if (!$analysis['ok']) {
+            $this->coop_audit->log('backup_restore_blocked', array(
+                'file' => $safeFile,
+                'blocked_count' => count($analysis['blocked'])
+            ));
+            $this->session->set_flashdata('error', 'Restore blocked by dry-run validation. Blocked statements: ' . count($analysis['blocked']));
+            redirect('dashboard/setting/backup', 'refresh');
+        }
+
+        $result = $this->runSqlBatch($sqlContent);
+
+        if ($result['ok']) {
+            $this->coop_audit->log('backup_restored', array(
+                'file' => $safeFile,
+                'snapshot' => $snapshotFile,
+                'queries' => $result['queries']
+            ));
+            $this->session->set_flashdata('success', 'Backup restored successfully. Executed queries: ' . $result['queries']);
+        } else {
+            $this->coop_audit->log('backup_restore_failed', array(
+                'file' => $safeFile,
+                'snapshot' => $snapshotFile,
+                'error' => $result['error']
+            ));
+            $this->session->set_flashdata('error', 'Restore failed: ' . $result['error']);
+        }
+
+        redirect('dashboard/setting/backup', 'refresh');
+    }
+
+    public function dryRunBackup($fileName = '') {
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
+
+        $safeFile = basename($fileName);
+        $backupPath = $this->getBackupPath();
+        $absolutePath = $backupPath . DIRECTORY_SEPARATOR . $safeFile;
+
+        if (!$safeFile || !is_file($absolutePath)) {
+            $this->session->set_flashdata('error', 'Backup file not found.');
+            redirect('dashboard/setting/backup', 'refresh');
+        }
+
+        $sqlContent = $this->extractSqlContent($absolutePath);
+        if ($sqlContent === '') {
+            $this->session->set_flashdata('error', 'Unable to read SQL data from backup file.');
+            redirect('dashboard/setting/backup', 'refresh');
+        }
+
+        $analysis = $this->analyzeSqlBatch($sqlContent);
+        if ($analysis['ok']) {
+            $this->coop_audit->log('backup_dry_run_passed', array('file' => $safeFile, 'queries' => $analysis['count']));
+            $this->session->set_flashdata('success', 'Dry run passed. SQL statements ready: ' . $analysis['count']);
+        } else {
+            $this->coop_audit->log('backup_dry_run_failed', array('file' => $safeFile, 'blocked' => $analysis['blocked']));
+            $this->session->set_flashdata('error', 'Dry run failed. Blocked statements: ' . implode(' | ', $analysis['blocked']));
+        }
+
+        redirect('dashboard/setting/backup', 'refresh');
     }
 
     public function profile() {
@@ -74,7 +256,7 @@ class Setting extends MX_Controller {
                 if ($password) {
                     $data['password'] = md5($password);
                 }
-                $data['position'] = $this->input->post('position');
+                $data['position'] = $this->coop_access->normalizeRole($this->input->post('position'));
                 $data['bpdate'] = $this->input->post('bpdate');
                 $data['blood'] = $this->input->post('blood');
                 $data['dob'] = $this->input->post('dob');
@@ -181,6 +363,117 @@ class Setting extends MX_Controller {
         $this->session->set_userdata('lang', $language);
         //redirect('dashboard/dashboard', 'refresh');
         redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    private function getBackupPath() {
+        return realpath(APPPATH . '..') . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'backups';
+    }
+
+    private function createSnapshotBackup() {
+        $backupPath = $this->getBackupPath();
+        if (!is_dir($backupPath)) {
+            mkdir($backupPath, 0755, true);
+        }
+
+        $this->load->dbutil();
+        $backup = $this->dbutil->backup(array(
+            'format' => 'zip',
+            'filename' => 'pre-restore-' . date('Y-m-d-H-i-s') . '.sql'
+        ));
+
+        $fileName = 'pre-restore-' . date('Y-m-d-H-i-s') . '.zip';
+        file_put_contents($backupPath . DIRECTORY_SEPARATOR . $fileName, $backup);
+
+        return $fileName;
+    }
+
+    private function extractSqlContent($absolutePath) {
+        $extension = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
+
+        if ($extension === 'sql') {
+            $content = file_get_contents($absolutePath);
+            return $content ? $content : '';
+        }
+
+        if ($extension === 'zip' && class_exists('ZipArchive')) {
+            $zip = new ZipArchive();
+            if ($zip->open($absolutePath) === TRUE) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $name = $zip->getNameIndex($i);
+                    if (strtolower(pathinfo($name, PATHINFO_EXTENSION)) === 'sql') {
+                        $content = $zip->getFromIndex($i);
+                        $zip->close();
+                        return $content ? $content : '';
+                    }
+                }
+                $zip->close();
+            }
+        }
+
+        return '';
+    }
+
+    private function runSqlBatch($sqlContent) {
+        $queries = $this->parseSqlStatements($sqlContent);
+        $count = 0;
+
+        foreach ($queries as $query) {
+            $query = trim($query);
+            if ($query === '' || strpos($query, '--') === 0) {
+                continue;
+            }
+
+            $ok = $this->db->query($query);
+            if ($ok === false) {
+                return array('ok' => false, 'queries' => $count, 'error' => 'An SQL statement failed.');
+            }
+            $count++;
+        }
+
+        return array('ok' => true, 'queries' => $count, 'error' => '');
+    }
+
+    private function analyzeSqlBatch($sqlContent) {
+        $blockedPrefixes = array('GRANT', 'REVOKE', 'CREATE USER', 'DROP USER', 'ALTER USER', 'SHUTDOWN', 'FLUSH');
+        $queries = $this->parseSqlStatements($sqlContent);
+        $blocked = array();
+        $count = 0;
+
+        foreach ($queries as $query) {
+            $clean = trim($query);
+            if ($clean === '' || strpos($clean, '--') === 0) {
+                continue;
+            }
+
+            $upper = strtoupper(preg_replace('/\s+/', ' ', $clean));
+            foreach ($blockedPrefixes as $prefix) {
+                if (strpos($upper, $prefix) === 0) {
+                    $blocked[] = $prefix;
+                }
+            }
+            $count++;
+        }
+
+        return array(
+            'ok' => empty($blocked),
+            'blocked' => array_values(array_unique($blocked)),
+            'count' => $count,
+        );
+    }
+
+    private function parseSqlStatements($sqlContent) {
+        $sqlContent = str_replace("\r", "", $sqlContent);
+        $chunks = explode(";\n", $sqlContent);
+        $queries = array();
+
+        foreach ($chunks as $chunk) {
+            $query = trim($chunk);
+            if ($query !== '') {
+                $queries[] = $query;
+            }
+        }
+
+        return $queries;
     }
 
 }

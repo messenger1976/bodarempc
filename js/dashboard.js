@@ -5,7 +5,8 @@ $("div#warning_notifi").delay(5000).hide("Slow");
 
 $(document).ready(function () {
 
-    $(".delete").click(function (e) {
+    // Delegated so DashLite table action dropdowns keep working after redraw
+    $(document).on('click', 'a.delete', function (e) {
         e.preventDefault();
         var url = $(this).attr('href');
         Swal.fire({
@@ -27,6 +28,44 @@ $(document).ready(function () {
         var selectshortcode = $("#selectshortcode").val();
         $("#shortcode").val(selectshortcode);
         console.log(selectshortcode);
+    });
+
+    // Styled upload buttons → hidden file inputs (favicon/logo and similar)
+    $(document).on('click', '.image_select_btn', function (e) {
+        e.preventDefault();
+        var target = $(this).data('target-input');
+        if (target) {
+            $(target).trigger('click');
+        }
+    });
+
+    // Legacy Material "Select photo" text triggers sibling/nearby file input
+    $(document).on('click', '.image_select_text', function (e) {
+        e.preventDefault();
+        var $group = $(this).closest('.form-group');
+        var $file = $group.find('input[type="file"]').first();
+        if ($file.length) {
+            $file.trigger('click');
+        }
+    });
+
+    $(document).on('change', '.coop-file-input, .form-group input[type="file"]', function () {
+        var input = this;
+        var $input = $(input);
+        var name = (input.files && input.files[0]) ? input.files[0].name : 'No file selected';
+        var $name = $('.coop-file-name[data-for="#' + input.id + '"]');
+        if ($name.length) {
+            $name.text(name);
+        }
+
+        var previewSel = $input.data('preview');
+        if (previewSel && input.files && input.files[0] && window.FileReader) {
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                $(previewSel).attr('src', ev.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     });
 
     // Reset Add Slider form when modal is closed
@@ -2671,3 +2710,66 @@ $(document).ready(function () {
         });
     });
 });
+/********************************/
+/***** Admin Theme Switcher *****/
+/********************************/
+(function () {
+    function getTheme() {
+        try {
+            return localStorage.getItem('coop_admin_theme') === 'light' ? 'light' : 'dark';
+        } catch (e) {
+            return 'dark';
+        }
+    }
+
+    function applyTheme(theme) {
+        var next = theme === 'light' ? 'light' : 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light', 'dark-mode', 'admin-modern');
+        document.body.classList.add('coop-dashlite');
+        if (next === 'light') {
+            document.body.classList.add('theme-light');
+            document.body.setAttribute('theme', 'light');
+        } else {
+            document.body.classList.add('theme-dark', 'dark-mode');
+            document.body.setAttribute('theme', 'dark');
+        }
+        document.documentElement.setAttribute('data-theme', next);
+        try {
+            localStorage.setItem('coop_admin_theme', next);
+        } catch (e) {}
+
+        var toggles = document.querySelectorAll('.coop-theme-toggle');
+        for (var i = 0; i < toggles.length; i++) {
+            var icon = toggles[i].querySelector('.theme-mode-icon');
+            var label = toggles[i].querySelector('.theme-mode-label');
+            if (icon) {
+                if (icon.classList.contains('ni')) {
+                    icon.className = next === 'dark' ? 'icon ni ni-moon theme-mode-icon' : 'icon ni ni-sun theme-mode-icon';
+                } else {
+                    icon.textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+                }
+            }
+            if (label) {
+                label.textContent = next === 'dark' ? 'Dark Mode' : 'Light Mode';
+            }
+            toggles[i].setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+        }
+    }
+
+    function bindThemeToggle() {
+        applyTheme(getTheme());
+        jQuery(document).on('click', '.coop-theme-toggle', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var current = getTheme();
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+            return false;
+        });
+    }
+
+    if (window.jQuery) {
+        jQuery(document).ready(bindThemeToggle);
+    } else {
+        document.addEventListener('DOMContentLoaded', bindThemeToggle);
+    }
+})();

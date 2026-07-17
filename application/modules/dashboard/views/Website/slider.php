@@ -4,7 +4,7 @@
             <div class="col-md-offset-1 col-md-10">
                 <div class="card gusers">
                     <div class="card-header" data-background-color="purple">
-                        <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#addSliderModal" style="margin-top: -2px;"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_addslider_panel_title'); ?></a>
+                        <a href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-bs-toggle="modal" data-target="#addSliderModal" style="margin-top: -2px;"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_addslider_panel_title'); ?></a>
                         <h4 class="title"><i class="material-icons">format_align_center</i> <?php echo $this->lang->line('dash_allslider_panel_title'); ?> ( <?php
                             $this->db->from('slider');
                             echo $this->db->count_all_results();
@@ -54,7 +54,7 @@
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="addSliderModalLabel"><i class="material-icons">add_a_photo</i> <?php echo $this->lang->line('dash_addslider_panel_title'); ?></h4>
                             </div>
                             <div class="modal-body" style="min-height: 480px;">
@@ -92,7 +92,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" form="website_slider_add_form" class="btn btn-primary"><i class="material-icons">backup</i> <?php echo $this->lang->line('dash_gpanel_add_now'); ?></button>
                             </div>
                         </div>

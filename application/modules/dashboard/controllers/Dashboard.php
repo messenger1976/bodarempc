@@ -17,6 +17,8 @@ class Dashboard extends MX_Controller {
         $language = $this->session->userdata('lang');
         $this->lang->load('dashboard', $language);
         $this->load->library('envatoapi');
+		$this->load->library('coop_access');
+		$this->load->library('coop_audit');
     }
 
     public function index() {
@@ -72,6 +74,143 @@ class Dashboard extends MX_Controller {
         $this->load->view('Dashboard/dashboard', $data);
         $this->load->view('Dashboard/footer', $data);
     }
+
+	public function reports() {
+		$this->coop_access->requireAnyRole(array('Super Admin', 'Admin', 'Manager', 'Staff', 'Viewer'));
+		$this->coop_audit->log('reports_viewed', array('year' => (int) $this->input->get('year')));
+
+		$year = (int) $this->input->get('year');
+		if (!$year) {
+			$year = (int) date('Y');
+		}
+
+		$months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+		$monthNames = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+
+		$collectSeries = array();
+		$spendSeries = array();
+		$memberGrowth = array();
+
+		foreach ($monthNames as $monthName) {
+			$collectSeries[] = (float) $this->getMonthFundsData('Collect', $monthName, $year);
+			$spendSeries[] = (float) $this->getMonthFundsData('Spend', $monthName, $year);
+			$memberGrowth[] = $this->getMonthlyCountByCdate('member', $monthName, $year);
+		}
+
+		$data['siteinfo'] = $this->getBasicInfo();
+		$data['report_year'] = $year;
+		$data['month_labels'] = $months;
+		$data['collect_series'] = $collectSeries;
+		$data['spend_series'] = $spendSeries;
+		$data['member_growth_series'] = $memberGrowth;
+
+		$data['kpi_collect_total'] = (float) $this->getTotalFundsData('Collect');
+		$data['kpi_spend_total'] = (float) $this->getTotalFundsData('Spend');
+		$data['kpi_balance_total'] = $data['kpi_collect_total'] - $data['kpi_spend_total'];
+		$data['kpi_member_total'] = $this->safeCountTable('member');
+
+		$data['services_stats'] = array(
+			'events' => $this->safeCountTable('event'),
+			'seminars' => $this->safeCountTable('seminar'),
+			'applicants' => $this->safeCountTable('seminarapplicants'),
+			'notices' => $this->safeCountTable('notice'),
+			'prayers' => $this->safeCountTable('prayer'),
+			'speeches' => $this->safeCountTable('speech'),
+		);
+
+		$data['role_stats'] = $this->db->select('position, COUNT(*) AS total')
+			->from('users')
+			->group_by('position')
+			->order_by('total', 'DESC')
+			->get()
+			->result();
+
+		$data['recent_funds'] = $this->safeRecentRows('funds', 'fundsid', 8);
+		$data['recent_donations'] = $this->safeRecentRows('donation', 'donationid', 8);
+
+		$this->load->view('Dashboard/header', $data);
+		$this->load->view('Dashboard/reports', $data);
+		$this->load->view('Dashboard/footer', $data);
+	}
+
+	public function reportsCsv() {
+		$this->coop_access->requireAnyRole(array('Super Admin', 'Admin', 'Manager', 'Staff', 'Viewer'));
+
+		$year = (int) $this->input->get('year');
+		if (!$year) {
+			$year = (int) date('Y');
+		}
+
+		$monthNames = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+
+		$this->coop_audit->log('reports_csv_exported', array('year' => $year));
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="analytics-report-' . $year . '.csv"');
+
+		$out = fopen('php://output', 'w');
+		fputcsv($out, array('Month', 'Collections', 'Spending', 'Net'));
+
+		foreach ($monthNames as $monthName) {
+			$collect = (float) $this->getMonthFundsData('Collect', $monthName, $year);
+			$spend = (float) $this->getMonthFundsData('Spend', $monthName, $year);
+			fputcsv($out, array($monthName, $collect, $spend, $collect - $spend));
+		}
+
+		fputcsv($out, array('', '', '', ''));
+		fputcsv($out, array('Service Area', 'Total Records'));
+
+		$serviceRows = array(
+			'Events' => $this->safeCountTable('event'),
+			'Seminars' => $this->safeCountTable('seminar'),
+			'Seminar Applicants' => $this->safeCountTable('seminarapplicants'),
+			'Prayers' => $this->safeCountTable('prayer'),
+			'Notices' => $this->safeCountTable('notice'),
+			'Speeches' => $this->safeCountTable('speech'),
+		);
+
+		foreach ($serviceRows as $label => $value) {
+			fputcsv($out, array($label, $value));
+		}
+
+		fclose($out);
+		exit;
+	}
+
+	private function safeCountTable($table) {
+		if (!$this->db->table_exists($table)) {
+			return 0;
+		}
+
+		return (int) $this->db->count_all($table);
+	}
+
+	private function getMonthlyCountByCdate($table, $monthName, $year) {
+		if (!$this->db->table_exists($table)) {
+			return 0;
+		}
+
+		if (!$this->db->field_exists('cdate', $table)) {
+			return 0;
+		}
+
+		$this->db->from($table);
+		$this->db->like('cdate', $monthName);
+		$this->db->like('cdate', (string) $year);
+		return (int) $this->db->count_all_results();
+	}
+
+	private function safeRecentRows($table, $orderColumn, $limit = 8) {
+		if (!$this->db->table_exists($table)) {
+			return array();
+		}
+
+		if (!$this->db->field_exists($orderColumn, $table)) {
+			return array();
+		}
+
+		return $this->db->order_by($orderColumn, 'DESC')->limit($limit)->get($table)->result();
+	}
     
     
     public function getBasicInfo(){

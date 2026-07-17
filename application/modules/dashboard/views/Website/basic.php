@@ -10,19 +10,41 @@
                     <div class="card-content">
                         <?php foreach ($website as $web): ?>
                             <form id="webBasicForm" class="form-horizontal" action="<?php echo base_url(); ?>dashboard/website/updatebasic" method="post" enctype="multipart/form-data">
-                                <div class="row">
-                                    <div class="col-md-offset-1 col-md-4">
-                                        <img class="favicon" src="<?php echo base_url(); ?>images/website/<?php echo $web->favicon; ?>" alt="Favicon">
-                                        <div class="form-group label-floating">
-                                            <p class="image_select_text"><i class="material-icons">add_a_photo</i> <?php echo $this->lang->line('dash_gpanel_sfavicon'); ?></p>													
-                                            <input type="file" id="favicon" name="favicon"  class="form-control">
+                                <div class="row gy-4 coop-media-upload-row">
+                                    <div class="col-md-6">
+                                        <div class="coop-media-upload">
+                                            <div class="coop-media-preview">
+                                                <img class="favicon" id="faviconPreview" src="<?php echo base_url(); ?>images/website/<?php echo $web->favicon; ?>" alt="Favicon">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label"><?php echo $this->lang->line('dash_gpanel_sfavicon'); ?></label>
+                                                <div class="form-control-wrap">
+                                                    <button type="button" class="btn btn-primary btn-block image_select_btn" data-target-input="#favicon">
+                                                        <em class="icon ni ni-camera"></em>
+                                                        <span><?php echo $this->lang->line('dash_gpanel_sfavicon'); ?></span>
+                                                    </button>
+                                                    <input type="file" id="favicon" name="favicon" class="coop-file-input" accept="image/*" data-preview="#faviconPreview">
+                                                    <span class="form-note coop-file-name" data-for="#favicon">No file selected</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-offset-1 col-md-4">
-                                        <img class="logo" src="<?php echo base_url(); ?>images/website/<?php echo $web->logo; ?>" alt="Favicon">
-                                        <div class="form-group label-floating">
-                                            <p class="image_select_text"><i class="material-icons">add_a_photo</i> <?php echo $this->lang->line('dash_gpanel_slogo'); ?></p>
-                                            <input type="file" id="logo" name="logo" class="form-control">
+                                    <div class="col-md-6">
+                                        <div class="coop-media-upload">
+                                            <div class="coop-media-preview">
+                                                <img class="logo" id="logoPreview" src="<?php echo base_url(); ?>images/website/<?php echo $web->logo; ?>" alt="Logo">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label"><?php echo $this->lang->line('dash_gpanel_slogo'); ?></label>
+                                                <div class="form-control-wrap">
+                                                    <button type="button" class="btn btn-primary btn-block image_select_btn" data-target-input="#logo">
+                                                        <em class="icon ni ni-camera"></em>
+                                                        <span><?php echo $this->lang->line('dash_gpanel_slogo'); ?></span>
+                                                    </button>
+                                                    <input type="file" id="logo" name="logo" class="coop-file-input" accept="image/*" data-preview="#logoPreview">
+                                                    <span class="form-note coop-file-name" data-for="#logo">No file selected</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -70,8 +92,9 @@
                                     </div> 
                                     <div class="col-md-4">
                                         <div class="form-group label-floating">
-                                            <label class="control-label"><?php echo $this->lang->line('dash_gpanel_webcurrency'); ?> (*)</label>
-                                            <select class="select form-control" id="currency" name="currency" required>
+                                            <label class="form-label"><?php echo $this->lang->line('dash_gpanel_webcurrency'); ?> (*)</label>
+                                            <div class="form-control-wrap">
+                                            <select class="form-select form-control form-control-lg" data-ui="lg" data-search="on" id="currency" name="currency" required>
                                                 <option selected value="<?php echo $web->currency; ?>"><?php echo $web->currency; ?></option>
                                                 <option value="DZD" >Algeria Dinars </option>
                                                 <option value="ARP" >Argentina Pesos </option>
@@ -142,6 +165,7 @@
                                                 <option value="VEB" >Venezuela Bolivar </option>
                                                 <option value="ZMK" >Zambia Kwacha </option>
                                             </select>
+                                            </div>
                                         </div>
                                     </div> 
                                 </div>

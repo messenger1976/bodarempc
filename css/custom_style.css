@@ -117,6 +117,181 @@ img.lang_img {
     border-radius: 100%;
 }
 
+.header-role-chip {
+    padding: 10px 8px 10px 0;
+}
+
+.header-role-chip .role-chip-wrap {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: #f1f6fd;
+    border: 1px solid #d5e2f3;
+    line-height: 1.2;
+    min-width: 250px;
+}
+
+.role-chip-title {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #6f7e93;
+    margin-right: 6px;
+    letter-spacing: .4px;
+}
+
+.role-chip-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: #0d3d73;
+    background: #d9ebff;
+}
+
+.role-chip-badge.role-level-super-admin {
+    color: #ffffff;
+    background: #c0392b;
+}
+
+.role-chip-badge.role-level-admin {
+    color: #ffffff;
+    background: #2c7be5;
+}
+
+.role-chip-badge.role-level-manager {
+    color: #ffffff;
+    background: #2e7d32;
+}
+
+.role-chip-badge.role-level-staff {
+    color: #3e2723;
+    background: #ffca28;
+}
+
+.role-chip-badge.role-level-viewer {
+    color: #37474f;
+    background: #cfd8dc;
+}
+
+.role-chip-summary {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #5d6d83;
+    white-space: normal;
+}
+
+.role-matrix-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    vertical-align: middle;
+}
+
+.role-legend-wrap {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.role-legend-label {
+    font-size: 12px;
+    color: #5d6d83;
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.role-help-text {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 11px;
+    color: #5d6d83;
+    max-width: 320px;
+    vertical-align: middle;
+}
+
+.role-select.role-pending-change {
+    border-color: #ff9800;
+    box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.15);
+}
+
+.role-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: #f7f8fa;
+    border: 1px solid #eceef1;
+    border-radius: 6px;
+}
+
+.role-filter-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    flex: 1 1 160px;
+}
+
+.role-filter-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #5d6d83;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.role-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 1px;
+}
+
+.role-result-count {
+    font-size: 12px;
+    color: #5d6d83;
+    margin: 0 0 8px;
+}
+
+.role-audit-empty {
+    color: #9aa4b2;
+    font-style: italic;
+}
+
+.role-pagination-wrap {
+    margin-top: 12px;
+}
+
+.role-pagination-wrap .pagination {
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .header-role-chip {
+        padding: 8px 15px;
+    }
+
+    .header-role-chip .role-chip-wrap {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .role-filter-field {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+
+    .role-filter-actions {
+        width: 100%;
+    }
+}
+
 /**************************************/
 /********* Dashboard Default Styles **********/
 /**************************************/
@@ -698,6 +873,45 @@ ul.active.nav_child li.active {
 }
 
 /********Seminar Registration Page**********/
+
+/* Admin experience refresh */
+.content .card .card-header .title {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.content .card .card-content .category {
+    color: #6b7280;
+}
+
+.card.table-card,
+.card.table-card .card-content {
+    overflow-x: auto;
+}
+
+.table > thead > tr > th {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+#reportFinancialChart,
+#reportMemberChart {
+    min-height: 260px;
+}
+
+.form-inline .form-group {
+    margin-right: 12px;
+}
+
+.alert {
+    border-radius: 4px;
+    box-shadow: none;
+}
 
 .content.seminarregistration{
     padding-top: 150px !important;

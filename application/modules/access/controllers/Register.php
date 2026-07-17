@@ -119,7 +119,7 @@ class Register extends MX_Controller {
                         $newdata = array(
                             'user_id' => $rows->userid,
                             'user_email' => $rows->email,
-                            'user_position' => $rows->position,
+                            'user_position' => ($rows->position === 'Super Admin' ? 'Admin' : $rows->position),
                             'logged_in' => TRUE,
                         );
                         $this->session->set_userdata($newdata);

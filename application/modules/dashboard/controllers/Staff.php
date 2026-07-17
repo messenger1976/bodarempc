@@ -12,12 +12,14 @@ class Staff extends MX_Controller {
         $user_position = $this->session->userdata('user_position');
         if (!$logged_in) {
             redirect('access/login', 'refresh');
-        } elseif ($user_position !== "Admin") {
+        } elseif (!in_array($user_position, array('Admin', 'Super Admin', 'Manager'))) {
             redirect('dashboard/index', 'refresh');
         }
 
         $language = $this->session->userdata('lang');
         $this->lang->load('dashboard', $language);
+        $this->load->library('coop_access');
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin', 'Manager'));
     }
 
     /*     * ************************************* */

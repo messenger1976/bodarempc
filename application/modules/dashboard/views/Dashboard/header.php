@@ -9,986 +9,268 @@ if (!$ccontroller && $cmodule == "dashboard") {
     $itdash = "notdashboard";
 }
 
-$user_position = $this->session->userdata('user_position');
+$raw_user_position = $this->session->userdata('user_position');
+$user_position = $raw_user_position;
+if ($user_position == "Super Admin") {
+    $user_position = "Admin";
+}
+$role_display = $raw_user_position ? $raw_user_position : "Viewer";
+$role_permissions_map = array(
+    "Super Admin" => "Full access: users, roles, backups, website, reports",
+    "Admin" => "Admin access: users, backups, website, reports",
+    "Manager" => "Operations access: finance, members, events, reports",
+    "Staff" => "Execution access: members, events, notices, reports",
+    "Viewer" => "Read-only access: reports and dashboard overview",
+);
+$role_summary = isset($role_permissions_map[$role_display]) ? $role_permissions_map[$role_display] : $role_permissions_map["Viewer"];
+$role_class_map = array(
+    "Super Admin" => "role-level-super-admin",
+    "Admin" => "role-level-admin",
+    "Manager" => "role-level-manager",
+    "Staff" => "role-level-staff",
+    "Viewer" => "role-level-viewer",
+);
+$role_class = isset($role_class_map[$role_display]) ? $role_class_map[$role_display] : "role-level-viewer";
 $siteinfo = $this->db->get('websitebasic');
 $siteinfo = $siteinfo->result();
 ?>
 
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="js">
     <head>
         <meta charset="utf-8" />
-        <link rel="apple-touch-icon" sizes="76x76" href="<?php echo base_url(); ?>images/favicon.png" />
-        <link rel="icon" type="image/png" href="<?php echo base_url(); ?>images/favicon.png" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title><?php echo $siteinfo[0]->title; ?> | <?php echo $siteinfo[0]->tag; ?></title>
+        <link rel="shortcut icon" href="<?php echo base_url(); ?>images/favicon.png" />
+        <link rel="apple-touch-icon" href="<?php echo base_url(); ?>images/favicon.png" />
 
-        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-        <meta name="viewport" content="width=device-width" />
-
-        <!-- Bootstrap core CSS     -->
-        <link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet" />
-
-        <!--  Material Dashboard CSS    -->
-        <link href="<?php echo base_url(); ?>assets/css/material-dashboard.css" rel="stylesheet"/>
-        <link href="<?php echo base_url(); ?>css/custom_style.css" rel="stylesheet"/>
-        <link href="<?php echo base_url(); ?>css/nice-select.css" rel="stylesheet"/>
-        <link href="<?php echo base_url(); ?>css/bootstrap-colorpicker.min.css" rel="stylesheet"/>
-
-        <!--  Cropper CDN CSS     -->        
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dashlite/css/dashlite.css?v=<?php echo time(); ?>">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dashlite/css/theme.css?v=<?php echo time(); ?>">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>css/custom_style.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>css/dashlite-coop-bridge.css?v=<?php echo time(); ?>">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>css/nice-select.css">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>css/bootstrap-colorpicker.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.1.3/cropper.min.css" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-
-
-        <!--     Fonts and icons     -->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-
-        <!-- Include Trumbowyg Editor style -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="<?php echo base_url(); ?>trumbowyg/dist/ui/trumbowyg.min.css" rel="stylesheet" type="text/css" />
-
-        <!-- Include Data Table style -->
         <link href="<?php echo base_url(); ?>datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet"/>
         <link href="<?php echo base_url(); ?>datatables/css/buttons.bootstrap4.min.css" rel="stylesheet"/>
-
         <link href="<?php echo base_url(); ?>fullcalendar/fullcalendar.min.css" rel="stylesheet">
-        <link href="<?php echo base_url(); ?>fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" >
+        <link href="<?php echo base_url(); ?>fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print">
 
-        <!-- Main JS Loading Here -->
-        <script src="<?php echo base_url(); ?>assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+        <script>
+            (function () {
+                try {
+                    var theme = localStorage.getItem('coop_admin_theme') || 'dark';
+                    document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+                } catch (e) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            })();
+        </script>
 
-        <!-- Add FullCalendar -->		
-        <script src="<?php echo base_url(); ?>fullcalendar/lib/moment.min.js"></script>		
+        <script src="<?php echo base_url(); ?>fullcalendar/lib/moment.min.js"></script>
         <script src="<?php echo base_url(); ?>fullcalendar/fullcalendar.min.js"></script>
 
         <style>
-
-            /*OWL Slider*/
-            body.dragging, body.dragging * {
-                cursor: move !important;
+            <?php $themeColor = !empty($siteinfo[0]->color) ? $siteinfo[0]->color : '#36661f'; ?>
+            :root, .coop-dashlite {
+                --coop-theme: <?php echo $themeColor; ?>;
             }
-
-            .dragged {
-                position: absolute;
-                opacity: 0.5;
-                z-index: 2000;
-            }
-
-            ol.example li.placeholder {
-                position: relative;
-                /** More li styles **/
-            }
-            ol.example li.placeholder:before {
-                position: absolute;
-                /** Define arrowhead **/
-            }
-
-            /* Theme Color Change*/
-            <?php $themeColor = $siteinfo[0]->color; ?>  
-
-            a {
-                color: <?php echo $themeColor; ?>;
-            }
-
-            .gIconColor {
+            .coop-dashlite .card .card-header[data-background-color],
+            .coop-dashlite .card .card-header[data-background-color="purple"] {
                 background: <?php echo $themeColor; ?> !important;
-                box-shadow: none !important;
-                border-radius: 100% !important;
-                padding: 0px !important;
-                margin: -20px 0 0 20px !important;
-                border: 2px solid rgba(51, 51, 89, 0.41);
+                background-image: none !important;
             }
-
-            .sidebar .nav i, .off-canvas-sidebar .nav i {                
-                color: <?php echo $themeColor; ?>;
-            }
-
-            .card [data-background-color="purple"] {
-                background: <?php echo $themeColor; ?>;
-                box-shadow: none;
-            }
-
-            .image_select_text {                
-                background: <?php echo $themeColor; ?>;
-            }
-
-            .file_import_btn {                
-                background: <?php echo $themeColor; ?>;
-            }
-
-            .imageWrapper {                
-                border: 1px solid <?php echo $themeColor; ?> !important;                
-            }
-
-            img#image {                
-                border: 1px solid <?php echo $themeColor; ?> !important;                
-            }
-
-            .form-control, .form-group .form-control {
-                border: 0;
-                background-image: linear-gradient(<?php echo $themeColor; ?>, <?php echo $themeColor; ?>), linear-gradient(#D2D2D2, #D2D2D2) !important;
-            }
-
-            .website img.favicon, .website img.logo {                
-                border: 1px solid <?php echo $themeColor; ?>;
-            }
-
-            .fr-toolbar {
-                border-top: 1px solid <?php echo $themeColor; ?> !important;
-            }
-
-            .fr-toolbar.fr-top {
-                box-shadow: 0 0px 1px <?php echo $themeColor; ?>, 0 0px 1px 0px <?php echo $themeColor; ?> !important;
-            }
-
-            .fr-box.fr-basic.fr-top .fr-wrapper {    
-                box-shadow: 0 0px 1px <?php echo $themeColor; ?>, 0 0px 1px 0px <?php echo $themeColor; ?> !important;
-            }
-
-            .btn.btn-primary, .btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active, .btn.btn-primary.active, .btn.btn-primary:active:focus, .btn.btn-primary:active:hover, .btn.btn-primary.active:focus, .btn.btn-primary.active:hover, .open > .btn.btn-primary.dropdown-toggle, .open > .btn.btn-primary.dropdown-toggle:focus, .open > .btn.btn-primary.dropdown-toggle:hover, .navbar .navbar-nav > li > a.btn.btn-primary, .navbar .navbar-nav > li > a.btn.btn-primary:hover, .navbar .navbar-nav > li > a.btn.btn-primary:focus, .navbar .navbar-nav > li > a.btn.btn-primary:active, .navbar .navbar-nav > li > a.btn.btn-primary.active, .navbar .navbar-nav > li > a.btn.btn-primary:active:focus, .navbar .navbar-nav > li > a.btn.btn-primary:active:hover, .navbar .navbar-nav > li > a.btn.btn-primary.active:focus, .navbar .navbar-nav > li > a.btn.btn-primary.active:hover, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-primary.dropdown-toggle:hover {
+            .coop-dashlite .btn-primary {
+                color: #fff !important;
                 background-color: <?php echo $themeColor; ?> !important;
-                color: #FFFFFF;
-                box-shadow: none;
+                border-color: <?php echo $themeColor; ?> !important;
             }
-
-            .sidebar[data-color="purple"] .nav li.active a, .off-canvas-sidebar[data-color="purple"] .nav li.active a {
-                background: linear-gradient(60deg, <?php echo $themeColor; ?>, <?php echo $themeColor; ?>);
-                box-shadow: none;
+            .coop-dashlite .btn-primary:hover,
+            .coop-dashlite .btn-primary:focus,
+            .coop-dashlite .btn-primary:active {
+                color: #fff !important;
+                background-color: color-mix(in srgb, <?php echo $themeColor; ?> 85%, #000) !important;
+                border-color: color-mix(in srgb, <?php echo $themeColor; ?> 85%, #000) !important;
             }
-
-            ul.active.nav_child li.active {
+            .coop-dashlite .btn-outline-primary {
+                color: <?php echo $themeColor; ?> !important;
+                border-color: <?php echo $themeColor; ?> !important;
+                background-color: transparent !important;
+            }
+            .coop-dashlite .btn-outline-primary:hover,
+            .coop-dashlite .btn-outline-primary:focus {
+                color: #fff !important;
+                background-color: <?php echo $themeColor; ?> !important;
+                border-color: <?php echo $themeColor; ?> !important;
+            }
+            .coop-dashlite .image_select_text, .coop-dashlite .file_import_btn { background: <?php echo $themeColor; ?> !important; }
+            .coop-dashlite .pagination > .active > a,
+            .coop-dashlite .pagination > .active > span { background-color: <?php echo $themeColor; ?> !important; border-color: <?php echo $themeColor; ?> !important; }
+            .coop-dashlite .coop-sidebar-nav .nav > li.active > a,
+            .coop-dashlite.theme-light .coop-sidebar-nav .nav > li.active > a {
                 background: <?php echo $themeColor; ?> !important;
             }
-
-            .sidebar .nav li ul {                
-                border-right: 3px solid <?php echo $themeColor; ?>;
+            .coop-dashlite .coop-sidebar-nav .nav li ul.nav_child li.active > a,
+            .coop-dashlite .coop-sidebar-nav .nav li ul.nav_child li > a:hover,
+            .coop-dashlite.theme-light .coop-sidebar-nav .nav li ul.nav_child li.active > a,
+            .coop-dashlite.theme-light .coop-sidebar-nav .nav li ul.nav_child li > a:hover {
+                background: transparent !important;
+                color: <?php echo $themeColor; ?> !important;
             }
-
-            .view_mainsite, .view_mainsite:hover {
-                background: <?php echo $themeColor; ?> !important;             
-                box-shadow: none;
+            .coop-dashlite.theme-light .coop-sidebar-nav .nav > li > a:hover {
+                background: color-mix(in srgb, <?php echo $themeColor; ?> 12%, transparent) !important;
+                color: <?php echo $themeColor; ?> !important;
             }
-
-            .navbar .notification {                
-                border: 0px !important;
-                background: <?php echo $themeColor; ?> !important;
-            }
-
-            .success_notifi {
-                background: <?php echo $themeColor; ?>;
-            }
-
-            .navbar .dropdown-menu li a:hover, .navbar .dropdown-menu li a:focus, .navbar .dropdown-menu li a:active, .navbar.navbar-default .dropdown-menu li a:hover, .navbar.navbar-default .dropdown-menu li a:focus, .navbar.navbar-default .dropdown-menu li a:active {
-                background-color: <?php echo $themeColor; ?> !important;
-                color: #FFFFFF;
-                box-shadow: none;
-            }
-
-            .datepicker table tr td.active.active, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled.active, .datepicker table tr td.active.disabled.disabled, .datepicker table tr td.active.disabled:active, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active.disabled:hover.active, .datepicker table tr td.active.disabled:hover.disabled, .datepicker table tr td.active.disabled:hover:active, .datepicker table tr td.active.disabled:hover:hover, .datepicker table tr td.active.disabled:hover[disabled], .datepicker table tr td.active.disabled[disabled], .datepicker table tr td.active:active, .datepicker table tr td.active:hover, .datepicker table tr td.active:hover.active, .datepicker table tr td.active:hover.disabled, .datepicker table tr td.active:hover:active, .datepicker table tr td.active:hover:hover, .datepicker table tr td.active:hover[disabled], .datepicker table tr td.active[disabled] {
-                background-color: <?php echo $themeColor; ?> !important;
-            }
-
-            .datepicker table tr td.active, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active:hover {
-                background-image: linear-gradient(to bottom,<?php echo $themeColor; ?>,<?php echo $themeColor; ?>) !important;
-            }
-
-            .nice-select.open .list {
-                border: 3px solid <?php echo $themeColor; ?> !important;                
-            }
-
-            .nice-select .option:hover, .nice-select .option.focus, .nice-select .option.selected.focus {
-                background-color: <?php echo $themeColor; ?>;
-            }
-
-            .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
-                z-index: 2;
-                color: #fff;
-                cursor: default;
-                background-color: <?php echo $themeColor; ?>;
-                border-color: <?php echo $themeColor; ?>;
-            }
-
-            .pagination li a, .pagination li span {
-                position: relative;
-                float: left;
-                padding: 12px 20px !important;
-                margin-left: -1px;
-                line-height: 1.42857143;
-                color: <?php echo $themeColor; ?>;
-                text-decoration: none;
-                background-color: #ffffff;
-                border: 1px solid <?php echo $themeColor; ?>;
-            }
-
-            .pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
-                z-index: 3;
-                color: #ffffff;
-                background-color: <?php echo $themeColor; ?>;
-                border-color: <?php echo $themeColor; ?>;
-            }
-
+            .coop-dashlite .gIconColor { background: <?php echo $themeColor; ?> !important; }
+            .coop-dashlite a { color: inherit; }
+            .coop-dashlite .text-primary,
+            .coop-dashlite a.link-primary { color: <?php echo $themeColor; ?> !important; }
         </style>
-
     </head>
 
-    <body>
+    <body class="nk-body bg-lighter npc-general has-sidebar coop-dashlite theme-dark" theme="dark">
+        <script>
+            (function () {
+                var theme = 'dark';
+                try { theme = localStorage.getItem('coop_admin_theme') || 'dark'; } catch (e) {}
+                document.body.classList.remove('theme-dark', 'theme-light', 'dark-mode');
+                if (theme === 'light') {
+                    document.body.classList.add('theme-light');
+                    document.body.setAttribute('theme', 'light');
+                } else {
+                    document.body.classList.add('theme-dark', 'dark-mode');
+                    document.body.setAttribute('theme', 'dark');
+                }
+            })();
+        </script>
 
-        <div class="wrapper">
-            <div class="loading" id="loading" style="display:none;">
-                <img src="<?php echo base_url(); ?>images/loading.svg" alt="Loading">
+        <div class="loading" id="loading" style="display:none;">
+            <img src="<?php echo base_url(); ?>images/loading.svg" alt="Loading">
+        </div>
+        <div class="warning_notifi notifi" id="warning_notifi" style="display:none;">
+            <p><em class="icon ni ni-alert-circle"></em> Oops! Something Wrong</p>
+        </div>
+        <div class="success_notifi notifi" id="success_notifi" style="display:none;">
+            <p><em class="icon ni ni-check-circle"></em> Successfully Updated</p>
+        </div>
+
+        <?php
+        $success = $this->session->flashdata('success');
+        $notsuccess = $this->session->flashdata('notsuccess');
+        if ($success) { ?>
+            <div class="success_notifi notifi" style="display:block;">
+                <p><em class="icon ni ni-check-circle"></em> <?php echo $success; ?></p>
             </div>
-
-            <div class="warning_notifi notifi" id="warning_notifi" style="display:none;">
-                <p><i class="material-icons">error</i> Oops! Something Wrong</p>
+        <?php } elseif ($notsuccess) { ?>
+            <div class="warning_notifi notifi" style="display:block;">
+                <p><em class="icon ni ni-alert-circle"></em> <?php echo $notsuccess; ?></p>
             </div>
+        <?php } ?>
 
-            <div class="success_notifi notifi" id="success_notifi" style="display:none;">
-                <p><i class="material-icons">check_box</i> Successfully Updated</p>
-            </div>
-
-            <?php
-            $success = $this->session->flashdata('success');
-            $notsuccess = $this->session->flashdata('notsuccess');
-
-            if ($success) {
-                ?>
-
-                <div class="success_notifi notifi" id="success_notifi" style="display:block;">
-                    <p><i class="material-icons">check_box</i> <?php echo $success; ?></p>
-                </div>
-
-            <?php } elseif ($notsuccess) { ?>
-
-                <div class="warning_notifi notifi" id="warning_notifi" style="display:block;">
-                    <p><i class="material-icons">error</i> <?php echo $notsuccess; ?></p>
-                </div>
-
-            <?php } ?>
-
-
-            <div class="sidebar" data-color="purple">
-
-                <div class="logo text-center">
-                    <a href="<?php echo base_url(); ?>">
-                        <img src="<?php echo base_url(); ?>images/website/<?php echo $siteinfo[0]->logo; ?>" alt="Logo">
-                    </a>
-                </div>
-
-                <div class="sidebar-wrapper">
-                    <ul class="nav">
-                        <li class="<?php
-                        if ($itdash == "dashboard") {
-                            echo "active";
-                        }
-                        ?>">
-                            <a href="<?php echo base_url('dashboard'); ?>">
-                                <i class="material-icons">dashboard</i>
-                                <p><?php echo $this->lang->line('dash_menu_dash'); ?></p>
+        <div class="nk-app-root">
+            <div class="nk-main">
+                <div class="nk-sidebar nk-sidebar-fixed is-dark" data-content="sidebarMenu">
+                    <div class="nk-sidebar-element nk-sidebar-head">
+                        <div class="nk-sidebar-brand">
+                            <a href="<?php echo base_url('dashboard'); ?>" class="logo-link nk-sidebar-logo">
+                                <img src="<?php echo base_url(); ?>images/website/<?php echo $siteinfo[0]->logo; ?>" alt="Logo" style="max-height:42px;border-radius:6px;">
                             </a>
-                        </li>
-
-                        <?php if ($user_position == "Admin") { ?>                           
-
-                            <li class="<?php
-                            if ($ccontroller == "website" || $ccontroller == "page" || $ccontroller == "menu" || $ccontroller == "section") {
-                                echo "active";
-                            }
-                            ?> nav_parent">					
-                                <a>
-                                    <i class="material-icons">format_align_center</i>
-                                    <p><?php echo $this->lang->line('dash_menu_website'); ?> <i class="right material-icons ">add_circle</i>	</p>	
-
-                                </a>
-
-
-                                <ul class="<?php
-                                if ($ccontroller == "website" || $ccontroller == "page" || $ccontroller == "section" || $ccontroller == "menu") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-
-                                    <li class="<?php
-                                    if ($cmethod == "header") {
-                                        echo "active";
-                                    }
-                                    ?>">		
-                                        <a href="<?php echo base_url('dashboard/website/header'); ?>">
-                                            <i class="material-icons">format_align_center</i>
-                                            <p><?php echo $this->lang->line('dash_menu_basic'); ?></p>	
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($ccontroller == "menu") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/menu'); ?>">
-                                            <i class="material-icons">format_align_center</i>
-                                            <p><?php echo $this->lang->line('dash_menu_menus'); ?></p>							
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "slider" || $cmethod == "slideredit") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/website/slider'); ?>">
-                                            <i class="material-icons">format_align_center</i>
-                                            <p><?php echo $this->lang->line('dash_menu_slider'); ?></p>							
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "gallery") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/website/gallery'); ?>">
-                                            <i class="material-icons">format_align_center</i>
-                                            <p><?php echo $this->lang->line('dash_menu_gallery'); ?></p>							
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($ccontroller == "section") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/section'); ?>">
-                                            <i class="material-icons">format_align_center</i>
-                                            <p><?php echo $this->lang->line('dash_menu_section'); ?></p>							
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($ccontroller == "page") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/page'); ?>">
-                                            <i class="material-icons">format_align_center</i>
-                                            <p><?php echo $this->lang->line('dash_menu_page'); ?></p>							
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-
-                        <!--                        <li class="nav_parent">
-                                                    <a>
-                                                        <i class="material-icons">short_text</i>
-                                                        <p><?php echo $this->lang->line('dash_menu_blog'); ?> (Coming) <i class="right material-icons ">add_circle</i>	</p>	
-                        
-                                                    </a>
-                        
-                                                    <ul class="nav_child">
-                                                        <li>
-                                                            <a href="#">
-                                                                <i class="material-icons">short_text</i>
-                                                                <p><?php echo $this->lang->line('dash_menu_addposts'); ?></p>	
-                                                            </a>
-                                                        </li>
-                        
-                                                        <li>
-                                                            <a href="#">
-                                                                <i class="material-icons">short_text</i>
-                                                                <p><?php echo $this->lang->line('dash_menu_allposts'); ?></p>							
-                                                            </a>
-                                                        </li>				
-                        
-                                                    </ul>
-                                                </li>-->
-
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "event") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">notifications_active</i>
-                                    <p><?php echo $this->lang->line('dash_menu_events'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "event") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addevent") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/event/addevent'); ?>">
-                                            <i class="material-icons">notifications_active</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addevent'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allevents") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/event/allevents'); ?>">
-                                            <i class="material-icons">notifications_active</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allevents'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "notice") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">bookmark</i>
-                                    <p><?php echo $this->lang->line('dash_menu_notice'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "notice") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addnotice") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/notice/addnotice'); ?>">
-                                            <i class="material-icons">bookmark</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addnotice'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allnotices") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/notice/allnotices'); ?>">
-                                            <i class="material-icons">bookmark</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allnotices'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "speech") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">forum</i>
-                                    <p><?php echo $this->lang->line('dash_menu_speech'); ?> <i class="right material-icons ">add_circle</i>	</p>	
-
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "speech") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addspeech") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/speech/addspeech'); ?>">
-                                            <i class="material-icons">forum</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addspeech'); ?></p>	
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allspeech") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/speech/allspeech'); ?>">
-                                            <i class="material-icons">forum</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allspeech'); ?></p>							
-                                        </a>
-                                    </li>				
-
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "department") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">view_module</i>
-                                    <p><?php echo $this->lang->line('dash_menu_department'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "department") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "adddepartment") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/department/adddepartment'); ?>">
-                                            <i class="material-icons">view_module</i>
-                                            <p><?php echo $this->lang->line('dash_menu_adddepartment'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "alldepartment") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/department/alldepartment'); ?>">
-                                            <i class="material-icons">view_module</i>
-                                            <p><?php echo $this->lang->line('dash_menu_alldepartment'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "committee") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_committee'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "committee") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addcommittee") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/committee/addcommittee'); ?>">
-                                            <i class="material-icons">group</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addcommittee'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allcommittee") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/committee/allcommittee'); ?>">
-                                            <i class="material-icons">group</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allcommittee'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "member") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_members'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "member") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addmember") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/member/addmember'); ?>">
-                                            <i class="material-icons">person</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addmembers'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allmembers") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/member/allmembers'); ?>">
-                                            <i class="material-icons">people</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allmembers'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "board_of_directors") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">person</i>
-                                    <p><?php echo $this->lang->line('dash_menu_board_of_directors'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "board_of_directors") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addboard_of_directors") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/board_of_directors/addboard_of_directors'); ?>">
-                                            <i class="material-icons">person</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addboard_of_directors'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allBoard_of_directors") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/board_of_directors/allBoard_of_directors'); ?>">
-                                            <i class="material-icons">people</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allboard_of_directors'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "cooperative_officers") {
-                                echo "active";
-                            }
-                            ?> nav_parent">		
-                                <a>
-                                    <i class="material-icons">person</i>
-                                    <p><?php echo $this->lang->line('dash_menu_cooperative_officers'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "cooperative_officers") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addcooperative_officers") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/cooperative_officers/addcooperative_officers'); ?>">
-                                            <i class="material-icons">person</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addcooperative_officers'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allCooperative_officers") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/cooperative_officers/allCooperative_officers'); ?>">
-                                            <i class="material-icons">people</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allcooperative_officers'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "staff") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">group</i>
-                                    <p><?php echo $this->lang->line('dash_menu_churchstaffs'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "staff") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addstaff") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/staff/addstaff'); ?>">
-                                            <i class="material-icons">person_add</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addchurchstaff'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allstaffs") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/staff/allstaffs'); ?>">
-                                            <i class="material-icons">group</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allchurchstaffs'); ?></p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "user") {
-                                echo "active";
-                            }
-                            ?> nav_parent">	
-                                <a>
-                                    <i class="material-icons">people</i>
-                                    <p><?php echo $this->lang->line('dash_menu_users'); ?> <i class="right material-icons ">add_circle</i>	</p>	
-
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "user") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-
-                                    <li class="<?php
-                                    if ($cmethod == "adduser") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/user/adduser'); ?>">
-                                            <i class="material-icons">person_add</i>
-                                            <p><?php echo $this->lang->line('dash_menu_adduser'); ?></p>							
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allusers") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/user/allusers'); ?>">
-                                            <i class="material-icons">people</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allusers'); ?></p>							
-                                        </a>
-                                    </li>			
-
-                                </ul>
-                            </li>
-                        <?php } ?> 
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "seminar") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">flare</i>
-                                    <p><?php echo $this->lang->line('dash_menu_seminars'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "seminar") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "addseminar") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/seminar/addseminar'); ?>">
-                                            <i class="material-icons">flare</i>
-                                            <p><?php echo $this->lang->line('dash_menu_addseminar'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allseminar") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/seminar/allseminar'); ?>">
-                                            <i class="material-icons">flare</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allseminars'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "allregistered") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/seminar/applicants'); ?>">
-                                            <i class="material-icons">flare</i>
-                                            <p><?php echo $this->lang->line('dash_menu_allapplicants'); ?></p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "attendance") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a>
-                                    <i class="material-icons">assignment_turned_in</i>
-                                    <p><?php echo $this->lang->line('dash_menu_attendance'); ?> <i class="right material-icons ">add_circle</i>	</p>					
-                                </a>
-
-                                <ul class="<?php
-                                if ($ccontroller == "attendance") {
-                                    echo "active";
-                                }
-                                ?> nav_child">
-                                    <li class="<?php
-                                    if ($cmethod == "attendancetype") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/attendance/addtype'); ?>">
-                                            <i class="material-icons">assignment_turned_in</i>
-                                            <p><?php echo $this->lang->line('dash_menu_attendancetype'); ?></p>
-                                        </a>
-                                    </li>
-
-                                    <li class="<?php
-                                    if ($cmethod == "attendance") {
-                                        echo "active";
-                                    }
-                                    ?>">
-                                        <a href="<?php echo base_url('dashboard/attendance'); ?>">
-                                            <i class="material-icons">assignment_turned_in</i>
-                                            <p><?php echo $this->lang->line('dash_menu_attendancebrowse'); ?></p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if ($user_position == "Admin") { ?> 
-                            <li class="<?php
-                            if ($ccontroller == "import") {
-                                echo "active";
-                            }
-                            ?> nav_parent">
-                                <a href="<?php echo base_url('dashboard/import'); ?>">
-                                    <i class="material-icons">subdirectory_arrow_left</i>
-                                    <p><?php echo $this->lang->line('dash_menu_import'); ?> </p>
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="main-panel">
-                <nav class="navbar navbar-transparent navbar-absolute">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand view_mainsite closeSidebar" href="#"><i class="material-icons">subdirectory_arrow_left</i></a>
-                            <a class="navbar-brand" href="#"><?php echo $siteinfo[0]->title; ?>  | <?php echo $siteinfo[0]->tag; ?> </a>
                         </div>
-                        <div class="collapse navbar-collapse">
-                            <ul class="nav navbar-nav navbar-right">
-                                <li>
-                                    <a href="<?php echo base_url(); ?>" target="_blank">
-                                        <i class="material-icons">format_align_center</i>
-                                        <?php echo $this->lang->line('dash_view_front'); ?></a>
-                                </li>                                
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="material-icons">person</i>
-                                        <span class="notification">3</span>
-                                        <p class="hidden-lg hidden-md">Profile</p>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="<?php echo base_url(); ?>dashboard/setting/profile"><i class="material-icons">person</i> View Profile</a></li>
-                                        <li><a href="<?php echo base_url(); ?>dashboard/setting/editprofile"><i class="material-icons">person</i> Update Profile</a></li>
-                                        <li><a href="<?php echo base_url(); ?>access/logout/"><i class="material-icons">power_settings_new</i> Logout</a></li>
-                                    </ul>
-                                </li>                                
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="material-icons">translate</i>
-                                        <span class="notification">5</span>
-                                        <p class="hidden-lg hidden-md">Language</p>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href='<?php echo base_url(); ?>dashboard/switchLang/english'><img class="lang_img" src="<?php echo base_url(); ?>images/language/english.png" alt="english"> <?php echo $this->lang->line('dash_lenglish'); ?></a></li>
-                                        <li><a href='<?php echo base_url(); ?>dashboard/switchLang/bengali'><img class="lang_img" src="<?php echo base_url(); ?>images/language/bengali.png" alt="bengali"> <?php echo $this->lang->line('dash_lbengali'); ?></a></li>
-                                        <li><a href='<?php echo base_url(); ?>dashboard/switchLang/hindi'><img class="lang_img" src="<?php echo base_url(); ?>images/language/hindi.png" alt="hindi"> <?php echo $this->lang->line('dash_lhindi'); ?></a></li>
-                                        <li><a href='<?php echo base_url(); ?>dashboard/switchLang/spanish'><img class="lang_img" src="<?php echo base_url(); ?>images/language/spanish.png" alt="spanish"> <?php echo $this->lang->line('dash_lspanish'); ?></a></li>
-                                        <li><a href='<?php echo base_url(); ?>dashboard/switchLang/portuguese'><img class="lang_img" src="<?php echo base_url(); ?>images/language/portuguese.png" alt="portuguese"> <?php echo $this->lang->line('dash_lportuguese'); ?></a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                        <div class="nk-menu-trigger me-n2">
+                            <a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em class="icon ni ni-arrow-left"></em></a>
                         </div>
                     </div>
-                </nav>
+                    <div class="nk-sidebar-element nk-sidebar-body">
+                        <div class="nk-sidebar-content">
+                            <div class="nk-sidebar-menu" data-simplebar>
+                                <div class="coop-sidebar-nav">
+                                    <div class="sidebar" data-color="purple">
+                                        <?php include APPPATH.'modules/dashboard/views/Dashboard/sidebar_nav.php'; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                
-        
+                <div class="nk-wrap">
+                    <div class="nk-header nk-header-fixed is-light">
+                        <div class="container-fluid">
+                            <div class="nk-header-wrap">
+                                <div class="nk-menu-trigger d-xl-none ms-n1">
+                                    <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
+                                </div>
+                                <div class="nk-header-brand d-xl-none">
+                                    <a href="<?php echo base_url('dashboard'); ?>" class="logo-link">
+                                        <span class="fw-bold"><?php echo $siteinfo[0]->title; ?></span>
+                                    </a>
+                                </div>
+                                <div class="nk-header-tools">
+                                    <ul class="nk-quick-nav">
+                                        <li class="header-role-chip d-none d-md-block" title="<?php echo $role_summary; ?>">
+                                            <div class="role-chip-wrap">
+                                                <span class="role-chip-title">Role</span>
+                                                <span class="role-chip-badge <?php echo $role_class; ?>"><?php echo $role_display; ?></span>
+                                                <span class="role-chip-summary d-none d-lg-block"><?php echo $role_summary; ?></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="<?php echo base_url(); ?>" target="_blank" class="btn btn-sm btn-outline-light">
+                                                <em class="icon ni ni-external"></em>
+                                                <span><?php echo $this->lang->line('dash_view_front'); ?></span>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown user-dropdown">
+                                            <a href="#" class="dropdown-toggle me-n1" data-bs-toggle="dropdown">
+                                                <div class="user-toggle">
+                                                    <div class="user-avatar sm"><em class="icon ni ni-user-alt"></em></div>
+                                                </div>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
+                                                <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
+                                                    <div class="user-card">
+                                                        <div class="user-avatar"><em class="icon ni ni-user-alt"></em></div>
+                                                        <div class="user-info"><span class="lead-text"><?php echo $role_display; ?></span><span class="sub-text"><?php echo $role_summary; ?></span></div>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-inner">
+                                                    <ul class="link-list">
+                                                        <li><a href="<?php echo base_url(); ?>dashboard/setting/profile"><em class="icon ni ni-user-alt"></em><span>View Profile</span></a></li>
+                                                        <li><a href="<?php echo base_url(); ?>dashboard/setting/editprofile"><em class="icon ni ni-edit-alt"></em><span>Update Profile</span></a></li>
+                                                        <li class="theme-switch-item">
+                                                            <a href="#" class="coop-theme-toggle" role="button">
+                                                                <em class="icon ni ni-moon theme-mode-icon"></em>
+                                                                <span class="theme-mode-label">Dark Mode</span>
+                                                                <span class="theme-switch"><span class="theme-switch-knob"></span></span>
+                                                            </a>
+                                                        </li>
+                                                        <li><a href="<?php echo base_url(); ?>access/logout/"><em class="icon ni ni-signout"></em><span>Logout</span></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="dropdown language-dropdown">
+                                            <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown"><em class="icon ni ni-globe"></em></a>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <ul class="link-list-opt no-bdr">
+                                                    <li><a href="<?php echo base_url(); ?>dashboard/switchLang/english"><img class="lang_img" src="<?php echo base_url(); ?>images/language/english.png" alt="english"> <?php echo $this->lang->line('dash_lenglish'); ?></a></li>
+                                                    <li><a href="<?php echo base_url(); ?>dashboard/switchLang/bengali"><img class="lang_img" src="<?php echo base_url(); ?>images/language/bengali.png" alt="bengali"> <?php echo $this->lang->line('dash_lbengali'); ?></a></li>
+                                                    <li><a href="<?php echo base_url(); ?>dashboard/switchLang/hindi"><img class="lang_img" src="<?php echo base_url(); ?>images/language/hindi.png" alt="hindi"> <?php echo $this->lang->line('dash_lhindi'); ?></a></li>
+                                                    <li><a href="<?php echo base_url(); ?>dashboard/switchLang/spanish"><img class="lang_img" src="<?php echo base_url(); ?>images/language/spanish.png" alt="spanish"> <?php echo $this->lang->line('dash_lspanish'); ?></a></li>
+                                                    <li><a href="<?php echo base_url(); ?>dashboard/switchLang/portuguese"><img class="lang_img" src="<?php echo base_url(); ?>images/language/portuguese.png" alt="portuguese"> <?php echo $this->lang->line('dash_lportuguese'); ?></a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nk-content nk-content-fluid">
+                        <div class="container-xl wide-xl">

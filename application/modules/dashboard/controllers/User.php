@@ -9,15 +9,14 @@ class User extends MX_Controller {
         parent::__construct();
 
         $logged_in = $this->session->userdata('logged_in');
-        $user_position = $this->session->userdata('user_position');
         if (!$logged_in) {
             redirect('access/login', 'refresh');
-        } elseif ($user_position !== "Admin") {
-            redirect('dashboard/index', 'refresh');
         }
 
         $language = $this->session->userdata('lang');
         $this->lang->load('dashboard', $language);
+        $this->load->library('coop_access');
+        $this->coop_access->requireAnyRole(array('Super Admin', 'Admin'));
     }
 
     /*     * ************************** */
@@ -67,7 +66,7 @@ class User extends MX_Controller {
             $data['phone'] = $this->input->post('phone');
             $data['email'] = $this->input->post('email');
             $data['password'] = md5($this->input->post('password'));
-            $data['position'] = $this->input->post('position');
+            $data['position'] = $this->coop_access->normalizeRole($this->input->post('position'));
             $data['bpdate'] = $this->input->post('bpdate');
             $data['blood'] = $this->input->post('blood');
             $data['dob'] = $this->input->post('dob');
@@ -216,7 +215,7 @@ class User extends MX_Controller {
                 if ($password) {
                     $data['password'] = md5($password);
                 }
-                $data['position'] = $this->input->post('position');
+                $data['position'] = $this->coop_access->normalizeRole($this->input->post('position'));
                 $data['bpdate'] = $this->input->post('bpdate');
                 $data['blood'] = $this->input->post('blood');
                 $data['dob'] = $this->input->post('dob');
