@@ -59,6 +59,7 @@ class Inquiry extends MX_Controller {
 
 		$data['inquiry'] = $inquiry;
 		$data['replies'] = $this->getReplies($inquiryid);
+		$data['attachments_by_reply'] = $this->getReplyAttachments($inquiryid);
 
 		$this->load->view('Dashboard/header');
 		$this->load->view('Inquiry/view', $data);
@@ -90,6 +91,14 @@ class Inquiry extends MX_Controller {
 			redirect('dashboard/inquiry/view/' . $inquiryid, 'refresh');
 			return;
 		}
+
+		$attachmentValidation = validate_inquiry_attachment_batch(isset($_FILES['attachments']) ? $_FILES['attachments'] : array());
+		if (!$attachmentValidation['valid']) {
+			$this->session->set_flashdata('notsuccess', $attachmentValidation['error']);
+			redirect('dashboard/inquiry/view/' . $inquiryid, 'refresh');
+			return;
+		}
+
 		$now = date('Y-m-d H:i:s');
 		$userid = $this->session->userdata('user_id');
 
@@ -117,6 +126,38 @@ class Inquiry extends MX_Controller {
 		$this->coop_mail->set_profile('contact');
 		$contactSettings = $this->coop_mail->get_settings('contact');
 		$contactMailbox = ($contactSettings && !empty($contactSettings->from_email)) ? $contactSettings->from_email : NULL;
+
+		$replyData = array(
+			'inquiryid' => $inquiryid,
+			'userid' => $userid ? (int) $userid : NULL,
+			'direction' => 'outbound',
+			'reply_subject' => $taggedSubject,
+			'reply_message' => $reply_message,
+			'email_sent' => 0,
+			'cdate' => date('j F Y'),
+			'created_at' => $now,
+		);
+		$this->db->insert('inquiry_reply', $replyData);
+		$replyid = (int) $this->db->insert_id();
+
+		$attachmentResult = $this->processReplyAttachments($replyid, $inquiryid, isset($_FILES['attachments']) ? $_FILES['attachments'] : array());
+		if (!$attachmentResult['success']) {
+			$this->db->where('replyid', $replyid);
+			$this->db->delete('inquiry_reply');
+			$this->session->set_flashdata('notsuccess', $attachmentResult['error']);
+			redirect('dashboard/inquiry/view/' . $inquiryid, 'refresh');
+			return;
+		}
+
+		$mailAttachments = array();
+		foreach ($attachmentResult['attachments'] as $attachment) {
+			$mailAttachments[] = array(
+				'path' => $attachment['path'],
+				'name' => $attachment['original_filename'],
+				'mime' => $attachment['mime_type'],
+			);
+		}
+
 		$sent = $this->coop_mail->send(
 			$inquiry->email,
 			$taggedSubject,
@@ -126,20 +167,12 @@ class Inquiry extends MX_Controller {
 			$contactMailbox,
 			$siteName,
 			NULL,
-			$mailHeaders
+			$mailHeaders,
+			$mailAttachments
 		);
 
-		$replyData = array(
-			'inquiryid' => $inquiryid,
-			'userid' => $userid ? (int) $userid : NULL,
-			'direction' => 'outbound',
-			'reply_subject' => $taggedSubject,
-			'reply_message' => $reply_message,
-			'email_sent' => $sent ? 1 : 0,
-			'cdate' => date('j F Y'),
-			'created_at' => $now,
-		);
-		$this->db->insert('inquiry_reply', $replyData);
+		$this->db->where('replyid', $replyid);
+		$this->db->update('inquiry_reply', array('email_sent' => $sent ? 1 : 0));
 
 		$this->db->where('inquiryid', $inquiryid);
 		$this->db->update('inquiry', array(
@@ -191,6 +224,7 @@ class Inquiry extends MX_Controller {
 			return;
 		}
 
+		$this->deleteInquiryAttachments($inquiryid);
 		$this->db->where('inquiryid', $inquiryid);
 		$this->db->delete('inquiry_reply');
 
@@ -204,6 +238,31 @@ class Inquiry extends MX_Controller {
 		}
 
 		redirect('dashboard/inquiry/allinquiries', 'refresh');
+	}
+
+	public function downloadattachment($attachmentid = NULL) {
+		if (!$this->db->table_exists('inquiry_reply_attachment')) {
+			show_404();
+		}
+
+		$attachmentid = (int) $attachmentid;
+		$attachment = $this->db->get_where('inquiry_reply_attachment', array('attachmentid' => $attachmentid), 1)->row();
+		if (!$attachment) {
+			show_404();
+		}
+
+		$inquiry = $this->getInquiry((int) $attachment->inquiryid);
+		if (!$inquiry) {
+			show_404();
+		}
+
+		$filePath = inquiry_attachment_resolve_path($attachment->stored_filename);
+		if ($filePath === FALSE) {
+			show_404();
+		}
+
+		$this->load->helper('download');
+		force_download($attachment->original_filename, file_get_contents($filePath));
 	}
 
 	public function fetchinbound() {
@@ -294,6 +353,137 @@ class Inquiry extends MX_Controller {
 		$this->db->where('inquiry_reply.inquiryid', (int) $inquiryid);
 		$this->db->order_by('inquiry_reply.replyid', 'ASC');
 		return $this->db->get()->result();
+	}
+
+	protected function getReplyAttachments($inquiryid) {
+		if (!$this->db->table_exists('inquiry_reply_attachment')) {
+			return array();
+		}
+
+		$this->db->where('inquiryid', (int) $inquiryid);
+		$this->db->order_by('attachmentid', 'ASC');
+		$rows = $this->db->get('inquiry_reply_attachment')->result();
+
+		$grouped = array();
+		foreach ($rows as $row) {
+			$grouped[(int) $row->replyid][] = $row;
+		}
+
+		return $grouped;
+	}
+
+	protected function processReplyAttachments($replyid, $inquiryid, $fileField) {
+		$validation = validate_inquiry_attachment_batch($fileField);
+		if (!$validation['valid']) {
+			return array(
+				'success' => FALSE,
+				'error' => $validation['error'],
+				'attachments' => array(),
+			);
+		}
+
+		if (empty($validation['files'])) {
+			return array(
+				'success' => TRUE,
+				'error' => '',
+				'attachments' => array(),
+			);
+		}
+
+		$storagePath = inquiry_attachment_storage_path();
+		if ($storagePath === FALSE) {
+			return array(
+				'success' => FALSE,
+				'error' => 'Attachment storage is not available.',
+				'attachments' => array(),
+			);
+		}
+
+		$saved = array();
+		foreach ($validation['files'] as $file) {
+			$storedName = inquiry_attachment_make_stored_name($file['name']);
+			$destination = $storagePath . DIRECTORY_SEPARATOR . $storedName;
+
+			if (!@move_uploaded_file($file['tmp_name'], $destination)) {
+				$this->rollbackReplyAttachments($saved);
+				return array(
+					'success' => FALSE,
+					'error' => 'Could not save attachment "' . $file['name'] . '".',
+					'attachments' => array(),
+				);
+			}
+
+			$mime = inquiry_attachment_detect_mime($destination, $file['type']);
+			if (!inquiry_attachment_mime_allowed($mime, $file['name'])) {
+				@unlink($destination);
+				$this->rollbackReplyAttachments($saved);
+				return array(
+					'success' => FALSE,
+					'error' => 'Attachment "' . $file['name'] . '" uses a file type that is not allowed.',
+					'attachments' => array(),
+				);
+			}
+
+			$record = array(
+				'replyid' => (int) $replyid,
+				'inquiryid' => (int) $inquiryid,
+				'direction' => 'outbound',
+				'original_filename' => $file['name'],
+				'stored_filename' => $storedName,
+				'mime_type' => $mime,
+				'file_size' => (int) $file['size'],
+				'created_at' => date('Y-m-d H:i:s'),
+			);
+			$this->db->insert('inquiry_reply_attachment', $record);
+
+			$record['path'] = $destination;
+			$record['attachmentid'] = (int) $this->db->insert_id();
+			$saved[] = $record;
+		}
+
+		return array(
+			'success' => TRUE,
+			'error' => '',
+			'attachments' => $saved,
+		);
+	}
+
+	protected function removeStoredAttachmentFiles($attachments) {
+		foreach ((array) $attachments as $attachment) {
+			if (!empty($attachment['path']) && is_file($attachment['path'])) {
+				@unlink($attachment['path']);
+				continue;
+			}
+			if (!empty($attachment['stored_filename'])) {
+				$filePath = inquiry_attachment_resolve_path($attachment['stored_filename']);
+				if ($filePath !== FALSE) {
+					@unlink($filePath);
+				}
+			}
+		}
+	}
+
+	protected function rollbackReplyAttachments($attachments) {
+		foreach ((array) $attachments as $attachment) {
+			if (!empty($attachment['attachmentid'])) {
+				$this->db->where('attachmentid', (int) $attachment['attachmentid']);
+				$this->db->delete('inquiry_reply_attachment');
+			}
+		}
+		$this->removeStoredAttachmentFiles($attachments);
+	}
+
+	protected function deleteInquiryAttachments($inquiryid) {
+		if (!$this->db->table_exists('inquiry_reply_attachment')) {
+			return;
+		}
+
+		$this->db->where('inquiryid', (int) $inquiryid);
+		$attachments = $this->db->get('inquiry_reply_attachment')->result();
+		$this->removeStoredAttachmentFiles($attachments);
+
+		$this->db->where('inquiryid', (int) $inquiryid);
+		$this->db->delete('inquiry_reply_attachment');
 	}
 
 	protected function getStatusCounts() {

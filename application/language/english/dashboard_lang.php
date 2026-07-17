@@ -166,6 +166,8 @@ $lang['dash_gpanel_replyplaceholder'] = "Type your reply to the guest here...";
 $lang['dash_gpanel_status_guest_replied'] = "Guest Replied";
 $lang['dash_gpanel_fetch_email_replies'] = "Check Email Replies";
 $lang['dash_gpanel_received_via_email'] = "Received via Email";
+$lang['dash_gpanel_attachments'] = "Attachments";
+$lang['dash_gpanel_attachment_hint'] = "Optional. Up to 5 files, 10 MB each, 20 MB total. Allowed: PDF, Word, Excel, TXT, JPG, PNG.";
 
 $lang['dash_addcstaff_panel_title'] = "Add Employee";
 $lang['dash_allcstaffs_panel_title'] = "All Employees";

@@ -1,4 +1,5 @@
 <?php
+$attachments_by_reply = isset($attachments_by_reply) ? $attachments_by_reply : array();
 $statusStyle = 'background:#8091a7;color:#fff;padding:3px 8px;border-radius:3px;font-size:12px;';
 if ($inquiry->status === 'new') {
     $statusStyle = 'background:#e85347;color:#fff;padding:3px 8px;border-radius:3px;font-size:12px;';
@@ -18,6 +19,12 @@ if ($inquiry->status === 'new') {
     .inquiry-reply-body ul,
     .inquiry-reply-body ol { margin: 0 0 10px 18px; padding: 0; }
     .inquiry-reply-body a { color: #36661f; text-decoration: underline; }
+    .inquiry-attachments { margin-top: 12px; padding-top: 10px; border-top: 1px dashed #d7dde8; }
+    .inquiry-attachments ul { margin: 0; padding: 0; list-style: none; }
+    .inquiry-attachments li { margin: 0 0 6px; }
+    .inquiry-attachments a { display: inline-flex; align-items: center; gap: 6px; color: #36661f; text-decoration: none; }
+    .inquiry-attachments a:hover { text-decoration: underline; }
+    .inquiry-attachment-hint { color: #8091a7; font-size: 12px; margin-top: 6px; }
 </style>
 <div class="content view_event">
     <div class="container-fluid">
@@ -113,6 +120,24 @@ if ($inquiry->status === 'new') {
                                     </div>
                                     <p style="margin-bottom:6px;"><strong><?php echo $this->lang->line('dash_gpanel_subject'); ?>:</strong> <?php echo htmlspecialchars($reply->reply_subject, ENT_QUOTES, 'UTF-8'); ?></p>
                                     <div class="inquiry-reply-body"><?php echo format_inquiry_reply_body($reply->reply_message, $isInbound); ?></div>
+                                    <?php
+                                    $replyAttachments = !empty($attachments_by_reply[(int) $reply->replyid]) ? $attachments_by_reply[(int) $reply->replyid] : array();
+                                    if (!empty($replyAttachments)) { ?>
+                                        <div class="inquiry-attachments">
+                                            <strong><?php echo $this->lang->line('dash_gpanel_attachments'); ?>:</strong>
+                                            <ul>
+                                                <?php foreach ($replyAttachments as $attachment) { ?>
+                                                    <li>
+                                                        <a href="<?php echo base_url('dashboard/inquiry/downloadattachment/' . (int) $attachment->attachmentid); ?>">
+                                                            <i class="material-icons" style="font-size:16px;">attach_file</i>
+                                                            <?php echo htmlspecialchars($attachment->original_filename, ENT_QUOTES, 'UTF-8'); ?>
+                                                            <span class="text-muted">(<?php echo format_inquiry_file_size($attachment->file_size); ?>)</span>
+                                                        </a>
+                                                    </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             <?php } ?>
                         <?php } ?>
@@ -122,7 +147,7 @@ if ($inquiry->status === 'new') {
                         <h4><i class="material-icons">send</i> <?php echo $this->lang->line('dash_gpanel_sendreply'); ?></h4>
                         <p class="category text-gray"><?php echo $this->lang->line('dash_gpanel_replyhint'); ?> <strong><?php echo htmlspecialchars($inquiry->email, ENT_QUOTES, 'UTF-8'); ?></strong></p>
 
-                        <form action="<?php echo base_url('dashboard/inquiry/reply'); ?>" method="post">
+                        <form action="<?php echo base_url('dashboard/inquiry/reply'); ?>" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="inquiryid" value="<?php echo (int) $inquiry->inquiryid; ?>">
                             <div class="form-group label-floating">
                                 <label class="control-label"><?php echo $this->lang->line('dash_gpanel_subject'); ?></label>
@@ -131,6 +156,11 @@ if ($inquiry->status === 'new') {
                             <div class="form-group label-floating">
                                 <label class="control-label"><?php echo $this->lang->line('dash_gpanel_replymessage'); ?></label>
                                 <textarea class="form-control inquiry-reply-editor" name="reply_message" rows="8" required placeholder="<?php echo $this->lang->line('dash_gpanel_replyplaceholder'); ?>"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label"><?php echo $this->lang->line('dash_gpanel_attachments'); ?></label>
+                                <input type="file" class="form-control" name="attachments[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png">
+                                <p class="inquiry-attachment-hint"><?php echo $this->lang->line('dash_gpanel_attachment_hint'); ?></p>
                             </div>
                             <button type="submit" class="btn btn-primary"><i class="material-icons">send</i> <?php echo $this->lang->line('dash_gpanel_sendreply'); ?></button>
                         </form>

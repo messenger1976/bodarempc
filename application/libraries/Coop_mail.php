@@ -125,7 +125,7 @@ class Coop_mail {
         return $settings;
     }
 
-    public function send($to, $subject, $message, $from_email = NULL, $from_name = NULL, $reply_to = NULL, $reply_to_name = NULL, $timeout_override = NULL, $headers = array()) {
+    public function send($to, $subject, $message, $from_email = NULL, $from_name = NULL, $reply_to = NULL, $reply_to_name = NULL, $timeout_override = NULL, $headers = array(), $attachments = array()) {
         $settings = $this->configure($timeout_override);
         if ($settings === FALSE) {
             return FALSE;
@@ -142,6 +142,17 @@ class Coop_mail {
             if ($headerValue !== '' && $headerValue !== NULL) {
                 $this->CI->email->set_header($headerName, $headerValue);
             }
+        }
+        foreach ((array) $attachments as $attachment) {
+            if (empty($attachment['path']) || !is_file($attachment['path'])) {
+                continue;
+            }
+            $this->CI->email->attach(
+                $attachment['path'],
+                'attachment',
+                !empty($attachment['name']) ? $attachment['name'] : '',
+                !empty($attachment['mime']) ? $attachment['mime'] : ''
+            );
         }
         $this->CI->email->to($to);
         $this->CI->email->subject($subject);

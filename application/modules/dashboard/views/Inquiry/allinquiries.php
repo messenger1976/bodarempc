@@ -38,6 +38,11 @@
                             </div>
                         </div>
 
+                        <style>
+                            .dtInquiry tbody tr.inquiry-row-link { cursor: pointer; }
+                            .dtInquiry tbody tr.inquiry-row-link:hover td { background: #f7f9fc; }
+                        </style>
+
                         <table class="dtInquiry table table-hover">
                             <thead class="text-default">
                                 <th><?php echo $this->lang->line('dash_gpanel_no'); ?></th>
@@ -66,14 +71,14 @@
                                         $statusStyle = 'background:#09c2de;color:#fff;padding:3px 8px;border-radius:3px;font-size:12px;';
                                     }
                                     ?>
-                                    <tr<?php echo in_array($row->status, array('new', 'guest_replied'), TRUE) ? ' style="font-weight:600;"' : ''; ?>>
+                                    <tr class="inquiry-row-link" data-href="<?php echo base_url('dashboard/inquiry/view/' . (int) $row->inquiryid); ?>"<?php echo in_array($row->status, array('new', 'guest_replied'), TRUE) ? ' style="font-weight:600;"' : ''; ?>>
                                         <td><?php echo $i; ?></td>
                                         <td><?php echo htmlspecialchars($row->name, ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo htmlspecialchars($row->email, ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo htmlspecialchars(character_limiter($row->subject, 40), ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><span style="<?php echo $statusStyle; ?>"><?php echo ucwords(str_replace('_', ' ', $row->status)); ?></span></td>
                                         <td><?php echo !empty($row->created_at) ? date('M j, Y g:i A', strtotime($row->created_at)) : $row->cdate; ?></td>
-                                        <td>
+                                        <td class="inquiry-row-actions">
                                             <a href="<?php echo base_url(); ?>dashboard/inquiry/view/<?php echo $row->inquiryid; ?>" class="btn btn-primary"><i class="material-icons">call_made</i> <?php echo $this->lang->line('dash_gpanel_view'); ?></a>
                                             <a href="<?php echo base_url(); ?>dashboard/inquiry/delete/<?php echo $row->inquiryid; ?>" class="btn btn-danger delete"><i class="material-icons">clear</i> <?php echo $this->lang->line('dash_gpanel_delete'); ?></a>
                                         </td>

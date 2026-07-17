@@ -219,6 +219,16 @@ $('.dtInquiry').DataTable({
     ]
 });
 
+$(document).on('click', '.dtInquiry tbody tr.inquiry-row-link', function (e) {
+    if ($(e.target).closest('.inquiry-row-actions, .tb-tnx-action, a, button, .dropdown-menu').length) {
+        return;
+    }
+    var href = $(this).attr('data-href');
+    if (href) {
+        window.location.href = href;
+    }
+});
+
 
 $('.dtMembers').DataTable({
     dom: 'Bfrtip',

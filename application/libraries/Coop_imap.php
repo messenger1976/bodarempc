@@ -208,6 +208,8 @@ class Coop_imap {
             'cdate' => date('j F Y'),
             'created_at' => !empty($meta->date) ? date('Y-m-d H:i:s', strtotime($meta->date)) : $now,
         ));
+        $replyid = (int) $this->CI->db->insert_id();
+        $this->import_message_attachments($connection, $uid, $replyid, (int) $inquiryid);
 
         $newStatus = 'guest_replied';
         $this->CI->db->where('inquiryid', (int) $inquiryid);
@@ -371,5 +373,167 @@ class Coop_imap {
         }
 
         return trim($body);
+    }
+
+    protected function import_message_attachments($connection, $uid, $replyid, $inquiryid) {
+        if (!$this->CI->db->table_exists('inquiry_reply_attachment')) {
+            return;
+        }
+
+        $structure = @imap_fetchstructure($connection, $uid, FT_UID);
+        if (!$structure) {
+            return;
+        }
+
+        $parts = $this->collect_attachment_parts($structure);
+        if (empty($parts)) {
+            return;
+        }
+
+        $policy = inquiry_attachment_policy();
+        $savedCount = 0;
+        $totalSize = 0;
+
+        foreach ($parts as $part) {
+            if ($savedCount >= $policy['max_count']) {
+                break;
+            }
+
+            $filename = $this->get_part_filename($part['structure']);
+            if ($filename === '') {
+                continue;
+            }
+
+            $rawBody = imap_fetchbody($connection, $uid, $part['part'], FT_UID);
+            $decoded = $this->decode_part_body($rawBody, $part['structure']);
+            $size = strlen($decoded);
+            if ($size <= 0) {
+                continue;
+            }
+            if ($size > $policy['max_file_bytes'] || ($totalSize + $size) > $policy['max_total_bytes']) {
+                continue;
+            }
+
+            $ext = inquiry_attachment_extension($filename);
+            if ($ext === '' || !in_array($ext, $policy['allowed_ext'], TRUE)) {
+                continue;
+            }
+
+            $storagePath = inquiry_attachment_storage_path();
+            if ($storagePath === FALSE) {
+                break;
+            }
+
+            $storedName = inquiry_attachment_make_stored_name($filename);
+            $destination = $storagePath . DIRECTORY_SEPARATOR . $storedName;
+            if (@file_put_contents($destination, $decoded) === FALSE) {
+                continue;
+            }
+
+            $mime = inquiry_attachment_detect_mime($destination, $this->get_part_mime_type($part['structure']));
+            if (!inquiry_attachment_mime_allowed($mime, $filename)) {
+                @unlink($destination);
+                continue;
+            }
+
+            $this->CI->db->insert('inquiry_reply_attachment', array(
+                'replyid' => (int) $replyid,
+                'inquiryid' => (int) $inquiryid,
+                'direction' => 'inbound',
+                'original_filename' => $filename,
+                'stored_filename' => $storedName,
+                'mime_type' => $mime,
+                'file_size' => $size,
+                'created_at' => date('Y-m-d H:i:s'),
+            ));
+
+            $savedCount++;
+            $totalSize += $size;
+        }
+    }
+
+    protected function collect_attachment_parts($structure, $partNumber = '') {
+        $parts = array();
+
+        if (!empty($structure->parts)) {
+            foreach ($structure->parts as $index => $subpart) {
+                $partId = $partNumber === '' ? (string) ($index + 1) : $partNumber . '.' . ($index + 1);
+                $parts = array_merge($parts, $this->collect_attachment_parts($subpart, $partId));
+            }
+            return $parts;
+        }
+
+        if ($this->is_attachment_part($structure)) {
+            $parts[] = array(
+                'part' => $partNumber === '' ? '1' : $partNumber,
+                'structure' => $structure,
+            );
+        }
+
+        return $parts;
+    }
+
+    protected function is_attachment_part($structure) {
+        $type = isset($structure->type) ? (int) $structure->type : 0;
+        $subtype = isset($structure->subtype) ? strtolower($structure->subtype) : '';
+        $disposition = !empty($structure->disposition) ? strtolower($structure->disposition) : '';
+        $filename = $this->get_part_filename($structure);
+
+        if ($disposition === 'inline') {
+            return FALSE;
+        }
+
+        if ($disposition === 'attachment') {
+            return $filename !== '';
+        }
+
+        if ($filename !== '' && !($type === 0 && in_array($subtype, array('plain', 'html'), TRUE))) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    protected function get_part_filename($structure) {
+        $filename = '';
+
+        if (!empty($structure->ifdparameters)) {
+            foreach ($structure->dparameters as $param) {
+                if (strtolower($param->attribute) === 'filename') {
+                    $filename = $this->decode_mime_header($param->value);
+                    break;
+                }
+            }
+        }
+
+        if ($filename === '' && !empty($structure->ifparameters)) {
+            foreach ($structure->parameters as $param) {
+                if (strtolower($param->attribute) === 'name') {
+                    $filename = $this->decode_mime_header($param->value);
+                    break;
+                }
+            }
+        }
+
+        return trim((string) $filename);
+    }
+
+    protected function get_part_mime_type($structure) {
+        $typeMap = array(
+            0 => 'text',
+            1 => 'multipart',
+            2 => 'message',
+            3 => 'application',
+            4 => 'audio',
+            5 => 'image',
+            6 => 'video',
+            7 => 'other',
+        );
+
+        $type = isset($structure->type) ? (int) $structure->type : 3;
+        $subtype = isset($structure->subtype) ? strtolower($structure->subtype) : 'octet-stream';
+        $primary = isset($typeMap[$type]) ? $typeMap[$type] : 'application';
+
+        return $primary . '/' . $subtype;
     }
 }
