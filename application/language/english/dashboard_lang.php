@@ -143,6 +143,30 @@ $lang['dash_addnotice_panel_title'] = "Add Notice";
 $lang['dash_allnotice_panel_title'] = "All Notices";
 $lang['dash_updatenotice_panel_title'] = "Update Requests";
 
+$lang['dash_allinquiry_panel_title'] = "Contact Inquiries";
+$lang['dash_viewinquiry_panel_title'] = "Inquiry";
+$lang['dash_gpanel_newinquiry'] = "Latest inquiry on ";
+$lang['dash_gpanel_subject'] = "Subject";
+$lang['dash_gpanel_message'] = "Message";
+$lang['dash_gpanel_all'] = "All";
+$lang['dash_gpanel_update'] = "Update";
+$lang['dash_gpanel_back'] = "Back";
+$lang['dash_gpanel_status_new'] = "New";
+$lang['dash_gpanel_status_read'] = "Read";
+$lang['dash_gpanel_status_replied'] = "Replied";
+$lang['dash_gpanel_status_closed'] = "Closed";
+$lang['dash_gpanel_conversation'] = "Conversation / Replies";
+$lang['dash_gpanel_noreplyyet'] = "No replies yet. Use the form below to respond by email.";
+$lang['dash_gpanel_emailsent'] = "Email Sent";
+$lang['dash_gpanel_emailsendfailed'] = "Email Failed";
+$lang['dash_gpanel_sendreply'] = "Send Reply";
+$lang['dash_gpanel_replyhint'] = "Your reply will be emailed to";
+$lang['dash_gpanel_replymessage'] = "Reply Message";
+$lang['dash_gpanel_replyplaceholder'] = "Type your reply to the guest here...";
+$lang['dash_gpanel_status_guest_replied'] = "Guest Replied";
+$lang['dash_gpanel_fetch_email_replies'] = "Check Email Replies";
+$lang['dash_gpanel_received_via_email'] = "Received via Email";
+
 $lang['dash_addcstaff_panel_title'] = "Add Employee";
 $lang['dash_allcstaffs_panel_title'] = "All Employees";
 $lang['dash_updatestaff_panel_title'] = "Update Employee";
@@ -443,6 +467,9 @@ $lang['dash_menu_prayer'] = "Prayers";
 $lang['dash_menu_notice'] = "Notice";
 	$lang['dash_menu_addnotice'] = "Add Notice";
 	$lang['dash_menu_allnotices'] = "All Notice";
+
+$lang['dash_menu_inquiry'] = "Inquiries";
+	$lang['dash_menu_allinquiries'] = "All Inquiries";
 	
 $lang['dash_menu_churchstaffs'] = "Employees";
 	$lang['dash_menu_addchurchstaff'] = "Add Employee";

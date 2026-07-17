@@ -711,7 +711,16 @@
     }
 </script>
 
-
+<?php
+$inquiry_poll_role = $this->session->userdata('user_position');
+if ($inquiry_poll_role === 'Super Admin') {
+    $inquiry_poll_role = 'Admin';
+}
+if (in_array($inquiry_poll_role, array('Admin', 'Manager', 'Staff'), TRUE)) {
+?>
+<script>window.INQUIRY_POLL_URL = <?php echo json_encode(base_url('dashboard/inquiry/poll')); ?>;</script>
+<script src="<?php echo base_url(); ?>js/inquiry-poll.js?v=<?php echo time(); ?>"></script>
+<?php } ?>
 
 </body>
 </html>

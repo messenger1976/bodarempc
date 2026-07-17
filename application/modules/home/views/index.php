@@ -706,7 +706,7 @@ foreach ($section as $section) { ?>
     
 
     <?php
-        $homeMapQuery = trim((string) $basicinfo[0]->map);
+        $homeMapQuery = trim((string) getBasic()->map);
         $homeMapEmbedUrl = 'https://www.google.com/maps?q=' . rawurlencode($homeMapQuery) . '&output=embed';
     ?>
     <div class="animate-in cs_sections map" data-anim-type="bounce-in-up-large"  data-anim-delay="600"  >
@@ -719,7 +719,7 @@ foreach ($section as $section) { ?>
     </div>
 
     <!-- Contact Start -->
-    <div class="container-xxl py-5">
+    <div id="contact-us" class="container-xxl py-5">
         <div class="container">
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
                 <p class="fw-medium text-uppercase text-primary mb-2">Contact Us</p>
@@ -740,7 +740,7 @@ foreach ($section as $section) { ?>
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Our Location</h5>
-                                        <span><?php echo isset($basic->address) ? $basic->address : 'Bohol, Philippines'; ?></span>
+                                        <span><?php echo getBasic()->address; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -751,7 +751,7 @@ foreach ($section as $section) { ?>
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Call Us</h5>
-                                        <span><?php echo isset($basic->phone) ? $basic->phone : '038-422-8034'; ?></span>
+                                        <span><?php echo getBasic()->contact; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -762,7 +762,7 @@ foreach ($section as $section) { ?>
                                     </div>
                                     <div class="ms-3">
                                         <h5 class="mb-0">Email Us</h5>
-                                        <span><?php echo isset($basic->email) ? $basic->email : 'bodarempc@yahoo.com'; ?></span>
+                                        <span><?php echo getBasic()->email; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -770,34 +770,50 @@ foreach ($section as $section) { ?>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <form id="contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post" enctype="multipart/form-data">
+                    <?php
+                    $contact_success = $this->session->flashdata('contact_success');
+                    $contact_error = $this->session->flashdata('contact_error');
+                    $contact_scroll = $this->session->flashdata('contact_scroll');
+                    if ($contact_success) {
+                    ?>
+                        <div class="alert alert-success" role="alert" style="margin-bottom:20px;">
+                            <?php echo $contact_success; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($contact_error) { ?>
+                        <div class="alert alert-danger" role="alert" style="margin-bottom:20px;">
+                            <?php echo $contact_error; ?>
+                        </div>
+                    <?php } ?>
+                    <form id="home-contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post">
+                        <input type="hidden" name="redirect_to" value="home">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
-                                    <label for="name">Your Name</label>
+                                    <input type="text" class="form-control" id="home-contact-name" name="name" placeholder="Your Name" required maxlength="150">
+                                    <label for="home-contact-name">Your Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
-                                    <label for="email">Your Email</label>
+                                    <input type="email" class="form-control" id="home-contact-email" name="email" placeholder="Your Email" required maxlength="255">
+                                    <label for="home-contact-email">Your Email</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
-                                    <label for="subject">Subject</label>
+                                    <input type="text" class="form-control" id="home-contact-subject" name="subject" placeholder="Subject" required maxlength="255">
+                                    <label for="home-contact-subject">Subject</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control" placeholder="Leave a message here" id="body" name="body" style="height: 150px" required></textarea>
-                                    <label for="body">Message</label>
+                                    <textarea class="form-control" placeholder="Leave a message here" id="home-contact-body" name="body" style="height: 150px" required maxlength="5000"></textarea>
+                                    <label for="home-contact-body">Message</label>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary py-3 px-5" type="submit" id="submit">
+                                <button class="btn btn-primary py-3 px-5" type="submit">
                                     <i class="fa fa-paper-plane me-2"></i>Send Message
                                 </button>
                             </div>
@@ -807,4 +823,14 @@ foreach ($section as $section) { ?>
             </div>
         </div>
     </div>
+    <?php if ($contact_scroll || $contact_success || $contact_error) { ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var section = document.getElementById('contact-us');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    </script>
+    <?php } ?>
     <!-- Contact End -->

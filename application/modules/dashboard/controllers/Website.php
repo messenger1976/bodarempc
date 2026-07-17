@@ -52,15 +52,24 @@ class Website extends MX_Controller {
 	/*****************************/
 	/***** Email/SMTP Settings ***/
 	/*****************************/
+	protected function emailProfile($value){
+		return ($value === 'account') ? 'account' : 'contact';
+	}
+
 	public function emailsettings(){
-		$query = $this->db->get_where('email_smtp_settings', array('id' => 1));
+		$profile = $this->emailProfile($this->input->get('profile', TRUE));
+		$query = $this->db->get_where('email_smtp_settings', array('profile' => $profile), 1);
 		$data['email_settings'] = $query->row();
+		$data['email_profile'] = $profile;
 		$this->load->view('Dashboard/header');
 		$this->load->view('Website/emailsettings', $data);
 		$this->load->view('Dashboard/footer');
 	}
 
 	public function updateemailsettings(){
+		$profile = $this->emailProfile($this->input->post('profile', TRUE));
+		$settings_url = 'dashboard/website/emailsettings?profile=' . $profile;
+
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required|trim');
 		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|integer|greater_than[0]|less_than_equal_to[65535]');
@@ -70,7 +79,7 @@ class Website extends MX_Controller {
 
 		if (!$this->form_validation->run()) {
 			$this->session->set_flashdata('notsuccess', strip_tags(validation_errors(' ', ' ')));
-			redirect('dashboard/website/emailsettings', 'refresh');
+			redirect($settings_url, 'refresh');
 			return;
 		}
 
@@ -100,11 +109,20 @@ class Website extends MX_Controller {
 			'updated_at' => date('Y-m-d H:i:s')
 		);
 
+		if ($profile === 'contact' && $this->db->field_exists('imap_enabled', 'email_smtp_settings')) {
+			$imapHost = trim($this->input->post('imap_host', TRUE));
+			$imapCrypto = $this->input->post('imap_crypto', TRUE);
+			$data['imap_host'] = $imapHost !== '' ? $imapHost : $data['smtp_host'];
+			$data['imap_port'] = max(1, (int) $this->input->post('imap_port'));
+			$data['imap_crypto'] = in_array($imapCrypto, array('', 'tls', 'ssl'), TRUE) ? ($imapCrypto !== '' ? $imapCrypto : 'ssl') : 'ssl';
+			$data['imap_enabled'] = $this->input->post('imap_enabled') ? 1 : 0;
+		}
+
 		$password = (string) $this->input->post('smtp_pass', FALSE);
-		$exists = $this->db->where('id', 1)->count_all_results('email_smtp_settings') > 0;
+		$exists = $this->db->where('profile', $profile)->count_all_results('email_smtp_settings') > 0;
 		if (!$exists && $password === '') {
 			$this->session->set_flashdata('notsuccess', 'SMTP Password is required when creating the settings.');
-			redirect('dashboard/website/emailsettings', 'refresh');
+			redirect($settings_url, 'refresh');
 			return;
 		}
 		if ($password !== '') {
@@ -113,10 +131,11 @@ class Website extends MX_Controller {
 		}
 
 		if ($exists) {
-			$this->db->where('id', 1);
+			$this->db->where('profile', $profile);
 			$saved = $this->db->update('email_smtp_settings', $data);
 		} else {
-			$data['id'] = 1;
+			$data['id'] = ($profile === 'account') ? 2 : 1;
+			$data['profile'] = $profile;
 			$data['created_at'] = date('Y-m-d H:i:s');
 			$saved = $this->db->insert('email_smtp_settings', $data);
 		}
@@ -125,21 +144,25 @@ class Website extends MX_Controller {
 			$saved ? 'success' : 'notsuccess',
 			$saved ? 'Email/SMTP settings saved successfully.' : 'Unable to save Email/SMTP settings.'
 		);
-		redirect('dashboard/website/emailsettings', 'refresh');
+		redirect($settings_url, 'refresh');
 	}
 
 	public function testemail(){
+		$profile = $this->emailProfile($this->input->post('profile', TRUE));
+		$settings_url = 'dashboard/website/emailsettings?profile=' . $profile;
+
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('test_email', 'Test Email', 'required|valid_email|trim');
 
 		if (!$this->form_validation->run()) {
 			$this->session->set_flashdata('notsuccess', strip_tags(validation_errors(' ', ' ')));
-			redirect('dashboard/website/emailsettings', 'refresh');
+			redirect($settings_url, 'refresh');
 			return;
 		}
 
 		$to = trim($this->input->post('test_email', TRUE));
 		$this->load->library('coop_mail');
+		$this->coop_mail->set_profile($profile);
 
 		if ($this->coop_mail->send_test($to)) {
 			$this->session->set_flashdata('success', 'Test email sent successfully to ' . $to . '. Check the inbox (and spam folder).');
@@ -148,7 +171,7 @@ class Website extends MX_Controller {
 			$this->session->set_flashdata('notsuccess', 'Test email failed. ' . $error);
 		}
 
-		redirect('dashboard/website/emailsettings', 'refresh');
+		redirect($settings_url, 'refresh');
 	}
 	
 	/*****************************/

@@ -199,6 +199,25 @@ if (!isset($itdash) || !isset($user_position) || !isset($ccontroller) || !isset(
 
                         <?php if (in_array($user_position, array("Admin", "Manager", "Staff"))) { ?>
                             <li class="<?php
+                            if ($ccontroller == "inquiry") {
+                                echo "active";
+                            }
+                            ?> nav_parent">
+                                <a href="<?php echo base_url('dashboard/inquiry/allinquiries'); ?>">
+                                    <em class="icon ni ni-mail"></em>
+                                    <p><?php echo $this->lang->line('dash_menu_inquiry'); ?>
+                                        <?php
+                                        $this->db->where_in('status', array('new', 'guest_replied'));
+                                        $newInquiryCount = (int) $this->db->count_all_results('inquiry');
+                                        ?>
+                                        <span id="inquiry-menu-badge" class="badge inquiry-menu-badge" style="background:#e53935;color:#fff;border-radius:10px;padding:2px 7px;font-size:11px;<?php echo $newInquiryCount > 0 ? '' : 'display:none;'; ?>"><?php echo $newInquiryCount; ?></span>
+                                    </p>
+                                </a>
+                            </li>
+                        <?php } ?>
+
+                        <?php if (in_array($user_position, array("Admin", "Manager", "Staff"))) { ?>
+                            <li class="<?php
                             if ($ccontroller == "speech") {
                                 echo "active";
                             }

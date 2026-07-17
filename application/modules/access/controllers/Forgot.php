@@ -53,6 +53,7 @@ class Forgot extends MX_Controller {
             $message = $this->buildResetEmail($title, $logo, $name, $reset_url);
 
             $this->load->library('coop_mail');
+            $this->coop_mail->set_profile('account');
             if (!$this->coop_mail->send($email, $subject, $message)) {
                 // Clear token if email failed so the user can retry.
                 $this->db->where('userid', $user->userid);

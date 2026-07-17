@@ -85,29 +85,44 @@
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <form id="contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post" enctype="multipart/form-data">
+                    <?php
+                    $contact_success = $this->session->flashdata('contact_success');
+                    $contact_error = $this->session->flashdata('contact_error');
+                    if ($contact_success) {
+                    ?>
+                        <div class="alert alert-success" role="alert" style="margin-bottom:20px;">
+                            <?php echo $contact_success; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($contact_error) { ?>
+                        <div class="alert alert-danger" role="alert" style="margin-bottom:20px;">
+                            <?php echo $contact_error; ?>
+                        </div>
+                    <?php } ?>
+                    <form id="contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post">
+                        <input type="hidden" name="redirect_to" value="home/contact">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required maxlength="150">
                                     <label for="name">Your Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required maxlength="255">
                                     <label for="email">Your Email</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
+                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required maxlength="255">
                                     <label for="subject">Subject</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control" placeholder="Leave a message here" id="body" name="body" style="height: 150px" required></textarea>
+                                    <textarea class="form-control" placeholder="Leave a message here" id="body" name="body" style="height: 150px" required maxlength="5000"></textarea>
                                     <label for="body">Message</label>
                                 </div>
                             </div>

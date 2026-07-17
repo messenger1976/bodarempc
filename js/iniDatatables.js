@@ -167,6 +167,59 @@ $('.dtPrayer').DataTable({
 });
 
 
+$('.dtInquiry').DataTable({
+    dom: 'Bfrtip',
+    order: [[0, 'asc']],
+    buttons: [
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5]
+            },
+            text: '<i class="fa fa-print fa-fw"></i> Print',
+            titleAttr: 'Print',
+            className: 'btn-primary mRight10'
+        },
+        {
+            extend: 'copy',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5]
+            },
+            text: '<i class="fa fa-copy fa-fw"></i> Copy',
+            titleAttr: 'Copy',
+            className: 'btn-primary mRight10'
+        },
+        {
+            extend: 'pdf',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5]
+            },
+            text: '<i class="fa fa-file-pdf-o fa-fw"></i> PDF',
+            titleAttr: 'PDF',
+            className: 'btn-primary mRight10'
+        },
+        {
+            extend: 'excel',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5]
+            },
+            text: '<i class="fa fa-file-excel-o fa-fw"></i> Excel',
+            titleAttr: 'Excel',
+            className: 'btn-primary mRight10'
+        },
+        {
+            extend: 'csv',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5]
+            },
+            text: '<i class="fa fa-file-text-o fa-fw"></i> CSV',
+            titleAttr: 'CSV',
+            className: 'btn-primary mRight10'
+        }
+    ]
+});
+
+
 $('.dtMembers').DataTable({
     dom: 'Bfrtip',
     searching: false,

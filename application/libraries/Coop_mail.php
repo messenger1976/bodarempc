@@ -3,8 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Coop_mail {
 
+    const PROFILE_CONTACT = 'contact';
+    const PROFILE_ACCOUNT = 'account';
+
     protected $CI;
     protected $last_error = '';
+    protected $profile = self::PROFILE_CONTACT;
 
     public function __construct() {
         $this->CI =& get_instance();
@@ -17,9 +21,35 @@ class Coop_mail {
         return $this->last_error;
     }
 
-    public function get_settings() {
-        $query = $this->CI->db->get_where('email_smtp_settings', array('id' => 1), 1);
-        return $query->row();
+    /**
+     * Select which sender profile to use for subsequent sends:
+     * 'contact' (Contact Us / inquiries) or 'account' (registration, password reset).
+     */
+    public function set_profile($profile) {
+        $this->profile = in_array($profile, array(self::PROFILE_CONTACT, self::PROFILE_ACCOUNT), TRUE)
+            ? $profile
+            : self::PROFILE_CONTACT;
+        return $this;
+    }
+
+    public function get_profile() {
+        return $this->profile;
+    }
+
+    public function get_settings($profile = NULL) {
+        $profile = $profile !== NULL ? $profile : $this->profile;
+
+        // Fallback for databases that predate the profile column (run database/email_smtp_profiles.sql).
+        if (!$this->CI->db->field_exists('profile', 'email_smtp_settings')) {
+            return $this->CI->db->get_where('email_smtp_settings', array('id' => 1), 1)->row();
+        }
+
+        $row = $this->CI->db->get_where('email_smtp_settings', array('profile' => $profile), 1)->row();
+        if (!$row) {
+            $row = $this->CI->db->get_where('email_smtp_settings', array('id' => 1), 1)->row();
+        }
+
+        return $row;
     }
 
     public function encrypt_password($password) {
@@ -50,7 +80,7 @@ class Coop_mail {
         return ($plain === FALSE) ? FALSE : $plain;
     }
 
-    public function configure() {
+    public function configure($timeout_override = NULL) {
         $this->last_error = '';
         $settings = $this->get_settings();
 
@@ -70,6 +100,8 @@ class Coop_mail {
             return FALSE;
         }
 
+        $timeout = ($timeout_override !== NULL) ? max(1, (int) $timeout_override) : max(1, (int) $settings->smtp_timeout);
+
         $config = array(
             'protocol' => !empty($settings->protocol) ? $settings->protocol : 'smtp',
             'smtp_host' => $settings->smtp_host,
@@ -77,7 +109,7 @@ class Coop_mail {
             'smtp_user' => $settings->smtp_user,
             'smtp_pass' => $password,
             'smtp_crypto' => (string) $settings->smtp_crypto,
-            'smtp_timeout' => max(1, (int) $settings->smtp_timeout),
+            'smtp_timeout' => $timeout,
             'mailtype' => !empty($settings->mailtype) ? $settings->mailtype : 'html',
             'charset' => !empty($settings->charset) ? $settings->charset : 'utf-8',
             'newline' => "\r\n",
@@ -93,8 +125,8 @@ class Coop_mail {
         return $settings;
     }
 
-    public function send($to, $subject, $message, $from_email = NULL, $from_name = NULL) {
-        $settings = $this->configure();
+    public function send($to, $subject, $message, $from_email = NULL, $from_name = NULL, $reply_to = NULL, $reply_to_name = NULL, $timeout_override = NULL, $headers = array()) {
+        $settings = $this->configure($timeout_override);
         if ($settings === FALSE) {
             return FALSE;
         }
@@ -103,6 +135,14 @@ class Coop_mail {
         $from_name = $from_name ? $from_name : $settings->from_name;
 
         $this->CI->email->from($from_email, $from_name);
+        if ($reply_to) {
+            $this->CI->email->reply_to($reply_to, $reply_to_name ? $reply_to_name : '');
+        }
+        foreach ((array) $headers as $headerName => $headerValue) {
+            if ($headerValue !== '' && $headerValue !== NULL) {
+                $this->CI->email->set_header($headerName, $headerValue);
+            }
+        }
         $this->CI->email->to($to);
         $this->CI->email->subject($subject);
         $this->CI->email->message($message);
