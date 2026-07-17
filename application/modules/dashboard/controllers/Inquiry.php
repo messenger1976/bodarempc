@@ -84,7 +84,12 @@ class Inquiry extends MX_Controller {
 		}
 
 		$reply_subject = $this->security->xss_clean($this->input->post('reply_subject'));
-		$reply_message = trim($this->input->post('reply_message'));
+		$reply_message = sanitize_inquiry_html($this->input->post('reply_message'));
+		if ($reply_message === '') {
+			$this->session->set_flashdata('notsuccess', 'Reply message is required.');
+			redirect('dashboard/inquiry/view/' . $inquiryid, 'refresh');
+			return;
+		}
 		$now = date('Y-m-d H:i:s');
 		$userid = $this->session->userdata('user_id');
 
@@ -98,7 +103,7 @@ class Inquiry extends MX_Controller {
 		$htmlMessage = '
 			<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333;max-width:640px;margin:0 auto;">
 				<p>Hi ' . htmlspecialchars($inquiry->name, ENT_QUOTES, 'UTF-8') . ',</p>
-				' . nl2br(htmlspecialchars($reply_message, ENT_QUOTES, 'UTF-8')) . '
+				' . $reply_message . '
 				<hr style="border:none;border-top:1px solid #ddd;margin:24px 0;" />
 				<p style="color:#666;font-size:13px;"><strong>Your original message:</strong><br />
 				<strong>Subject:</strong> ' . htmlspecialchars($inquiry->subject, ENT_QUOTES, 'UTF-8') . '<br />

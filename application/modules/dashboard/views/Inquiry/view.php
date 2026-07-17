@@ -12,6 +12,13 @@ if ($inquiry->status === 'new') {
     $statusStyle = 'background:#09c2de;color:#fff;padding:3px 8px;border-radius:3px;font-size:12px;';
 }
 ?>
+<style>
+    .inquiry-reply-body p { margin: 0 0 10px; }
+    .inquiry-reply-body p:last-child { margin-bottom: 0; }
+    .inquiry-reply-body ul,
+    .inquiry-reply-body ol { margin: 0 0 10px 18px; padding: 0; }
+    .inquiry-reply-body a { color: #36661f; text-decoration: underline; }
+</style>
 <div class="content view_event">
     <div class="container-fluid">
         <div class="row">
@@ -105,16 +112,7 @@ if ($inquiry->status === 'new') {
                                         </span>
                                     </div>
                                     <p style="margin-bottom:6px;"><strong><?php echo $this->lang->line('dash_gpanel_subject'); ?>:</strong> <?php echo htmlspecialchars($reply->reply_subject, ENT_QUOTES, 'UTF-8'); ?></p>
-                                    <div style="white-space:pre-wrap;"><?php
-                                        $replyBody = $reply->reply_message;
-                                        if ($isInbound) {
-                                            $replyBody = preg_replace("/\n+On .+wrote:\s*\n.*/is", '', $replyBody);
-                                            $replyBody = preg_replace("/\n+-----\s*Original Message\s*-----[\s\S]*/i", '', $replyBody);
-                                            $replyBody = preg_replace("/\n+From:\s*BODARE[\s\S]*/i", '', $replyBody);
-                                            $replyBody = trim($replyBody);
-                                        }
-                                        echo htmlspecialchars($replyBody, ENT_QUOTES, 'UTF-8');
-                                    ?></div>
+                                    <div class="inquiry-reply-body"><?php echo format_inquiry_reply_body($reply->reply_message, $isInbound); ?></div>
                                 </div>
                             <?php } ?>
                         <?php } ?>
@@ -132,7 +130,7 @@ if ($inquiry->status === 'new') {
                             </div>
                             <div class="form-group label-floating">
                                 <label class="control-label"><?php echo $this->lang->line('dash_gpanel_replymessage'); ?></label>
-                                <textarea class="form-control" name="reply_message" rows="8" required placeholder="<?php echo $this->lang->line('dash_gpanel_replyplaceholder'); ?>"></textarea>
+                                <textarea class="form-control inquiry-reply-editor" name="reply_message" rows="8" required placeholder="<?php echo $this->lang->line('dash_gpanel_replyplaceholder'); ?>"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary"><i class="material-icons">send</i> <?php echo $this->lang->line('dash_gpanel_sendreply'); ?></button>
                         </form>

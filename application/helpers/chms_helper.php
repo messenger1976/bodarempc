@@ -256,3 +256,37 @@ if (!function_exists('shortCode')) {
     }
 
 }
+
+if (!function_exists('sanitize_inquiry_html')) {
+
+    function sanitize_inquiry_html($html) {
+        $allowed = '<p><br><strong><b><em><i><u><ul><ol><li><a><h1><h2><h3><h4><blockquote><span><div>';
+        $clean = strip_tags((string) $html, $allowed);
+        $clean = preg_replace('/\s*on\w+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $clean);
+        $clean = preg_replace('/href\s*=\s*("\s*javascript:[^"]*"|\'\s*javascript:[^\']*\')/i', 'href="#"', $clean);
+        return trim($clean);
+    }
+}
+
+if (!function_exists('format_inquiry_reply_body')) {
+
+    function format_inquiry_reply_body($body, $isInbound = FALSE) {
+        $body = trim((string) $body);
+        if ($body === '') {
+            return '';
+        }
+
+        if ($isInbound) {
+            $body = preg_replace("/\n+On .+wrote:\s*\n.*/is", '', $body);
+            $body = preg_replace("/\n+-----\s*Original Message\s*-----[\s\S]*/i", '', $body);
+            $body = preg_replace("/\n+From:\s*BODARE[\s\S]*/i", '', $body);
+            $body = trim($body);
+        }
+
+        if (strip_tags($body) !== $body) {
+            return sanitize_inquiry_html($body);
+        }
+
+        return nl2br(htmlspecialchars($body, ENT_QUOTES, 'UTF-8'));
+    }
+}
