@@ -48,6 +48,108 @@ class Website extends MX_Controller {
 		$query = $this->db->get('websitebasic');
 		return $query->result();
 	}
+
+	/*****************************/
+	/***** Email/SMTP Settings ***/
+	/*****************************/
+	public function emailsettings(){
+		$query = $this->db->get_where('email_smtp_settings', array('id' => 1));
+		$data['email_settings'] = $query->row();
+		$this->load->view('Dashboard/header');
+		$this->load->view('Website/emailsettings', $data);
+		$this->load->view('Dashboard/footer');
+	}
+
+	public function updateemailsettings(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required|trim');
+		$this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|integer|greater_than[0]|less_than_equal_to[65535]');
+		$this->form_validation->set_rules('smtp_user', 'SMTP Username', 'required|trim');
+		$this->form_validation->set_rules('from_email', 'From Email', 'required|valid_email|trim');
+		$this->form_validation->set_rules('from_name', 'From Name', 'required|trim');
+
+		if (!$this->form_validation->run()) {
+			$this->session->set_flashdata('notsuccess', strip_tags(validation_errors(' ', ' ')));
+			redirect('dashboard/website/emailsettings', 'refresh');
+			return;
+		}
+
+		$crypto = $this->input->post('smtp_crypto', TRUE);
+		$mailtype = $this->input->post('mailtype', TRUE);
+		if (!in_array($crypto, array('', 'tls', 'ssl'), TRUE)) {
+			$crypto = 'tls';
+		}
+		if (!in_array($mailtype, array('html', 'text'), TRUE)) {
+			$mailtype = 'html';
+		}
+
+		$data = array(
+			'protocol' => 'smtp',
+			'smtp_host' => trim($this->input->post('smtp_host', TRUE)),
+			'smtp_port' => (int) $this->input->post('smtp_port'),
+			'smtp_user' => trim($this->input->post('smtp_user', TRUE)),
+			'smtp_crypto' => $crypto,
+			'smtp_timeout' => max(1, (int) $this->input->post('smtp_timeout')),
+			'from_email' => trim($this->input->post('from_email', TRUE)),
+			'from_name' => trim($this->input->post('from_name', TRUE)),
+			'mailtype' => $mailtype,
+			'charset' => 'utf-8',
+			'newline' => "\r\n",
+			'crlf' => "\r\n",
+			'is_active' => $this->input->post('is_active') ? 1 : 0,
+			'updated_at' => date('Y-m-d H:i:s')
+		);
+
+		$password = (string) $this->input->post('smtp_pass', FALSE);
+		$exists = $this->db->where('id', 1)->count_all_results('email_smtp_settings') > 0;
+		if (!$exists && $password === '') {
+			$this->session->set_flashdata('notsuccess', 'SMTP Password is required when creating the settings.');
+			redirect('dashboard/website/emailsettings', 'refresh');
+			return;
+		}
+		if ($password !== '') {
+			$this->load->library('coop_mail');
+			$data['smtp_pass'] = $this->coop_mail->encrypt_password($password);
+		}
+
+		if ($exists) {
+			$this->db->where('id', 1);
+			$saved = $this->db->update('email_smtp_settings', $data);
+		} else {
+			$data['id'] = 1;
+			$data['created_at'] = date('Y-m-d H:i:s');
+			$saved = $this->db->insert('email_smtp_settings', $data);
+		}
+
+		$this->session->set_flashdata(
+			$saved ? 'success' : 'notsuccess',
+			$saved ? 'Email/SMTP settings saved successfully.' : 'Unable to save Email/SMTP settings.'
+		);
+		redirect('dashboard/website/emailsettings', 'refresh');
+	}
+
+	public function testemail(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('test_email', 'Test Email', 'required|valid_email|trim');
+
+		if (!$this->form_validation->run()) {
+			$this->session->set_flashdata('notsuccess', strip_tags(validation_errors(' ', ' ')));
+			redirect('dashboard/website/emailsettings', 'refresh');
+			return;
+		}
+
+		$to = trim($this->input->post('test_email', TRUE));
+		$this->load->library('coop_mail');
+
+		if ($this->coop_mail->send_test($to)) {
+			$this->session->set_flashdata('success', 'Test email sent successfully to ' . $to . '. Check the inbox (and spam folder).');
+		} else {
+			$error = $this->coop_mail->get_last_error();
+			$this->session->set_flashdata('notsuccess', 'Test email failed. ' . $error);
+		}
+
+		redirect('dashboard/website/emailsettings', 'refresh');
+	}
 	
 	/*****************************/
 	/***** Website Slider *****/

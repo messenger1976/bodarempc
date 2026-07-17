@@ -45,14 +45,14 @@ $tag = !empty($siteinfo[0]->tag) ? $siteinfo[0]->tag : '';
                                     <div class="form-group">
                                         <div class="form-label-group">
                                             <label class="form-label" for="email">Email address</label>
-                                            <a class="link link-primary link-sm" tabindex="-1" href="<?php echo base_url(); ?>">Need Help?</a>
+                                            <a class="link link-primary link-sm" tabindex="-1" href="<?php echo base_url('access/register'); ?>">Create account</a>
                                         </div>
                                         <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Enter your email address" required>
                                     </div>
                                     <div class="form-group">
                                         <div class="form-label-group">
                                             <label class="form-label" for="password">Password</label>
-                                            <a class="link link-primary link-sm" tabindex="-1" href="<?php echo base_url(); ?>access/register">Create account</a>
+                                            <a class="link link-primary link-sm" tabindex="-1" href="<?php echo base_url('access/forgot'); ?>">Forgot Password?</a>
                                         </div>
                                         <div class="form-control-wrap">
                                             <a tabindex="-1" href="#" class="form-icon form-icon-right passcode-switch" data-target="password">

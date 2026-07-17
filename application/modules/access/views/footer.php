@@ -16,6 +16,9 @@ $auth_slides = !empty($slider) ? $slider : array();
                                         <li class="nav-item">
                                             <a class="nav-link" href="<?php echo base_url(); ?>access/register">Register</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="<?php echo base_url(); ?>access/forgot">Forgot Password</a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="mt-3">

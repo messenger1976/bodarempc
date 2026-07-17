@@ -86,6 +86,16 @@ if (!isset($itdash) || !isset($user_position) || !isset($ccontroller) || !isset(
                                     </li>
 
                                     <li class="<?php
+                                    if ($cmethod == "emailsettings") {
+                                        echo "active";
+                                    }
+                                    ?>">
+                                        <a href="<?php echo base_url('dashboard/website/emailsettings'); ?>">
+                                            <p>Email/SMTP Settings</p>
+                                        </a>
+                                    </li>
+
+                                    <li class="<?php
                                     if ($ccontroller == "section") {
                                         echo "active";
                                     }
