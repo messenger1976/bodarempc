@@ -16,15 +16,27 @@ class Login extends MX_Controller {
     }
 
     public function index() {
-        $data['siteinfo'] = $this->getBasicInfo();
-        $this->load->view('header', $data);
-        $this->load->view('login', $data);
-        $this->load->view('footer', $data);
+        $this->renderLogin();
     }
 
     public function getBasicInfo() {
         $query = $this->db->get('websitebasic');
         return $query->result();
+    }
+
+    public function getSlider() {
+        $this->db->order_by('serialid', 'asc');
+        $this->db->limit(5);
+        $query = $this->db->get('slider');
+        return $query->result();
+    }
+
+    private function renderLogin() {
+        $data['siteinfo'] = $this->getBasicInfo();
+        $data['slider'] = $this->getSlider();
+        $this->load->view('header', $data);
+        $this->load->view('login', $data);
+        $this->load->view('footer', $data);
     }
 
     public function checking() {
@@ -63,10 +75,7 @@ class Login extends MX_Controller {
                 $session_msg['login_error'] = "Email Or Password is not valid";
                 $this->session->set_flashdata($session_msg);
 
-                $data['siteinfo'] = $this->getBasicInfo();
-                $this->load->view('header', $data);
-                $this->load->view('login', $data);
-                $this->load->view('footer', $data);
+                $this->renderLogin();
             }
         } else {
 
@@ -74,10 +83,7 @@ class Login extends MX_Controller {
             $session_msg['register_error'] = validation_errors();
             $this->session->set_userdata($session_msg);
 
-            $data['siteinfo'] = $this->getBasicInfo();
-            $this->load->view('header', $data);
-            $this->load->view('login', $data);
-            $this->load->view('footer', $data);
+            $this->renderLogin();
         }
     }
 
@@ -130,10 +136,7 @@ class Login extends MX_Controller {
                     $session_msg['login_error'] = "No Accound Found, Please Signup First With This Social Media";
                     $this->session->set_flashdata($session_msg);
 
-                    $data['siteinfo'] = $this->getBasicInfo();
-                    $this->load->view('header', $data);
-                    $this->load->view('login', $data);
-                    $this->load->view('footer', $data);
+                    $this->renderLogin();
                 }
             } else {
 
@@ -141,10 +144,7 @@ class Login extends MX_Controller {
                 $session_msg['login_error'] = "Sorry! Something Went Wrong, Please Try Another Media";
                 $this->session->set_flashdata($session_msg);
 
-                $data['siteinfo'] = $this->getBasicInfo();
-                $this->load->view('header', $data);
-                $this->load->view('login', $data);
-                $this->load->view('footer', $data);
+                $this->renderLogin();
             }
         } catch (Exception $e) {
             show_error($e->getMessage());

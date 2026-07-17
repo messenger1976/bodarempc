@@ -15,10 +15,7 @@ class Register extends MX_Controller {
     }
 
     public function index() {
-        $data['siteinfo'] = $this->getBasicInfo();
-        $this->load->view('header', $data);
-        $this->load->view('register', $data);
-        $this->load->view('footer', $data);
+        $this->renderRegister();
     }
 
     /*     * ************************** */
@@ -28,6 +25,29 @@ class Register extends MX_Controller {
     public function getBasicInfo() {
         $query = $this->db->get('websitebasic');
         return $query->result();
+    }
+
+    public function getSlider() {
+        $this->db->order_by('serialid', 'asc');
+        $this->db->limit(5);
+        $query = $this->db->get('slider');
+        return $query->result();
+    }
+
+    private function renderRegister() {
+        $data['siteinfo'] = $this->getBasicInfo();
+        $data['slider'] = $this->getSlider();
+        $this->load->view('header', $data);
+        $this->load->view('register', $data);
+        $this->load->view('footer', $data);
+    }
+
+    private function renderLogin() {
+        $data['siteinfo'] = $this->getBasicInfo();
+        $data['slider'] = $this->getSlider();
+        $this->load->view('header', $data);
+        $this->load->view('login', $data);
+        $this->load->view('footer', $data);
     }
 
     public function addnewuser() {
@@ -69,10 +89,7 @@ class Register extends MX_Controller {
             //$this->session->set_userdata($session_msg);
             $this->session->set_flashdata($session_msg);
 
-            $data['siteinfo'] = $this->getBasicInfo();
-            $this->load->view('header', $data);
-            $this->load->view('register', $data);
-            $this->load->view('footer', $data);
+            $this->renderRegister();
         }
     }
 
@@ -132,10 +149,7 @@ class Register extends MX_Controller {
                     $session_msg = array();
                     $session_msg['login_error'] = "User Already Exist";
                     $this->session->set_flashdata($session_msg);
-                    $data['siteinfo'] = $this->getBasicInfo();
-                    $this->load->view('header', $data);
-                    $this->load->view('login', $data);
-                    $this->load->view('footer', $data);
+                    $this->renderLogin();
                 }
             } else {
 
@@ -143,10 +157,7 @@ class Register extends MX_Controller {
                 $session_msg['login_error'] = "Sorry! Something Went Wrong, Please Try Another Media";
                 $this->session->set_flashdata($session_msg);
 
-                $data['siteinfo'] = $this->getBasicInfo();
-                $this->load->view('header', $data);
-                $this->load->view('login', $data);
-                $this->load->view('footer', $data);
+                $this->renderLogin();
             }
         } catch (Exception $e) {
             show_error($e->getMessage());

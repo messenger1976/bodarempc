@@ -43,7 +43,6 @@
                                     <p class="category text-gray" title="<?php echo $this->lang->line('dash_gpanel_bpdate'); ?>" ><i class="material-icons">date_range</i> <?php echo $row->bpdate; ?></p>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                    <p class="category text-gray" title="<?php echo $this->lang->line('dash_gpanel_blood'); ?>" ><i class="material-icons">local_hospital</i> <?php echo $row->blood; ?></p>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                     <p class="category text-gray" title="<?php echo $this->lang->line('dash_gpanel_dob'); ?>" ><i class="material-icons">date_range</i> <?php echo $row->dob; ?></p>

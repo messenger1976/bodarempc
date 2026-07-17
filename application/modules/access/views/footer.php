@@ -1,147 +1,75 @@
-            <footer class="footer">
-                <div class="container">
-                    <nav class="pull-left">
-<!--                        <ul>
-                            <li>
-                                <a href="#">
-                                    Home
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    Shop
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    Members
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    Blog
-                                </a>
-                            </li>
-                        </ul>-->
-                    </nav>
-                    <p class="copyright pull-right">
-<!--                        &copy;
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>
-                        <a href="#">John's Development</a>, made with love for a better web-->
-                    </p>
+<?php
+$title = !empty($siteinfo[0]->title) ? $siteinfo[0]->title : 'Cooperative';
+$tag = !empty($siteinfo[0]->tag) ? $siteinfo[0]->tag : '';
+$year = date('Y');
+$auth_slides = !empty($slider) ? $slider : array();
+?>
+                            <div class="nk-block nk-auth-footer">
+                                <div class="nk-block-between">
+                                    <ul class="nav nav-sm">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="<?php echo base_url(); ?>">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="<?php echo base_url(); ?>access/login">Login</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="<?php echo base_url(); ?>access/register">Register</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-3">
+                                    <p>&copy; <?php echo $year; ?> <?php echo htmlspecialchars($title); ?><?php echo $tag ? ' — ' . htmlspecialchars($tag) : ''; ?></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nk-split-content nk-split-stretch nk-auth-promo-panel d-flex toggle-break-lg toggle-slide toggle-slide-right" data-content="athPromo" data-toggle-screen="lg" data-toggle-overlay="true">
+                            <div class="slider-wrap w-100 w-max-550px p-3 p-sm-5 m-auto">
+                                <div class="slider-init" data-slick='{"dots":true, "arrows":false}'>
+                                    <?php if (!empty($auth_slides)) { ?>
+                                        <?php foreach ($auth_slides as $slide) {
+                                            $slide_title = !empty($slide->subtitle) ? html_entity_decode(strip_tags($slide->subtitle), ENT_QUOTES, 'UTF-8') : $title;
+                                            $slide_text = !empty($slide->content) ? html_entity_decode(strip_tags($slide->content), ENT_QUOTES, 'UTF-8') : ($tag ? $tag : 'Welcome to our cooperative community.');
+                                            $slide_img = base_url() . 'images/website/slider/' . $slide->filename;
+                                            ?>
+                                            <div class="slider-item">
+                                                <div class="nk-feature nk-feature-center">
+                                                    <div class="nk-feature-img">
+                                                        <img class="round" src="<?php echo $slide_img; ?>" alt="<?php echo htmlspecialchars($slide_title); ?>">
+                                                    </div>
+                                                    <div class="nk-feature-content py-4 p-sm-5">
+                                                        <h4><?php echo htmlspecialchars($slide_title); ?></h4>
+                                                        <p><?php echo htmlspecialchars($slide_text); ?></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <div class="slider-item">
+                                            <div class="nk-feature nk-feature-center">
+                                                <div class="nk-feature-img">
+                                                    <img class="round" src="<?php echo base_url(); ?>assets/dashlite/images/slides/promo-a.png" alt="">
+                                                </div>
+                                                <div class="nk-feature-content py-4 p-sm-5">
+                                                    <h4><?php echo htmlspecialchars($title); ?></h4>
+                                                    <p>Manage members, finances, and cooperative operations from one modern admin panel.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                                <div class="slider-dots"></div>
+                                <div class="slider-arrows"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+            </div>
         </div>
     </div>
+
+    <script src="<?php echo base_url(); ?>assets/dashlite/js/bundle.js?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo base_url(); ?>assets/dashlite/js/scripts.js?v=<?php echo time(); ?>"></script>
 </body>
-
-<!--   Core JS Files   -->
-<script src="<?php echo base_url();?>assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/jquery-ui.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/material.min.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/perfect-scrollbar.jquery.min.js" type="text/javascript"></script>
-
-<!-- Forms Validations Plugin -->
-<script src="<?php echo base_url();?>assets/js/jquery.validate.min.js"></script>
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
-<script src="<?php echo base_url();?>assets/js/moment.min.js"></script>
-<!--  Charts Plugin -->
-<script src="<?php echo base_url();?>assets/js/chartist.min.js"></script>
-<!--  Plugin for the Wizard -->
-<script src="<?php echo base_url();?>assets/js/jquery.bootstrap-wizard.js"></script>
-<!--  Notifications Plugin    -->
-<script src="<?php echo base_url();?>assets/js/bootstrap-notify.js"></script>
-<!--   Sharrre Library    -->
-<script src="<?php echo base_url();?>assets/js/jquery.sharrre.js"></script>
-<!-- DateTimePicker Plugin -->
-<script src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
-<!-- Vector Map plugin -->
-<script src="<?php echo base_url();?>assets/js/jquery-jvectormap.js"></script>
-<!-- Sliders Plugin -->
-<script src="<?php echo base_url();?>assets/js/nouislider.min.js"></script>
-<!--  Google Maps Plugin    -->
-<script src="https://maps.googleapis.com/maps/api/js"></script>
-<!-- Select Plugin -->
-<script src="<?php echo base_url();?>assets/js/jquery.select-bootstrap.js"></script>
-<!--  DataTables.net Plugin    -->
-<script src="<?php echo base_url();?>assets/js/jquery.datatables.js"></script>
-<!-- Sweet Alert 2 plugin -->
-<script src="<?php echo base_url();?>assets/js/sweetalert2.js"></script>
-<!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-<script src="<?php echo base_url();?>assets/js/jasny-bootstrap.min.js"></script>
-<!--  Full Calendar Plugin    -->
-<script src="<?php echo base_url();?>assets/js/fullcalendar.min.js"></script>
-<!-- TagsInput Plugin -->
-<script src="<?php echo base_url();?>assets/js/jquery.tagsinput.js"></script>
-<!-- Material Dashboard javascript methods -->
-<script src="<?php echo base_url();?>assets/js/material-dashboard.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.js" type="text/javascript"></script>	
-	
-<!-- DatePicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
-
-<!-- Nice Select -->
-<script src="<?php echo base_url(); ?>js/jquery.nice-select.min.js"></script>
-	
-	
-<script>
-
-
-	function previewFile() {
-		var preview = document.querySelector('img#image');
-		var file    = document.querySelector('input[type=file]').files[0];
-		var reader  = new FileReader();
-
-		reader.addEventListener("load", function () {
-			preview.src = reader.result;
-		}, false);
-
-		if (file) {
-			reader.readAsDataURL(file);
-		}
-		
-		reader.onload = (function () {
-			
-			// Destroy cropper
-		  $('#image').cropper('destroy');
-
-		  // Replace url
-		  preview.src = reader.result;
-		
-			$('#image').cropper({
-			  aspectRatio: 1 / 1,
-			  viewMode:3,
-			  dragMode:'move',
-			  crop: function(e) {
-				// Output the result data for cropping image.
-				$("input#x").val(e.x);
-				$("input#y").val(e.y);
-				$("input#width").val(e.width);
-				$("input#height").val(e.height);				
-			  }
-			});
-			
-			var x = $("input#x").val();
-			console.log(x);
-			
-		});
-	}
-	
-	
-	$(document).ready(function(){
-	
-			$('.datepicker').datepicker({
-				format: 'dd/mm/yyyy',
-				startDate: '-3d'
-			});
-				
-			$('.select').niceSelect();
-			
-	});
-		
-</script>
 </html>

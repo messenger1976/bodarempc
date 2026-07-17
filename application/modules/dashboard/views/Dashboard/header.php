@@ -72,7 +72,7 @@ $siteinfo = $siteinfo->result();
             })();
         </script>
 
-        <script src="<?php echo base_url(); ?>fullcalendar/lib/moment.min.js"></script>
+        <script src="<?php echo base_url(); ?>fullcalendar/lib/moment.min.js"></script>		
         <script src="<?php echo base_url(); ?>fullcalendar/fullcalendar.min.js"></script>
 
         <style>
@@ -149,28 +149,28 @@ $siteinfo = $siteinfo->result();
             })();
         </script>
 
-        <div class="loading" id="loading" style="display:none;">
-            <img src="<?php echo base_url(); ?>images/loading.svg" alt="Loading">
-        </div>
-        <div class="warning_notifi notifi" id="warning_notifi" style="display:none;">
+            <div class="loading" id="loading" style="display:none;">
+                <img src="<?php echo base_url(); ?>images/loading.svg" alt="Loading">
+            </div>
+            <div class="warning_notifi notifi" id="warning_notifi" style="display:none;">
             <p><em class="icon ni ni-alert-circle"></em> Oops! Something Wrong</p>
-        </div>
-        <div class="success_notifi notifi" id="success_notifi" style="display:none;">
+            </div>
+            <div class="success_notifi notifi" id="success_notifi" style="display:none;">
             <p><em class="icon ni ni-check-circle"></em> Successfully Updated</p>
-        </div>
+            </div>
 
-        <?php
-        $success = $this->session->flashdata('success');
-        $notsuccess = $this->session->flashdata('notsuccess');
+            <?php
+            $success = $this->session->flashdata('success');
+            $notsuccess = $this->session->flashdata('notsuccess');
         if ($success) { ?>
             <div class="success_notifi notifi" style="display:block;">
                 <p><em class="icon ni ni-check-circle"></em> <?php echo $success; ?></p>
-            </div>
-        <?php } elseif ($notsuccess) { ?>
+                </div>
+            <?php } elseif ($notsuccess) { ?>
             <div class="warning_notifi notifi" style="display:block;">
                 <p><em class="icon ni ni-alert-circle"></em> <?php echo $notsuccess; ?></p>
-            </div>
-        <?php } ?>
+                </div>
+            <?php } ?>
 
         <div class="nk-app-root">
             <div class="nk-main">
@@ -189,7 +189,7 @@ $siteinfo = $siteinfo->result();
                         <div class="nk-sidebar-content">
                             <div class="nk-sidebar-menu" data-simplebar>
                                 <div class="coop-sidebar-nav">
-                                    <div class="sidebar" data-color="purple">
+            <div class="sidebar" data-color="purple">
                                         <?php include APPPATH.'modules/dashboard/views/Dashboard/sidebar_nav.php'; ?>
                                     </div>
                                 </div>
@@ -218,13 +218,13 @@ $siteinfo = $siteinfo->result();
                                                 <span class="role-chip-badge <?php echo $role_class; ?>"><?php echo $role_display; ?></span>
                                                 <span class="role-chip-summary d-none d-lg-block"><?php echo $role_summary; ?></span>
                                             </div>
-                                        </li>
+                        </li>
                                         <li>
                                             <a href="<?php echo base_url(); ?>" target="_blank" class="btn btn-sm btn-outline-light">
                                                 <em class="icon ni ni-external"></em>
                                                 <span><?php echo $this->lang->line('dash_view_front'); ?></span>
-                                            </a>
-                                        </li>
+                                        </a>
+                                    </li>
                                         <li class="dropdown user-dropdown">
                                             <a href="#" class="dropdown-toggle me-n1" data-bs-toggle="dropdown">
                                                 <div class="user-toggle">
@@ -250,9 +250,9 @@ $siteinfo = $siteinfo->result();
                                                             </a>
                                                         </li>
                                                         <li><a href="<?php echo base_url(); ?>access/logout/"><em class="icon ni ni-signout"></em><span>Logout</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                    </ul>
+                </div>
+            </div>
                                         </li>
                                         <li class="dropdown language-dropdown">
                                             <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown"><em class="icon ni ni-globe"></em></a>
@@ -264,13 +264,14 @@ $siteinfo = $siteinfo->result();
                                                     <li><a href="<?php echo base_url(); ?>dashboard/switchLang/spanish"><img class="lang_img" src="<?php echo base_url(); ?>images/language/spanish.png" alt="spanish"> <?php echo $this->lang->line('dash_lspanish'); ?></a></li>
                                                     <li><a href="<?php echo base_url(); ?>dashboard/switchLang/portuguese"><img class="lang_img" src="<?php echo base_url(); ?>images/language/portuguese.png" alt="portuguese"> <?php echo $this->lang->line('dash_lportuguese'); ?></a></li>
                                                 </ul>
-                                            </div>
-                                        </li>
+                                    </div>
+                                </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-
+                
                     <div class="nk-content nk-content-fluid">
                         <div class="container-xl wide-xl">
+        

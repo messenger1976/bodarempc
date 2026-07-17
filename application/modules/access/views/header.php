@@ -1,86 +1,81 @@
-<?php 
-
-	$cmodule = $this->uri->segment(1); //Church Module
-	$ccontroller = $this->uri->segment(2); //Church Controller
-	$cmethod = $this->uri->segment(3); //Church Method
-	
-	if(!$ccontroller && $cmodule == "dashboard"){
-		$itdash = "dashboard";
-	}else{
-		$itdash = "notdashboard";
-	}
-	
+<?php
+$cmodule = $this->uri->segment(1);
+$ccontroller = $this->uri->segment(2);
+$themeColor = !empty($siteinfo[0]->color) ? $siteinfo[0]->color : '#36661f';
+$logo = !empty($siteinfo[0]->logo) ? $siteinfo[0]->logo : '';
+$favicon = !empty($siteinfo[0]->favicon) ? $siteinfo[0]->favicon : $logo;
+$title = !empty($siteinfo[0]->title) ? $siteinfo[0]->title : 'Login';
+$tag = !empty($siteinfo[0]->tag) ? $siteinfo[0]->tag : '';
 ?>
-
-<!doctype html>
-<html lang="en">
-
-
-<!-- Mirrored from demos.creative-tim.com/material-dashboard-pro/examples/pages/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 22 Jan 2017 15:09:24 GMT -->
+<!DOCTYPE html>
+<html lang="en" class="js">
 <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="<?php echo base_url();?>images/website/<?php echo $siteinfo[0]->favicon;?>" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title><?php echo $siteinfo[0]->title;?> | <?php echo $siteinfo[0]->tag;?></title>
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
-    
-    <link href="<?php echo base_url();?>assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="<?php echo base_url();?>assets/css/material-dashboard.css" rel="stylesheet" />
-    <link href="<?php echo base_url();?>css/custom_style.css" rel="stylesheet" />
-    <link href="<?php echo base_url(); ?>css/nice-select.css" rel="stylesheet"/>
-	
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <!-- <link href="<?php echo base_url(); ?>assets/css/demo.css" rel="stylesheet" /> -->
-	
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css" rel="stylesheet" />
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-	
-	
-     <!--     Fonts and icons     -->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><?php echo htmlspecialchars($title); ?><?php echo $tag ? ' | ' . htmlspecialchars($tag) : ''; ?></title>
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>images/website/<?php echo htmlspecialchars($favicon); ?>">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dashlite/css/dashlite.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dashlite/css/theme.css?v=<?php echo time(); ?>">
+    <style>
+        :root {
+            --coop-theme: <?php echo htmlspecialchars($themeColor); ?>;
+        }
+        .pg-auth .btn-primary {
+            color: #fff !important;
+            background-color: var(--coop-theme) !important;
+            border-color: var(--coop-theme) !important;
+        }
+        .pg-auth .btn-primary:hover,
+        .pg-auth .btn-primary:focus,
+        .pg-auth .btn-primary:active {
+            color: #fff !important;
+            background-color: color-mix(in srgb, var(--coop-theme) 85%, #000) !important;
+            border-color: color-mix(in srgb, var(--coop-theme) 85%, #000) !important;
+        }
+        .pg-auth a.link-primary,
+        .pg-auth .link-primary,
+        .pg-auth .form-note-s2 a,
+        .pg-auth .nav-link:hover {
+            color: var(--coop-theme) !important;
+        }
+        .pg-auth .form-control:focus {
+            border-color: var(--coop-theme) !important;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--coop-theme) 18%, transparent) !important;
+        }
+        .pg-auth .brand-logo .logo-img {
+            max-height: 52px;
+            width: auto;
+        }
+        .pg-auth .nk-auth-promo-panel {
+            background:
+                radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--coop-theme) 18%, transparent), transparent 45%),
+                radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--coop-theme) 12%, transparent), transparent 40%),
+                #f5f6fa;
+        }
+        .pg-auth .nk-feature-content h4 {
+            color: var(--coop-theme);
+        }
+        .pg-auth .nk-feature-img {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .pg-auth .nk-feature-img img.round {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+        }
+    </style>
 </head>
-
-<body>
-    <nav class="navbar navbar-default  navbar-absolute" style="border-bottom: 3px solid #ccc;">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="<?php echo base_url();?>"><img style="float:left; width: 40px; margin: -3px 20px  0 0"  class="img-circle img-rounded img-responsive" src="<?php echo base_url();?>images/website/<?php echo $siteinfo[0]->logo;?>" alt="Logo"><?php echo $siteinfo[0]->title;?></a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="<?php echo base_url();?>">
-                            <i class="material-icons">dashboard</i> Home
-                        </a>
-                    </li>
-					<li class="<?php if($cmodule =="access" && $ccontroller == "login"){echo "active";} ?>">
-                        <a href="<?php echo base_url('access/login');?>">
-                            <i class="material-icons">fingerprint</i> Login
-                        </a>
-                    </li>
-                    <li class="<?php if($cmodule =="access" && $ccontroller == "register"){echo "active";} ?>">
-                        <a href="<?php echo base_url('access/register');?>">
-                            <i class="material-icons">person_add</i> Register
-                        </a>
-                    </li>                    
-                    <li class="<?php if($cmodule =="dashboard" && $ccontroller == "joinseminar"){echo "active";} ?>">
-                        <a href="<?php echo base_url('dashboard/joinseminar');?>">
-                            <i class="material-icons">person_add</i> Join Seminar
-                        </a>
-                    </li> 
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="wrapper wrapper-full-page" style="background:#607D8B">
-        <div class="full-page login-page register-page" >
-            <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+<body class="nk-body bg-white npc-default pg-auth">
+    <div class="nk-app-root">
+        <div class="nk-main">
+            <div class="nk-wrap nk-wrap-nosidebar">
+                <div class="nk-content">
+                    <div class="nk-split nk-split-page nk-split-md">
+                        <div class="nk-split-content nk-block-area nk-block-area-column nk-auth-container bg-white">
+                            <div class="absolute-top-right d-lg-none p-3 p-sm-5">
+                                <a href="#" class="toggle btn-white btn btn-icon btn-light" data-target="athPromo"><em class="icon ni ni-info"></em></a>
+                            </div>

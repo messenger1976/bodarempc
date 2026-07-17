@@ -131,12 +131,6 @@
                                 <div class="row">	                                        
                                     <div class="col-md-4">
                                         <div class="form-group label-floating is-empty">
-                                            <label class="control-label"><?php echo $this->lang->line('dash_gpanel_blood'); ?></label>
-                                            <input type="text" id="blood" name="blood" class="form-control" value="<?php echo $row->blood; ?>">
-                                            <span class="material-input"></span></div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group label-floating is-empty">
                                             <label class="control-label"><?php echo $this->lang->line('dash_gpanel_dob'); ?></label>
                                             <input type="text" id="dob" name="dob" class="datepicker form-control" value="<?php echo $row->dob; ?>">
                                             <span class="material-input"></span></div>

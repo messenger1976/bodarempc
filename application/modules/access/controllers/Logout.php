@@ -29,6 +29,7 @@ class Logout extends MX_Controller {
 		//$this->session->set_userdata($session_msg);
 		$this->session->set_flashdata($session_msg);
                 $data['siteinfo'] = $this->getBasicInfo();
+                $data['slider'] = $this->getSlider();
 		$this->load->view('header', $data);
 		$this->load->view('login', $data);
 		$this->load->view('footer', $data);
@@ -40,6 +41,13 @@ class Logout extends MX_Controller {
         /*****************************/
         public function getBasicInfo(){
             $query = $this->db->get('websitebasic');
+            return $query->result();
+        }
+
+        public function getSlider() {
+            $this->db->order_by('serialid', 'asc');
+            $this->db->limit(5);
+            $query = $this->db->get('slider');
             return $query->result();
         }
         
