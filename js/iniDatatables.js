@@ -168,7 +168,7 @@ $('.dtPrayer').DataTable({
 
 
 $('.dtInquiry').DataTable({
-    dom: 'Bfrtip',
+    dom: "<'row'<'col-sm-12 col-md-4'B><'col-sm-12 col-md-4 inquiry-dt-date'><'col-sm-12 col-md-4'f>>rtip",
     order: [[0, 'asc']],
     buttons: [
         {
@@ -218,6 +218,58 @@ $('.dtInquiry').DataTable({
         }
     ]
 });
+
+(function () {
+    function formatDate(dateObj) {
+        var y = dateObj.getFullYear();
+        var m = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+        var d = ('0' + dateObj.getDate()).slice(-2);
+        return y + '-' + m + '-' + d;
+    }
+
+    function setRangeDates(range) {
+        var today = new Date();
+        var from = new Date(today.getTime());
+        var to = new Date(today.getTime());
+
+        if (range === '7') {
+            from.setDate(today.getDate() - 6);
+        } else if (range === '30') {
+            from.setDate(today.getDate() - 29);
+        }
+
+        $('#inquiry-date-from').val(formatDate(from));
+        $('#inquiry-date-to').val(formatDate(to));
+    }
+
+    function syncDateInputs() {
+        var range = $('#inquiry-range').val();
+        var $inputs = $('#inquiry-date-inputs');
+        var isCustom = range === 'custom';
+
+        if (!isCustom) {
+            setRangeDates(range);
+        }
+
+        $inputs.toggleClass('is-locked', !isCustom);
+        $('#inquiry-date-from, #inquiry-date-to').prop('readonly', !isCustom);
+    }
+
+    var $filter = $('#inquiry-date-filter');
+    var $slot = $('.inquiry-dt-date');
+    if ($filter.length && $slot.length) {
+        $filter.appendTo($slot).show();
+    } else if ($filter.length) {
+        $filter.insertBefore($('.dtInquiry')).show();
+    }
+
+    $(document).on('change', '#inquiry-range', function () {
+        syncDateInputs();
+        if ($(this).val() !== 'custom') {
+            $('#inquiry-date-filter').submit();
+        }
+    });
+})();
 
 $(document).on('click', '.dtInquiry tbody tr.inquiry-row-link', function (e) {
     if ($(e.target).closest('.inquiry-row-actions, .tb-tnx-action, a, button, .dropdown-menu').length) {

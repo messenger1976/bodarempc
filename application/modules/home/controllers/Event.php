@@ -22,9 +22,9 @@ class Event extends MX_Controller {
         $data['event'] = $this->getPagiData($limit, $start);  
         $data['pagination'] = $this->pagination->create_links();
         $data['basicinfo'] = $this->getBasicInfo();   
-        $this->load->view('header');
+        $this->load->view('header2', $data);
         $this->load->view('event/event', $data);
-        $this->load->view('footer', $data);
+        $this->load->view('footer2', $data);
     }
     
     /*****************************/
@@ -33,9 +33,9 @@ class Event extends MX_Controller {
     public function view(){        
         $data['basicinfo'] = $this->getBasicInfo();        
         $data['event'] = $this->getIndividual();
-        $this->load->view('header');
+        $this->load->view('header2', $data);
         $this->load->view('event/view', $data);
-        $this->load->view('footer', $data);
+        $this->load->view('footer2', $data);
     }
     
     

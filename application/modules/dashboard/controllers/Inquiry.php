@@ -25,14 +25,21 @@ class Inquiry extends MX_Controller {
 
 	public function allinquiries() {
 		$status = $this->input->get('status');
+		$dateFilter = $this->resolveDateFilter();
+
 		$this->db->from('inquiry');
 		if (in_array($status, array('new', 'read', 'replied', 'closed', 'guest_replied'), TRUE)) {
 			$this->db->where('status', $status);
 		}
+		$this->applyDateFilter($dateFilter['date_from'], $dateFilter['date_to']);
 		$this->db->order_by('inquiryid', 'DESC');
 		$data['inquiries'] = $this->db->get()->result();
 		$data['filter_status'] = $status;
-		$data['counts'] = $this->getStatusCounts();
+		$data['filter_range'] = $dateFilter['range'];
+		$data['filter_date_from'] = $dateFilter['date_from'];
+		$data['filter_date_to'] = $dateFilter['date_to'];
+		$data['date_query'] = $dateFilter['query'];
+		$data['counts'] = $this->getStatusCounts($dateFilter['date_from'], $dateFilter['date_to']);
 
 		$this->load->view('Dashboard/header');
 		$this->load->view('Inquiry/allinquiries', $data);
@@ -486,7 +493,7 @@ class Inquiry extends MX_Controller {
 		$this->db->delete('inquiry_reply_attachment');
 	}
 
-	protected function getStatusCounts() {
+	protected function getStatusCounts($dateFrom = NULL, $dateTo = NULL) {
 		$counts = array(
 			'all' => 0,
 			'new' => 0,
@@ -496,7 +503,12 @@ class Inquiry extends MX_Controller {
 			'guest_replied' => 0,
 		);
 
-		$rows = $this->db->query("SELECT status, COUNT(*) AS total FROM inquiry GROUP BY status")->result();
+		$this->db->select('status, COUNT(*) AS total');
+		$this->db->from('inquiry');
+		$this->applyDateFilter($dateFrom, $dateTo);
+		$this->db->group_by('status');
+		$rows = $this->db->get()->result();
+
 		foreach ($rows as $row) {
 			$counts['all'] += (int) $row->total;
 			if (isset($counts[$row->status])) {
@@ -505,5 +517,74 @@ class Inquiry extends MX_Controller {
 		}
 
 		return $counts;
+	}
+
+	protected function resolveDateFilter() {
+		$today = date('Y-m-d');
+		$range = $this->input->get('range');
+		$allowed = array('today', '7', '30', 'custom');
+		if (!in_array($range, $allowed, TRUE)) {
+			$range = 'today';
+		}
+
+		$dateFrom = $this->sanitizeDate($this->input->get('date_from'));
+		$dateTo = $this->sanitizeDate($this->input->get('date_to'));
+
+		if ($range === 'today') {
+			$dateFrom = $today;
+			$dateTo = $today;
+		} elseif ($range === '7') {
+			$dateFrom = date('Y-m-d', strtotime('-6 days'));
+			$dateTo = $today;
+		} elseif ($range === '30') {
+			$dateFrom = date('Y-m-d', strtotime('-29 days'));
+			$dateTo = $today;
+		} else {
+			if ($dateFrom === NULL) {
+				$dateFrom = $today;
+			}
+			if ($dateTo === NULL) {
+				$dateTo = $today;
+			}
+			if ($dateFrom > $dateTo) {
+				$tmp = $dateFrom;
+				$dateFrom = $dateTo;
+				$dateTo = $tmp;
+			}
+		}
+
+		$query = http_build_query(array(
+			'range' => $range,
+			'date_from' => $dateFrom,
+			'date_to' => $dateTo,
+		));
+
+		return array(
+			'range' => $range,
+			'date_from' => $dateFrom,
+			'date_to' => $dateTo,
+			'query' => $query,
+		);
+	}
+
+	protected function sanitizeDate($value) {
+		$value = trim((string) $value);
+		if ($value === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+			return NULL;
+		}
+		$parts = explode('-', $value);
+		if (!checkdate((int) $parts[1], (int) $parts[2], (int) $parts[0])) {
+			return NULL;
+		}
+		return $value;
+	}
+
+	protected function applyDateFilter($dateFrom, $dateTo) {
+		if ($dateFrom) {
+			$this->db->where('DATE(created_at) >=', $dateFrom);
+		}
+		if ($dateTo) {
+			$this->db->where('DATE(created_at) <=', $dateTo);
+		}
 	}
 }

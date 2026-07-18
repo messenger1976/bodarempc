@@ -1,55 +1,84 @@
+    <!-- Page Header Start -->
+    <?php
+        // Get the Event menu image
+        $this->db->where_in('menuname', array('Event', 'Events'));
+        $menu = $this->db->get('menu')->row();
+        $bgImage = (isset($menu) && !empty($menu->menuimage)) 
+            ? base_url() . 'images/website/menu/' . $menu->menuimage 
+            : base_url() . 'themes/bodare/website/assets/img/default-bg.jpg';
+    ?>
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(to right, rgb(2, 36, 91) 0%, rgba(2, 36, 91, 0) 100%), url(<?php echo $bgImage; ?>) center center no-repeat">
+        <div class="container py-5">
+            <h1 class="display-3 text-white animated slideInRight">Event</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb animated slideInRight mb-0">
+                    <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>">Home</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>home/event">Events</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Event Details</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
 
-<div class="wrapper_section">
-    <!-- <div class="container"> -->
-    <div class="animate-in cs_sections" data-anim-type="bounce-in-up-large"  data-anim-delay="300"  >
+    <!-- Event Details Start -->
+    <div class="container-xxl py-5 event-view-page">
         <div class="container">
-            <p class="breadcrumb"><i class="fa fa-home"></i> <a href="<?php echo base_url(); ?>">Home</a> <i class="fa fa-angle-right"></i> <a href="<?php echo base_url(); ?>home/event">Event</a></p>
-            <h2>Event</h2>
-            <div class="separator-container">
-                <div class="separator line-separator">♦</div>
-            </div>
+            <style>
+                .event-view-page .event-banner img {
+                    width: 100%;
+                    max-height: 480px;
+                    object-fit: cover;
+                    display: block;
+                }
+
+                .event-view-page .event-meta span {
+                    display: inline-block;
+                    margin-right: 24px;
+                    color: #666;
+                }
+
+                .event-view-page .event-meta i {
+                    color: var(--primary);
+                    margin-right: 6px;
+                }
+
+                .event-view-page .event-description {
+                    line-height: 1.8;
+                }
+            </style>
 
             <?php foreach ($event as $event) { ?>
-                <div class="col-lg-offset-2 col-lg-8 col-md-6 col-sm-12 col-xs-12">
-                    <div class="seminar single">
-                        <img src="<?php echo base_url(); ?>images/event/feature/<?php echo $event->eventimage; ?>" alt="Event Banner"></img>
-                        <h5><span><i class="fa fa-calendar"></i> Time - <?php echo $event->eventtime; ?>, <?php echo $event->eventdate; ?></span> <span><i class="fa fa-map-marker"></i> Location - <?php echo $event->eventlocation; ?></span> </h5>
-                        <h4><a   href="<?php echo base_url(); ?>home/event/view/<?php echo $event->eventid; ?>"><?php echo $event->eventtitle; ?></a></h4>
-                    </div>
-                </div>
-
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="seminar-view">
-                        <div class="row">
-                            <h4><?php echo $event->eventdescription; ?></h4>
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="event-banner mb-4 wow fadeInUp" data-wow-delay="0.1s">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>images/event/feature/<?php echo $event->eventimage; ?>" alt="Event Banner">
                         </div>
-
-                        <div class="separator-container">
-                            <div class="extra_space_sm"></div>
+                        <div class="wow fadeInUp" data-wow-delay="0.3s">
+                            <h1 class="display-6 mb-3"><?php echo $event->eventtitle; ?></h1>
+                            <div class="event-meta mb-4">
+                                <span><i class="fa fa-calendar"></i> Time - <?php echo $event->eventtime; ?>, <?php echo $event->eventdate; ?></span>
+                                <span><i class="fa fa-map-marker-alt"></i> Location - <?php echo $event->eventlocation; ?></span>
+                            </div>
+                            <div class="event-description mb-5">
+                                <?php echo $event->eventdescription; ?>
+                            </div>
                         </div>
-
-                        <div class="row"> 
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <iframe
-                                    width="100%"
-                                    height="300"
-                                    frameborder="0" style="border:0; pointer-events: none;"
-                                    src="https://www.google.com/maps?q=<?php echo rawurlencode($event->location); ?>&output=embed">
-                                </iframe>
-                            </div> 
+                        <div class="wow fadeInUp" data-wow-delay="0.5s">
+                            <h4 class="mb-3"><i class="fa fa-map-marked-alt text-primary"></i> Event Location</h4>
+                            <iframe
+                                width="100%"
+                                height="350"
+                                frameborder="0" style="border:0;"
+                                src="https://www.google.com/maps?q=<?php echo rawurlencode($event->eventlocation); ?>&output=embed">
+                            </iframe>
+                        </div>
+                        <div class="mt-5 text-center wow fadeInUp" data-wow-delay="0.5s">
+                            <a href="<?php echo base_url(); ?>home/event" class="btn btn-primary py-3 px-5"><i class="fa fa-arrow-left me-2"></i>Back to All Events</a>
                         </div>
                     </div>
-
-                    <div class="separator-container">
-                        <div class="extra_space_sm"></div>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
-                        <div class="socialShare"></div>
-                    </div>
-
-
                 </div>
             <?php } ?>
         </div>
     </div>
-</div>
+    <!-- Event Details End -->

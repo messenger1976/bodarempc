@@ -168,6 +168,12 @@ $lang['dash_gpanel_fetch_email_replies'] = "Check Email Replies";
 $lang['dash_gpanel_received_via_email'] = "Received via Email";
 $lang['dash_gpanel_attachments'] = "Attachments";
 $lang['dash_gpanel_attachment_hint'] = "Optional. Up to 5 files, 10 MB each, 20 MB total. Allowed: PDF, Word, Excel, TXT, JPG, PNG.";
+$lang['dash_gpanel_date_range'] = "Date Range";
+$lang['dash_gpanel_today'] = "Today";
+$lang['dash_gpanel_last_7_days'] = "Last 7 Days";
+$lang['dash_gpanel_last_30_days'] = "Last 30 Days";
+$lang['dash_gpanel_custom_range'] = "Custom";
+$lang['dash_gpanel_filter'] = "Filter";
 
 $lang['dash_addcstaff_panel_title'] = "Add Employee";
 $lang['dash_allcstaffs_panel_title'] = "All Employees";
