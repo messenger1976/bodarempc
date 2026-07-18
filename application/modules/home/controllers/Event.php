@@ -39,6 +39,35 @@ class Event extends MX_Controller {
             return;
         }
 
+        $event = $data['event'][0];
+        $basic = !empty($data['basicinfo'][0]) ? $data['basicinfo'][0] : getBasic();
+        $site_name = !empty($basic->title) ? $basic->title : 'BODARE & Community MPC';
+        $description = seo_plain_text($event->eventdescription, 160);
+        if ($description === '') {
+            $description = $event->eventtitle . ' — upcoming event from ' . $site_name
+                . (!empty($event->eventlocation) ? ' at ' . $event->eventlocation : '')
+                . (!empty($event->eventdate) ? ' on ' . $event->eventdate : '') . '.';
+        }
+        $data['seo'] = array(
+            'title' => $event->eventtitle . ' | Events | ' . $site_name,
+            'description' => $description,
+            'keywords' => $event->eventtitle . ', BODARE events, cooperative activities, Bohol',
+            'canonical' => current_url(),
+            'image' => !empty($event->eventimage)
+                ? base_url('images/event/feature/' . $event->eventimage)
+                : '',
+            'type' => 'article',
+            'json_ld' => array(
+                seo_organization_schema($basic),
+                seo_event_schema($event, $basic),
+                seo_breadcrumb_schema(array(
+                    'Home' => '',
+                    'Events' => 'home/event',
+                    $event->eventtitle => current_url(),
+                )),
+            ),
+        );
+
         $this->load->view('header2', $data);
         $this->load->view('event/view', $data);
         $this->load->view('footer2', $data);

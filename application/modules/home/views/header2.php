@@ -15,18 +15,15 @@ if ($this->uri->uri_string() == '') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-PH">
 
 <head>
     <meta charset="utf-8">
-    <title><?php echo $basic->title;?> | <?php echo $basic->tag;?></title>
-    <link rel="shortcut icon" type="image/png" href="<?php echo base_url();?>images/website/<?php echo $basic->favicon;?>"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <?php
+        $seo = seo_resolve(isset($seo) ? $seo : array(), $basic);
+        seo_render_head($seo);
+    ?>
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -82,10 +79,18 @@ if ($this->uri->uri_string() == '') {
             <div class="col-lg-6 ps-5 text-start">
                 <div class="h-100 d-inline-flex align-items-center text-white">
                     <span>Follow Us:</span>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-instagram"></i></a>
+                    <?php if (!empty(getBasic()->facebook)) { ?>
+                    <a class="btn btn-link text-light" href="<?php echo getBasic()->facebook; ?>" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <?php } ?>
+                    <?php if (!empty(getBasic()->twitter)) { ?>
+                    <a class="btn btn-link text-light" href="<?php echo getBasic()->twitter; ?>" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <?php } ?>
+                    <?php if (!empty(getBasic()->linkedin)) { ?>
+                    <a class="btn btn-link text-light" href="<?php echo getBasic()->linkedin; ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <?php } ?>
+                    <?php if (!empty(getBasic()->youtube)) { ?>
+                    <a class="btn btn-link text-light" href="<?php echo getBasic()->youtube; ?>" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <?php } ?>
                 </div>
             </div>
             <div class="col-lg-6 text-end">

@@ -41,6 +41,51 @@ class Cooperative_officers extends MX_Controller {
     public function view(){
         $data['basicinfo'] = $this->getBasicInfo();        
         $data['cooperative_officers'] = $this->getIndividual();
+
+        if (empty($data['cooperative_officers'])) {
+            show_404();
+            return;
+        }
+
+        $officer = $data['cooperative_officers'][0];
+        $basic = !empty($data['basicinfo'][0]) ? $data['basicinfo'][0] : getBasic();
+        $site_name = !empty($basic->title) ? $basic->title : 'BODARE & Community MPC';
+        $full_name = trim($officer->fname . ' ' . $officer->lname);
+        $position = !empty($officer->position) ? $officer->position : 'Cooperative Officer';
+        $description = !empty($officer->speech)
+            ? seo_plain_text($officer->speech, 160)
+            : ($full_name . ' serves as ' . $position . ' at ' . $site_name . '.');
+        $data['seo'] = array(
+            'title' => $full_name . ' — ' . $position . ' | ' . $site_name,
+            'description' => $description,
+            'keywords' => $full_name . ', ' . $position . ', cooperative officers, BODARE',
+            'canonical' => current_url(),
+            'image' => !empty($officer->profileimage)
+                ? base_url('images/cooperative_officers/profile/' . $officer->profileimage)
+                : '',
+            'type' => 'profile',
+            'json_ld' => array(
+                seo_organization_schema($basic),
+                seo_breadcrumb_schema(array(
+                    'Home' => '',
+                    'Cooperative Officers' => 'home/cooperative_officers',
+                    $full_name => current_url(),
+                )),
+                array(
+                    '@context' => 'https://schema.org',
+                    '@type' => 'Person',
+                    'name' => $full_name,
+                    'jobTitle' => $position,
+                    'worksFor' => array(
+                        '@type' => 'Organization',
+                        'name' => $site_name,
+                        'url' => base_url(),
+                    ),
+                    'url' => current_url(),
+                ),
+            ),
+        );
+
         $this->load->view('header2', $data);
         $this->load->view('cooperative_officers/view', $data);
         $this->load->view('footer2', $data);

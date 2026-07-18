@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /access/
+Disallow: /dashboard/
+Disallow: /application/
+Disallow: /system/
+Disallow: /ci_sessions/
+Disallow: /vendor/
+
+Sitemap: https://www.bodarempc.com/sitemap.xml

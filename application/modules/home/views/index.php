@@ -9,7 +9,7 @@
 
                 <?php $i=0; foreach ($slider as $slide) { $i++;?>     
                     <div class="carousel-item <?php if($i == 1){echo "active";} ?>">
-                        <img class="w-100" src="<?php echo base_url();?>images/website/slider/resize/<?php echo $slide->filename; ?>" alt="Image">
+                        <img class="w-100" src="<?php echo base_url();?>images/website/slider/resize/<?php echo $slide->filename; ?>" alt="<?php echo htmlspecialchars(!empty($slide->content) ? $slide->content : (!empty($slide->subtitle) ? $slide->subtitle : 'BODARE & Community MPC'), ENT_QUOTES, 'UTF-8'); ?>">
                         <div class="carousel-caption">
                             <div class="container">
                                 <div class="row justify-content-center">
@@ -57,10 +57,10 @@
                 <div class="col-lg-6">
                     <div class="row gx-3 h-100">
                         <div class="col-6 align-self-start wow fadeInUp" data-wow-delay="0.1s">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-1.jpg">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-1.jpg" alt="About BODARE & Community MPC">
                         </div>
                         <div class="col-6 align-self-end wow fadeInDown" data-wow-delay="0.1s">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-2.jpg">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-2.jpg" alt="BODARE cooperative community in Bohol">
                         </div>
                     </div>
                 </div>

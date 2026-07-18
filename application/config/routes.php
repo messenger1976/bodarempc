@@ -58,6 +58,8 @@ $route['login'] = "access/login";
 /****************************************************************/
 
 $route['home/page/(:any)'] = "home/page/index";
+$route['sitemap\.xml'] = "home/sitemap/index";
+$route['sitemap'] = "home/sitemap/index";
 //$route['hauth/window/(:any)'] = "access/hauth/window/";
 //$route['hauth/window/endpoint(:any)'] = "access/hauth/endpoint/";
 $route['404_override'] = '';

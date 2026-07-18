@@ -19,10 +19,10 @@
                 <div class="col-lg-6">
                     <div class="row gx-3 h-100">
                         <div class="col-6 align-self-start wow fadeInUp" data-wow-delay="0.1s">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-1.jpg">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-1.jpg" alt="BODARE & Community MPC cooperative building and members">
                         </div>
                         <div class="col-6 align-self-end wow fadeInDown" data-wow-delay="0.1s">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-2.jpg">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>themes/bodare/website/assets/img/about-2.jpg" alt="Bohol DAR Employee and Community Multi-Purpose Cooperative activities">
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,8 @@
     <!-- Page Header Start -->
     <?php
+        $eventRow = !empty($event) ? (is_array($event) ? reset($event) : $event) : null;
+        $eventTitle = ($eventRow && !empty($eventRow->eventtitle)) ? $eventRow->eventtitle : 'Event Details';
+
         // Get the Event menu image
         $this->db->where_in('menuname', array('Event', 'Events'));
         $menu = $this->db->get('menu')->row();
@@ -9,12 +12,12 @@
     ?>
     <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s" style="background: linear-gradient(to right, rgb(2, 36, 91) 0%, rgba(2, 36, 91, 0) 100%), url(<?php echo $bgImage; ?>) center center no-repeat">
         <div class="container py-5">
-            <h1 class="display-3 text-white animated slideInRight">Event</h1>
+            <h1 class="display-3 text-white animated slideInRight"><?php echo htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8'); ?></h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb animated slideInRight mb-0">
                     <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>">Home</a></li>
                     <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>home/event">Events</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Event Details</li>
+                    <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8'); ?></li>
                 </ol>
             </nav>
         </div>
@@ -52,7 +55,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <div class="event-banner mb-4 wow fadeInUp" data-wow-delay="0.1s">
-                            <img class="img-fluid" src="<?php echo base_url(); ?>images/event/feature/<?php echo $event->eventimage; ?>" alt="Event Banner">
+                            <img class="img-fluid" src="<?php echo base_url(); ?>images/event/feature/<?php echo $event->eventimage; ?>" alt="<?php echo htmlspecialchars($event->eventtitle, ENT_QUOTES, 'UTF-8'); ?>">
                         </div>
                         <div class="wow fadeInUp" data-wow-delay="0.3s">
                             <h1 class="display-6 mb-3"><?php echo $event->eventtitle; ?></h1>

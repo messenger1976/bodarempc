@@ -25,9 +25,10 @@ if ($this->uri->uri_string() == '') {
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="shortcut icon" type="image/png" href="<?php echo base_url();?>images/website/<?php echo $basic->favicon;?>"/>
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <title><?php echo $basic->title;?> | <?php echo $basic->tag;?></title>
+        <?php
+            $seo = seo_resolve(isset($seo) ? $seo : array(), $basic);
+            seo_render_head($seo);
+        ?>
 
         <!-- Bootstrap And Styles -->
         <link href="<?php echo base_url(); ?>css/bootstrap.min.css" rel="stylesheet">
