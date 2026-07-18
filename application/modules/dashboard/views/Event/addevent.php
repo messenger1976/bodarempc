@@ -54,6 +54,7 @@
                                     <div class="form-group label-floating is-empty">
                                         <label class="control-label"><?php echo $this->lang->line('dash_gpanel_location'); ?> (*)</label>
                                         <input type="text" id="eventlocation" name="eventlocation" class="form-control" required>
+                                        <small class="text-muted">Address/place name, or coordinates like <code>9.6729,123.8721</code></small>
                                         <span class="material-input"></span></div>
                                 </div>
 

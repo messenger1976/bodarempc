@@ -55,6 +55,7 @@
                                         <div class="form-group label-floating is-empty">
                                             <label class="control-label"><?php echo $this->lang->line('dash_gpanel_location'); ?> (*)</label>
                                             <input type="text" id="eventlocation" name="eventlocation" class="form-control" value="<?php echo $row->eventlocation; ?>" required>
+                                            <small class="text-muted">Address/place name, or coordinates like <code>9.6729,123.8721</code></small>
                                             <span class="material-input"></span></div>
                                     </div>
 
@@ -101,6 +102,7 @@
                                 </div>
 
                                 <button id="updateEventSubmit" type="submit" class="btn btn-primary pull-right"><i class="material-icons">person_add</i> <?php echo $this->lang->line('dash_updateevent_panel_title'); ?></button>
+                                <a href="<?php echo base_url(); ?>dashboard/event/allevents" class="btn btn-default pull-right" style="margin-right: 8px;"><i class="material-icons">arrow_back</i> <?php echo $this->lang->line('dash_gpanel_back'); ?></a>
                                 <div class="clearfix"></div>
                             </form>
                         <?php endforeach; ?>

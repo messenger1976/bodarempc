@@ -66,12 +66,7 @@
                         </div>
                         <div class="wow fadeInUp" data-wow-delay="0.5s">
                             <h4 class="mb-3"><i class="fa fa-map-marked-alt text-primary"></i> Event Location</h4>
-                            <iframe
-                                width="100%"
-                                height="350"
-                                frameborder="0" style="border:0;"
-                                src="https://www.google.com/maps?q=<?php echo rawurlencode($event->eventlocation); ?>&output=embed">
-                            </iframe>
+                            <?php echo coop_map_embed($event->eventlocation, $event->eventtitle, 380); ?>
                         </div>
                         <div class="mt-5 text-center wow fadeInUp" data-wow-delay="0.5s">
                             <a href="<?php echo base_url(); ?>home/event" class="btn btn-primary py-3 px-5"><i class="fa fa-arrow-left me-2"></i>Back to All Events</a>

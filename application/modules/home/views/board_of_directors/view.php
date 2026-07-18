@@ -109,12 +109,7 @@
                             </div> 
 
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <iframe
-                                    width="100%"
-                                    height="280"
-                                    frameborder="0" style="border:0; pointer-events: none;"
-                                    src="https://www.google.com/maps?q=<?php echo rawurlencode($board_of_directors->city . ', ' . $board_of_directors->country); ?>&output=embed">
-                                </iframe>
+                                <?php echo coop_map_embed($board_of_directors->city . ', ' . $board_of_directors->country, '', 280, FALSE); ?>
                             </div> 
                         </div>
                     </div>

@@ -705,17 +705,8 @@ foreach ($section as $section) { ?>
     
     
 
-    <?php
-        $homeMapQuery = trim((string) getBasic()->map);
-        $homeMapEmbedUrl = 'https://www.google.com/maps?q=' . rawurlencode($homeMapQuery) . '&output=embed';
-    ?>
     <div class="animate-in cs_sections map" data-anim-type="bounce-in-up-large"  data-anim-delay="600"  >
-        <iframe
-            width="100%"
-            height="700"
-            frameborder="0" style="border:0; pointer-events: none;"
-            src="<?php echo $homeMapEmbedUrl; ?>" allowfullscreen>
-        </iframe>
+        <?php echo coop_map_embed(getBasic()->map, getBasic()->title, 700); ?>
     </div>
 
     <!-- Contact Start -->

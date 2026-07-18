@@ -185,6 +185,7 @@
 
 <!-- Include Trumbowyg Editor JS -->
 <script src="<?php echo base_url(); ?>trumbowyg/dist/trumbowyg.min.js"></script>
+<script src="<?php echo base_url(); ?>js/trumbowyg.imagemanager.js?v=<?php echo time(); ?>"></script>
 
 
 <!-- Nice Select -->
@@ -279,7 +280,13 @@
                     ['unorderedList', 'orderedList'],
                     ['horizontalRule'],
                     ['removeformat']
-                ]
+                ],
+                plugins: {
+                    imagemanager: {
+                        uploadPath: "<?php echo base_url(); ?>dashboard/imagemanager/upload",
+                        browsePath: "<?php echo base_url(); ?>dashboard/imagemanager/browse"
+                    }
+                }
             });
         }
     } catch (e) {}

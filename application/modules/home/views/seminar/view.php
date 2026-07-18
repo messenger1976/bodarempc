@@ -36,12 +36,7 @@
 
                         <div class="row"> 
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <iframe
-                                    width="100%"
-                                    height="300"
-                                    frameborder="0" style="border:0; pointer-events: none;"
-                                    src="https://www.google.com/maps?q=<?php echo rawurlencode($seminar->location); ?>&output=embed">
-                                </iframe>
+                                <?php echo coop_map_embed($seminar->seminarlocation, $seminar->seminartitle, 300); ?>
                             </div> 
                         </div>
                     </div>

@@ -124,12 +124,7 @@
                             </div> 
 
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                <iframe
-                                    width="100%"
-                                    height="280"
-                                    frameborder="0" style="border:0; pointer-events: none;"
-                                    src="https://www.google.com/maps?q=<?php echo rawurlencode($cooperative_officers->city . ', ' . $cooperative_officers->country); ?>&output=embed">
-                                </iframe>
+                                <?php echo coop_map_embed($cooperative_officers->city . ', ' . $cooperative_officers->country, '', 280, FALSE); ?>
                             </div> 
                         </div>
                     </div>

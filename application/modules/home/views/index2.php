@@ -205,17 +205,8 @@
     </div>
 
 
-    <?php
-        $legacyHomeMapQuery = trim((string) $basic->map);
-        $legacyHomeMapEmbedUrl = 'https://www.google.com/maps?q=' . rawurlencode($legacyHomeMapQuery) . '&output=embed';
-    ?>
     <div class="animate-in cs_sections map" data-anim-type="bounce-in-up-large"  data-anim-delay="600"  >
-        <iframe
-            width="100%"
-            height="700"
-            frameborder="0" style="border:0; pointer-events: none;"
-            src="<?php echo $legacyHomeMapEmbedUrl; ?>" allowfullscreen>
-        </iframe>
+        <?php echo coop_map_embed($basic->map, $basic->title, 700); ?>
     </div>
 
     <div class="animate-in cs_sections parallax" data-parallax="scroll" data-image-src="images/slide07.jpg" data-anim-type="bounce-in-up-large"  data-anim-delay="600"  >

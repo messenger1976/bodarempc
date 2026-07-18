@@ -48,6 +48,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card-footer">
+                            <div class="pull-right">
+                                <a href="<?php echo base_url(); ?>dashboard/event/allevents" class="btn btn-default"><i class="material-icons">arrow_back</i> <?php echo $this->lang->line('dash_gpanel_back'); ?></a>
+                                <a href="<?php echo base_url(); ?>dashboard/event/edit/<?php echo $row->eventid; ?>" class="btn btn-warning"><i class="material-icons">edit</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
                 </div>
             </div>
