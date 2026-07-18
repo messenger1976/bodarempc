@@ -61,6 +61,37 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Status (*)</label>
+                                            <select id="status" name="status" class="form-control" required>
+                                                <option value="draft" <?php echo $row->status === 'draft' ? 'selected' : ''; ?>>Draft</option>
+                                                <option value="published" <?php echo $row->status === 'published' ? 'selected' : ''; ?>>Publish</option>
+                                            </select>
+                                            <small class="text-muted">Draft events are never shown on the public website.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Publish Start (*)</label>
+                                            <input type="datetime-local" id="publish_start_at" name="publish_start_at" class="form-control" value="<?php echo date('Y-m-d\TH:i', strtotime($row->publish_start_at)); ?>" required>
+                                            <small class="text-muted">The event becomes visible at this date and time when published.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Publish End</label>
+                                            <input type="datetime-local" id="publish_end_at" name="publish_end_at" class="form-control" value="<?php echo $row->publish_end_at ? date('Y-m-d\TH:i', strtotime($row->publish_end_at)) : ''; ?>" <?php echo $row->publish_end_at ? '' : 'disabled'; ?>>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="no_publish_end" <?php echo $row->publish_end_at ? '' : 'checked'; ?>> No ending date
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group label-floating is-empty">
                                             <label class="control-label"><?php echo $this->lang->line('dash_gpanel_description'); ?></label>
@@ -77,3 +108,12 @@
                 </div>
             </div>
         </div>
+        <script>
+            document.getElementById('no_publish_end').addEventListener('change', function () {
+                var endDate = document.getElementById('publish_end_at');
+                endDate.disabled = this.checked;
+                if (this.checked) {
+                    endDate.value = '';
+                }
+            });
+        </script>

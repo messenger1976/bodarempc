@@ -80,6 +80,7 @@ class Home extends MX_Controller {
     /***** Get Event Info ********/
     /*****************************/
     public function getEventInfo(){        
+        $this->applyEventPublicationFilter();
         $this->db->order_by('eventid', 'desc');
         $this->db->limit(1);
         $query = $this->db->get('event');
@@ -90,9 +91,24 @@ class Home extends MX_Controller {
     /***** Get All Events Info ********/
     /**********************************/
     public function getEventsInfo(){        
+        $this->applyEventPublicationFilter();
         $this->db->order_by('eventid', 'desc');
         $query = $this->db->get('event');
         return $query->result();
+    }
+
+    /**
+     * Limit homepage event queries to currently published events.
+     */
+    protected function applyEventPublicationFilter(){
+        $now = date('Y-m-d H:i:s');
+
+        $this->db->where('status', 'published');
+        $this->db->where('publish_start_at <=', $now);
+        $this->db->group_start();
+        $this->db->where('publish_end_at IS NULL', NULL, FALSE);
+        $this->db->or_where('publish_end_at >', $now);
+        $this->db->group_end();
     }
     
     /*****************************/

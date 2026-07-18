@@ -18,7 +18,7 @@ class Event extends MX_Controller {
         $database = "event";
         $perpage = 6;
         $start = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $limit = iniPagination($baselink, $database, $perpage);	
+        $limit = iniPagination($baselink, $database, $perpage, $this->getPublishedCount());	
         $data['event'] = $this->getPagiData($limit, $start);  
         $data['pagination'] = $this->pagination->create_links();
         $data['basicinfo'] = $this->getBasicInfo();   
@@ -33,6 +33,12 @@ class Event extends MX_Controller {
     public function view(){        
         $data['basicinfo'] = $this->getBasicInfo();        
         $data['event'] = $this->getIndividual();
+
+        if (empty($data['event'])) {
+            show_404();
+            return;
+        }
+
         $this->load->view('header2', $data);
         $this->load->view('event/view', $data);
         $this->load->view('footer2', $data);
@@ -51,6 +57,8 @@ class Event extends MX_Controller {
     /***** Get Event Info ********/
     /*****************************/
     public function getEvent(){ 
+        $this->applyPublicationFilter();
+        $this->db->order_by('eventid', 'desc');
         $query = $this->db->get('event');
         return $query->result();
     }
@@ -60,7 +68,9 @@ class Event extends MX_Controller {
     /*****************************/
     public function getIndividual(){ 
         $eventid = $this->uri->segment(4);
-        $query = $this->db->get_where('event', array('eventid' => $eventid));
+        $this->db->where('eventid', $eventid);
+        $this->applyPublicationFilter();
+        $query = $this->db->get('event');
         return $query->result();
     }
     
@@ -68,9 +78,33 @@ class Event extends MX_Controller {
     /********* Get Pagination Event *************/
     /****************************************/
     public function getPagiData($limit, $start){
+            $this->applyPublicationFilter();
+            $this->db->order_by('eventid', 'desc');
             $this->db->limit($limit, $start);
             $query = $this->db->get('event');
             return $query->result();
+    }
+
+    /**
+     * Count events that are visible on the public website.
+     */
+    public function getPublishedCount(){
+        $this->applyPublicationFilter();
+        return $this->db->count_all_results('event');
+    }
+
+    /**
+     * Apply the shared status and publication-window rules.
+     */
+    protected function applyPublicationFilter(){
+        $now = date('Y-m-d H:i:s');
+
+        $this->db->where('status', 'published');
+        $this->db->where('publish_start_at <=', $now);
+        $this->db->group_start();
+        $this->db->where('publish_end_at IS NULL', NULL, FALSE);
+        $this->db->or_where('publish_end_at >', $now);
+        $this->db->group_end();
     }
         
 }

@@ -57,16 +57,27 @@ class Event extends MX_Controller {
         $this->form_validation->set_rules('eventdate', 'Date', 'trim|required');
         $this->form_validation->set_rules('eventtime', 'Time', 'trim|required');
         $this->form_validation->set_rules('eventlocation', 'Location', 'trim|required');
+        $this->form_validation->set_rules('status', 'Status', 'trim|required|in_list[draft,published]');
+        $this->form_validation->set_rules('publish_start_at', 'Publish start date', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
             $errors['errorFormValidation'] = validation_errors();
             echo json_encode($errors);
         } else {
+            $publication = $this->getPublicationData();
+            if (!$publication['valid']) {
+                $errors['errorFormValidation'] = $publication['error'];
+                echo json_encode($errors);
+                return;
+            }
 
             $data['eventtitle'] = $this->input->post('eventtitle');
             $data['eventdate'] = $this->input->post('eventdate');
             $data['eventtime'] = $this->input->post('eventtime');
             $data['eventlocation'] = $this->input->post('eventlocation');
             $data['eventdescription'] = $this->input->post('eventdescription');
+            $data['status'] = $publication['status'];
+            $data['publish_start_at'] = $publication['publish_start_at'];
+            $data['publish_end_at'] = $publication['publish_end_at'];
             $data['cdate'] = date("j F Y");
 
             /*             * ****** Uploading Profile Images ****** */
@@ -84,7 +95,8 @@ class Event extends MX_Controller {
                 } else {
                     $data['eventimage'] = '';
                     $errors['profileimage_error'] = strip_tags($this->upload->display_errors());
-                    echo json_encode($succcess);
+                    echo json_encode($errors);
+                    return;
                 }
 
                 $config['image_library'] = 'gd2';
@@ -178,16 +190,27 @@ class Event extends MX_Controller {
         $this->form_validation->set_rules('eventdate', 'Date', 'trim|required');
         $this->form_validation->set_rules('eventtime', 'Time', 'trim|required');
         $this->form_validation->set_rules('eventlocation', 'Location', 'trim|required');
+        $this->form_validation->set_rules('status', 'Status', 'trim|required|in_list[draft,published]');
+        $this->form_validation->set_rules('publish_start_at', 'Publish start date', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
             $errors['errorFormValidation'] = validation_errors();
             echo json_encode($errors);
         } else {
+            $publication = $this->getPublicationData();
+            if (!$publication['valid']) {
+                $errors['errorFormValidation'] = $publication['error'];
+                echo json_encode($errors);
+                return;
+            }
 
             $data['eventtitle'] = $this->input->post('eventtitle');
             $data['eventdate'] = $this->input->post('eventdate');
             $data['eventtime'] = $this->input->post('eventtime');
             $data['eventlocation'] = $this->input->post('eventlocation');
             $data['eventdescription'] = $this->input->post('eventdescription');
+            $data['status'] = $publication['status'];
+            $data['publish_start_at'] = $publication['publish_start_at'];
+            $data['publish_end_at'] = $publication['publish_end_at'];
             $data['cdate'] = date("j F Y");
 
             /*             * ****** Uploading Profile Images ****** */
@@ -205,7 +228,8 @@ class Event extends MX_Controller {
                 } else {
                     $data['eventimage'] = '';
                     $errors['profileimage_error'] = strip_tags($this->upload->display_errors());
-                    echo json_encode($succcess);
+                    echo json_encode($errors);
+                    return;
                 }
 
                 $config['image_library'] = 'gd2';
@@ -296,6 +320,61 @@ class Event extends MX_Controller {
     public function getTotal($table) {        
         $query = $this->db->get($table);
         return $query->result();
+    }
+
+    /**
+     * Validate and normalize the event publication window.
+     */
+    protected function getPublicationData() {
+        $status = $this->input->post('status');
+        $start = $this->parsePublicationDate($this->input->post('publish_start_at'));
+        $endValue = trim((string) $this->input->post('publish_end_at'));
+        $end = NULL;
+
+        if ($start === FALSE) {
+            return array(
+                'valid' => FALSE,
+                'error' => 'Please enter a valid publish start date and time.'
+            );
+        }
+
+        if ($endValue !== '') {
+            $end = $this->parsePublicationDate($endValue);
+            if ($end === FALSE) {
+                return array(
+                    'valid' => FALSE,
+                    'error' => 'Please enter a valid publish end date and time.'
+                );
+            }
+
+            if (strtotime($end) <= strtotime($start)) {
+                return array(
+                    'valid' => FALSE,
+                    'error' => 'The publish end date must be later than the publish start date.'
+                );
+            }
+        }
+
+        return array(
+            'valid' => TRUE,
+            'status' => $status,
+            'publish_start_at' => $start,
+            'publish_end_at' => $end
+        );
+    }
+
+    /**
+     * Convert an HTML datetime-local value to a database datetime.
+     */
+    protected function parsePublicationDate($value) {
+        $value = trim((string) $value);
+        $date = DateTime::createFromFormat('Y-m-d\TH:i', $value);
+
+        if (!$date || $date->format('Y-m-d\TH:i') !== $value) {
+            return FALSE;
+        }
+
+        return $date->format('Y-m-d H:i:s');
     }
 
 }

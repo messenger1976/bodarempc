@@ -19,6 +19,8 @@
                             <th><?php echo $this->lang->line('dash_gpanel_date'); ?></th>
                             <th><?php echo $this->lang->line('dash_gpanel_time'); ?></th>
                             <th><?php echo $this->lang->line('dash_gpanel_location'); ?></th>
+                            <th>Status</th>
+                            <th>Publish Window</th>
                             <th><?php echo $this->lang->line('dash_gpanel_action'); ?></th>
                             </thead>
                             <tbody>
@@ -45,6 +47,32 @@
                                         <td><?php echo $row->eventdate; ?></td>
                                         <td><?php echo $row->eventtime; ?></td>
                                         <td><?php echo $row->eventlocation; ?></td>
+                                        <td>
+                                            <?php
+                                            $now = time();
+                                            $publishStart = strtotime($row->publish_start_at);
+                                            $publishEnd = $row->publish_end_at ? strtotime($row->publish_end_at) : NULL;
+
+                                            if ($row->status === 'draft') {
+                                                $publicationLabel = 'Draft';
+                                                $publicationClass = 'label-default';
+                                            } elseif ($publishStart > $now) {
+                                                $publicationLabel = 'Scheduled';
+                                                $publicationClass = 'label-info';
+                                            } elseif ($publishEnd !== NULL && $publishEnd <= $now) {
+                                                $publicationLabel = 'Expired';
+                                                $publicationClass = 'label-warning';
+                                            } else {
+                                                $publicationLabel = 'Published';
+                                                $publicationClass = 'label-success';
+                                            }
+                                            ?>
+                                            <span class="label <?php echo $publicationClass; ?>"><?php echo $publicationLabel; ?></span>
+                                        </td>
+                                        <td>
+                                            <strong>Start:</strong> <?php echo date('M j, Y g:i A', $publishStart); ?><br>
+                                            <strong>End:</strong> <?php echo $publishEnd ? date('M j, Y g:i A', $publishEnd) : 'No ending date'; ?>
+                                        </td>
                                         <td>
                                             <a href="<?php echo base_url(); ?>dashboard/event/view/<?php echo $row->eventid; ?>" class="btn btn-primary"><i class="material-icons">call_made</i> <?php echo $this->lang->line('dash_gpanel_view'); ?></a>
                                             <a href="<?php echo base_url(); ?>dashboard/event/edit/<?php echo $row->eventid; ?>" class="btn btn-warning"><i class="material-icons">add</i> <?php echo $this->lang->line('dash_gpanel_edit'); ?></a>

@@ -8,7 +8,7 @@ if (!function_exists('iniPagination')){
 	/*****************************/
 	/****** Global Pagination Initialization ******/
 	/*****************************/
-	function iniPagination($baselink, $database, $perpage){
+	function iniPagination($baselink, $database, $perpage, $totalRows = NULL){
 		
 		$ci =& get_instance(); //get main CodeIgniter object		
 		$ci->load->database(); //load databse library
@@ -19,7 +19,9 @@ if (!function_exists('iniPagination')){
                     $config["base_url"] = base_url() . "dashboard/" . $baselink;
                 }
                 
-                $config['total_rows'] = $ci->db->count_all($database);
+                $config['total_rows'] = ($totalRows === NULL)
+                    ? $ci->db->count_all($database)
+                    : (int) $totalRows;
 		$limit = $config['per_page'] = $perpage;
 		$config["uri_segment"] = 4;
 		$choice = $config["total_rows"] / $config["per_page"];
