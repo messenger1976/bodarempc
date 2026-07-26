@@ -99,6 +99,67 @@ if ($this->uri->uri_string() == '') {
 
     <!-- Template Javascript -->
     <script src="<?php echo base_url(); ?>themes/bodare/website/assets/js/main.js"></script>
+<?php if (!empty($form_security) && is_array($form_security)): ?>
+    <script>
+    window.CONTACT_FORM_SECURITY = <?php echo json_encode(array(
+        'recaptcha_enabled' => !empty($form_security['recaptcha_enabled']),
+        'recaptcha_site_key' => !empty($form_security['recaptcha_site_key']) ? $form_security['recaptcha_site_key'] : '',
+        'recaptcha_action' => !empty($form_security['recaptcha_action']) ? $form_security['recaptcha_action'] : 'contact_submit',
+    ), JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS); ?>;
+    </script>
+    <?php if (!empty($form_security['recaptcha_enabled']) && !empty($form_security['recaptcha_site_key'])): ?>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo rawurlencode($form_security['recaptcha_site_key']); ?>" async defer></script>
+    <?php endif; ?>
+    <script>
+    (function () {
+        var cfg = window.CONTACT_FORM_SECURITY || {};
+        var forms = document.querySelectorAll('form[data-contact-secure="1"]');
+        if (!forms.length) return;
+
+        function enableSubmit(form, enabled) {
+            var btn = form.querySelector('[type="submit"]');
+            if (btn) btn.disabled = !enabled;
+        }
+
+        Array.prototype.forEach.call(forms, function (form) {
+            form.addEventListener('submit', function (e) {
+                if (!cfg.recaptcha_enabled || !cfg.recaptcha_site_key) {
+                    return;
+                }
+                if (typeof grecaptcha === 'undefined' || !grecaptcha.execute) {
+                    e.preventDefault();
+                    alert('CAPTCHA is still loading. Please wait a moment and try again.');
+                    return;
+                }
+                if (form.getAttribute('data-recaptcha-ready') === '1') {
+                    form.removeAttribute('data-recaptcha-ready');
+                    return;
+                }
+
+                e.preventDefault();
+                enableSubmit(form, false);
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(cfg.recaptcha_site_key, {
+                        action: cfg.recaptcha_action || 'contact_submit'
+                    }).then(function (token) {
+                        var input = form.querySelector('.contact-recaptcha-token');
+                        if (input) input.value = token;
+                        form.setAttribute('data-recaptcha-ready', '1');
+                        if (typeof form.requestSubmit === 'function') {
+                            form.requestSubmit();
+                        } else {
+                            form.submit();
+                        }
+                    }).catch(function () {
+                        enableSubmit(form, true);
+                        alert('CAPTCHA verification failed. Please try again.');
+                    });
+                });
+            });
+        });
+    })();
+    </script>
+<?php endif; ?>
 </body>
 
 </html>

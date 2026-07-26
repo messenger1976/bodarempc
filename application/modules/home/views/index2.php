@@ -218,8 +218,15 @@
                 <div class="separator line-separator">♦</div>
             </div>
             <div class="col-md-offset-2 col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <form id="contactform" class="form-horizontal" action="<?php echo base_url();?>home/home/contactWithUs" method="post">
+                <form id="contactform" class="form-horizontal" action="<?php echo base_url();?>home/home/contactWithUs" method="post" data-contact-secure="1">
                     <input type="hidden" name="redirect_to" value="home">
+                    <?php
+                    $honeypot_id = 'legacy-company-url';
+                    $this->load->view('partials/contact_form_security', array(
+                        'form_security' => isset($form_security) ? $form_security : array(),
+                        'honeypot_id' => $honeypot_id,
+                    ));
+                    ?>
                     <div class="column one-second">
                         <input placeholder="Your name" type="text" name="name" required maxlength="150">
                     </div>

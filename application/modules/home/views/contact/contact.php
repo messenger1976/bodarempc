@@ -90,8 +90,15 @@
                             <?php echo $contact_error; ?>
                         </div>
                     <?php } ?>
-                    <form id="contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post">
+                    <form id="contactform" action="<?php echo base_url();?>home/home/contactWithUs" method="post" data-contact-secure="1">
                         <input type="hidden" name="redirect_to" value="home/contact">
+                        <?php
+                        $honeypot_id = 'contact-company-url';
+                        $this->load->view('partials/contact_form_security', array(
+                            'form_security' => isset($form_security) ? $form_security : array(),
+                            'honeypot_id' => $honeypot_id,
+                        ));
+                        ?>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">

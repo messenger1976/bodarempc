@@ -30,6 +30,7 @@ class Home extends MX_Controller {
         $data['cooperative_officers'] = $this->getCooperativeOfficers();
         $data['pagination'] = '';
         $data['purchase'] = $this->evnatoVerify();
+        $data = $this->withFormSecurity($data);
         $this->load->view('header2', $data);
         $this->load->view('index', $data);
         $this->load->view('footer2', $data);
@@ -63,6 +64,7 @@ class Home extends MX_Controller {
     public function contact(){        
         $data['basicinfo'] = $this->getBasicInfo();
         $data['purchase'] = $this->evnatoVerify();
+        $data = $this->withFormSecurity($data);
         $this->load->view('header2', $data);
         $this->load->view('contact/contact', $data);
         $this->load->view('footer2', $data);
@@ -218,6 +220,61 @@ class Home extends MX_Controller {
             $redirect_to = 'home/contact';
         }
 
+        $this->load->library('form_security');
+
+        $data = $this->input->post();
+        if (!is_array($data)) {
+            $data = array();
+        }
+        if (!isset($data['message']) && isset($data['body'])) {
+            $data['message'] = $data['body'];
+        }
+
+        // 1) Honeypot — bots that fill hidden fields get a fake success.
+        if (!$this->form_security->check_honeypot($data)) {
+            $this->form_security->log_event('inquiry_rejected_honeypot', array(
+                'ip' => $this->input->ip_address(),
+            ));
+            $this->session->set_flashdata('contact_success', 'Thank you! Your message has been sent successfully. We will get back to you soon.');
+            $this->contactRedirect($redirect_to);
+            return;
+        }
+
+        // 2) Rate limiting / throttling by IP.
+        $rate = $this->form_security->check_rate_limit();
+        if (empty($rate['ok'])) {
+            $this->session->set_flashdata(
+                'contact_error',
+                isset($rate['message']) ? $rate['message'] : 'Too many submissions. Please try again later.'
+            );
+            $this->contactRedirect($redirect_to);
+            return;
+        }
+
+        // 3) CSRF token.
+        $csrfToken = $this->input->post('csrf_token');
+        $csrf = $this->form_security->verify_csrf(is_string($csrfToken) ? $csrfToken : '');
+        if (empty($csrf['ok'])) {
+            $this->session->set_flashdata(
+                'contact_error',
+                isset($csrf['message']) ? $csrf['message'] : 'Invalid security token. Please refresh the page and try again.'
+            );
+            $this->contactRedirect($redirect_to);
+            return;
+        }
+
+        // 4) reCAPTCHA v3 (when configured).
+        $recaptchaToken = $this->input->post('recaptcha_token');
+        $captcha = $this->form_security->verify_recaptcha(is_string($recaptchaToken) ? $recaptchaToken : '');
+        if (empty($captcha['ok'])) {
+            $this->session->set_flashdata(
+                'contact_error',
+                isset($captcha['message']) ? $captcha['message'] : 'CAPTCHA verification failed. Please try again.'
+            );
+            $this->contactRedirect($redirect_to);
+            return;
+        }
+
         $this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[150]');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[255]');
         $this->form_validation->set_rules('subject', 'Subject', 'trim|required|max_length[255]');
@@ -229,10 +286,21 @@ class Home extends MX_Controller {
             return;
         }
 
-        $name = $this->security->xss_clean($this->input->post('name'));
-        $email = $this->security->xss_clean($this->input->post('email'));
-        $subject = $this->security->xss_clean($this->input->post('subject'));
-        $body = trim(strip_tags($this->input->post('body')));
+        // 5) Extra sanitization / format checks (injection & spam hardening).
+        $clean = $this->form_security->sanitize_inquiry_fields($data);
+        if (empty($clean['ok'])) {
+            $this->session->set_flashdata(
+                'contact_error',
+                isset($clean['message']) ? $clean['message'] : 'Invalid form data.'
+            );
+            $this->contactRedirect($redirect_to);
+            return;
+        }
+
+        $name = $clean['data']['name'];
+        $email = $clean['data']['email'];
+        $subject = $clean['data']['subject'];
+        $body = $clean['data']['message'];
         $now = date('Y-m-d H:i:s');
 
         $inquiry = array(
@@ -256,6 +324,11 @@ class Home extends MX_Controller {
         }
 
         $inquiryid = $this->db->insert_id();
+        $this->form_security->log_event('inquiry_saved', array(
+            'inquiryid' => (int) $inquiryid,
+            'ip' => $this->input->ip_address(),
+        ));
+
         $info = $this->getBasicInfo();
         $toEmail = !empty($info[0]->email) ? $info[0]->email : '';
         $siteName = !empty($info[0]->title) ? $info[0]->title : 'BODARE & COMMUNITY MPC';
@@ -319,6 +392,12 @@ class Home extends MX_Controller {
 
         $this->session->set_flashdata('contact_success', 'Thank you! Your message has been sent successfully. We will get back to you soon.');
         $this->contactRedirect($redirect_to);
+    }
+
+    protected function withFormSecurity(array $data) {
+        $this->load->library('form_security');
+        $data['form_security'] = $this->form_security->public_bootstrap();
+        return $data;
     }
 
     protected function contactRedirect($redirect_to) {
