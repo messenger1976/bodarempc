@@ -62,6 +62,7 @@ if ($this->uri->uri_string() == '') {
             border-radius: 4px;
         }
     </style>
+    <?php adsense_render_head(); ?>
 </head>
 
 <body>

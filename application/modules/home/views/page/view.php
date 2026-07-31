@@ -16,6 +16,7 @@
     </div>
     <!-- Page Header End -->
 
+<?php adsense_render_unit('in_content', 'adsense-in-content container mb-4'); ?>
 
 <?php echo $row->pagecontent; ?>
  

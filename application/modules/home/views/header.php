@@ -175,7 +175,7 @@ if ($this->uri->uri_string() == '') {
             
             
         </style>
-        
+        <?php adsense_render_head(); ?>
     </head>
     <body>
         

@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'file', 'text', 'security', 'chms', 'pagination', 'coop_map', 'seo');
+$autoload['helper'] = array('url', 'file', 'text', 'security', 'chms', 'pagination', 'coop_map', 'seo', 'adsense');
 
 /*
 | -------------------------------------------------------------------
@@ -103,7 +103,7 @@ $autoload['helper'] = array('url', 'file', 'text', 'security', 'chms', 'paginati
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('adsense');
 
 /*
 | -------------------------------------------------------------------

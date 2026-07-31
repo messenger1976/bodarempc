@@ -177,6 +177,8 @@
     </div>
     <!-- Service End -->
 
+    <?php adsense_render_unit('in_content', 'adsense-in-content container my-4'); ?>
+
     <!-- Call to Action Start -->
     <div class="container-fluid bg-primary bg-gradient my-5 py-5 wow fadeInUp" data-wow-delay="0.1s">
         <div class="container py-5">

@@ -66,6 +66,7 @@
                             <div class="event-description mb-5">
                                 <?php echo $event->eventdescription; ?>
                             </div>
+                            <?php adsense_render_unit('in_content', 'adsense-in-content mb-5'); ?>
                         </div>
                         <div class="wow fadeInUp" data-wow-delay="0.5s">
                             <h4 class="mb-3"><i class="fa fa-map-marked-alt text-primary"></i> Event Location</h4>

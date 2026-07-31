@@ -85,6 +85,8 @@
     </div>
     <!-- About End -->
 
+    <?php adsense_render_unit('in_content', 'adsense-in-content container'); ?>
+
     <!-- Facts Start -->
     <div class="container-fluid facts my-5 p-5">
         <div class="row g-5">

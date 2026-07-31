@@ -9,6 +9,7 @@ if ($this->uri->uri_string() == '') {
 <?php foreach ($basicinfo as $basic)
     
     ?>
+<?php adsense_render_unit('footer', 'adsense-footer container my-4'); ?>
  <!-- Footer Start -->
     <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
